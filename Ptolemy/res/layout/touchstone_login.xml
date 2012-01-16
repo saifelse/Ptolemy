@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/touchstone_login" />
+	<EditText
+	    android:id="@+id/EditUserName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/form_username" />
+	<EditText
+	    android:id="@+id/EditPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/form_password" />
+	<Button  
+        android:id="@+id/ButtonLogin"  
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"  
+        android:text="@string/login_button"  
+        android:onClick="loginTouchstone" /> 
+    <TextView
+        android:id="@+id/PrepopulateStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

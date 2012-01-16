@@ -1,6 +1,7 @@
 package edu.mit.pt;
 
 import java.io.InputStream;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -13,28 +14,15 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
-public class Exec {
-        public static void main(String[] arg) {
+public class Moira {
+        public static List<String> getClasses(String username, String password) {
                 try {
                         JSch jsch = new JSch();
-                        
-                        String user = "joshma";
+                        String user = username;
                         String host = "athena.dialup.mit.edu";
-
                         Session session = jsch.getSession(user, host, 22);
-
-                        /*
-                         * String xhost="127.0.0.1"; int xport=0; String
-                         * display=JOptionPane.showInputDialog("Enter display name",
-                         * xhost+":"+xport); xhost=display.substring(0,
-                         * display.indexOf(':'));
-                         * xport=Integer.parseInt(display.substring(display
-                         * .indexOf(':')+1)); session.setX11Host(xhost);
-                         * session.setX11Port(xport+6000);
-                         */
-
-                        // username and password will be given via UserInfo interface.
-                        UserInfo ui = new MyUserInfo();
+                        
+                        UserInfo ui = new MyUserInfo(password);
                         session.setUserInfo(ui);
                         session.connect();
 
@@ -42,23 +30,10 @@ public class Exec {
 
                         Channel channel = session.openChannel("exec");
                         ((ChannelExec) channel).setCommand(command);
-
-                        // X Forwarding
-                        // channel.setXForwarding(true);
-
-                        // channel.setInputStream(System.in);
                         channel.setInputStream(null);
-
-                        // channel.setOutputStream(System.out);
-
-                        // FileOutputStream fos=new FileOutputStream("/tmp/stderr");
-                        // ((ChannelExec)channel).setErrStream(fos);
                         ((ChannelExec) channel).setErrStream(System.err);
-
                         InputStream in = channel.getInputStream();
-
                         channel.connect();
-
                         byte[] tmp = new byte[1024];
                         while (true) {
                                 while (in.available() > 0) {
@@ -66,11 +41,10 @@ public class Exec {
                                         if (i < 0)
                                                 break;
                                         String line = new String(tmp, 0, i);
-                                        System.out.println(line);
+                                        Log.v("blah",line);
                                 }
                                 if (channel.isClosed()) {
-                                        System.out.println("exit-status: "
-                                                        + channel.getExitStatus());
+                                        System.out.println("exit-status: " + channel.getExitStatus());
                                         break;
                                 }
                                 try {
@@ -87,8 +61,9 @@ public class Exec {
 
         public static class MyUserInfo implements UserInfo, UIKeyboardInteractive {
                 String passwd;
-                JTextField passwordField = (JTextField) new JPasswordField(20);
-                
+                public MyUserInfo(String password){
+                	passwd = password;
+                }
                 public String getPassword() {
                         return passwd;
                 }
@@ -106,23 +81,16 @@ public class Exec {
                 }
 
                 public boolean promptPassword(String message) {
-                        Object[] ob = { passwordField };
-                        int result = JOptionPane.showConfirmDialog(null, ob, message,
-                                        JOptionPane.OK_CANCEL_OPTION);
-                        if (result == JOptionPane.OK_OPTION) {
-                                passwd = passwordField.getText();
-                                return true;
-                        } else {
-                                return false;
-                        }
+                        return true;
                 }
 
                 public void showMessage(String message) {
                 }
 
-                public String[] promptKeyboardInteractive(String destination,
-                                String name, String instruction, String[] prompt, boolean[] echo) {
+                public String[] promptKeyboardInteractive(String destination, String name, String instruction, String[] prompt, boolean[] echo) {
                         return null;
                 }
         }
+
+        
 }

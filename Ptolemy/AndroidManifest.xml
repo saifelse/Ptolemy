@@ -17,13 +17,15 @@
         </activity>
         <activity android:name=".PtolemyMapActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             	<data android:scheme="http" android:host="pt.mit.edu" />    
+            </intent-filter>
+        </activity>
+        <activity android:name=".PrepopulateActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
