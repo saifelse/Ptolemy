@@ -2,6 +2,7 @@
 <resources>
     <string name="hello">Hello World, PtolemyActivity!</string>
     <string name="launch_prepopulate">Load from Moira</string>
+    <string name="launch_skyhook">Use Skyhook</string>
     <string name="empty_list">You haven\'t selected any classes</string>
     
     <string name="app_name">Ptolemy</string>
