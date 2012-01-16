@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, PtolemyActivity!</string>
     <string name="app_name">Ptolemy</string>
+    <string name="hello_map">Hello MapActivity!</string>
 
 </resources>
