@@ -8,5 +8,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/hello" />
+    
+    	<Button  
+        android:id="@+id/ButtonLaunchPrepopulate"  
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"  
+        android:text="@string/launch_prepopulate"  
+        android:onClick="launchTouchstoneLogin" /> 
+        
+    	<TextView
+    	android:id="@+id/SelectedClasses"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_list" />
 
 </LinearLayout>

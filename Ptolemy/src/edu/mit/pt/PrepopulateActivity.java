@@ -3,12 +3,19 @@ package edu.mit.pt;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * TODO: Needs to be threaded.
+ * TODO: Add a loading bar.
+ * TODO: Make it look pretty.
+ *
+ */
 public class PrepopulateActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
@@ -16,7 +23,7 @@ public class PrepopulateActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.touchstone_login);
     }
-    public void loginTouchstone(View whatView){
+    public void loginTouchstone(View view){
     	// Fields
     	TextView statusField = (TextView) findViewById(R.id.PrepopulateStatus);    
     	EditText usernameField = (EditText) findViewById(R.id.EditUserName);  
@@ -33,12 +40,19 @@ public class PrepopulateActivity extends Activity {
     	loginButton.setEnabled(false);
     	
     	// Attempt login.
-    	statusField.setText("Logging in "+username+":"+password+"@athena.dialup.mit.edu");
+    	statusField.setText("Logging in as "+username+"@athena.dialup.mit.edu");
     	try {
-    	    List<String> classes = Moira.getClasses(username, password);
+    	    List<String> classes = Moira.getClasses(username, password, "fa11");
+    	    setResult(RESULT_OK, new classDataIntent(classes));
+    	    finish();
     	}catch(Exception e){
-    		statusField.setText("An error arose.");
+    		e.printStackTrace();
+    		statusField.setText("An error arose. Try logging in again.");
+    		
+    		// Allow user to resubmit data.
+        	usernameField.setEnabled(true);
+        	passwordField.setEnabled(true);
+        	loginButton.setEnabled(true);
     	}
-    	
     }
 }
