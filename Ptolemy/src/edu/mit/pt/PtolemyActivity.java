@@ -1,5 +1,7 @@
 package edu.mit.pt;
 
+import edu.mit.pt.maps.PtolemyMapActivity;
+import edu.mit.pt.maps.SkyhookMapActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +22,10 @@ public class PtolemyActivity extends Activity {
     	Intent i = new Intent(this, PrepopulateActivity.class);
     	startActivityForResult(i, REQUEST_MOIRA);
     }
-    
+    public void launchSkyhook(View view){
+    	Intent i = new Intent(this, PtolemyMapActivity.class);
+    	startActivity(i);
+    }
     public void onActivityResult(int requestCode, int resultCode, Intent data){
     	switch(requestCode){
     	case REQUEST_MOIRA:

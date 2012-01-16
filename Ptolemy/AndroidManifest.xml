@@ -5,36 +5,49 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="10" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
+    
+	<!--  For Skyhook -->
+	<!-- used to communicate with Skyhook's/Google Maps servers -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!-- enables WiFi, if disabled, for the duration of a location request -->
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<!-- used to obtain information about the WiFi environment -->
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<!-- used to obtain cell tower ID -->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
+	<!-- used to access GPS location, for XPS functionality -->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <uses-library android:name="com.google.android.maps" />
-
+        <uses-library android:name="com.google.android.maps"/>
         <activity
             android:name=".PtolemyActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name=".maps.PtolemyMapActivity" >
+        <activity android:name=".maps.PtolemyMapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="pt.mit.edu"
-                    android:scheme="http" />
+            	<data android:scheme="http" android:host="pt.mit.edu" />    
             </intent-filter>
         </activity>
-        <activity android:name=".PrepopulateActivity" >
+        <activity android:name=".maps.SkyhookMapActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".PrepopulateActivity">
         </activity>
     </application>
-
 </manifest>

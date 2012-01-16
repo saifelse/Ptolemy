@@ -1,0 +1,6 @@
+To get this working, create res/config.xml with the following resources
+
+<string name="map_key">[put googlemaps api key here]</string>
+<string name="skyhook_username">hashbrowns</string>
+<string name="skyhook_realm">mit</string>
+

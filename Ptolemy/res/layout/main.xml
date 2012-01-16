@@ -10,6 +10,13 @@
         android:text="@string/hello" />
     
     	<Button  
+        android:id="@+id/ButtonSkyhookLaunch"  
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"  
+        android:text="@string/launch_skyhook"  
+        android:onClick="launchSkyhook" /> 
+            
+    	<Button  
         android:id="@+id/ButtonLaunchPrepopulate"  
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"  
