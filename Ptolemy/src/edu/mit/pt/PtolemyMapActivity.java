@@ -1,9 +1,8 @@
 package edu.mit.pt;
 
-import com.google.android.maps.MapActivity;
-
-import android.app.Activity;
 import android.os.Bundle;
+
+import com.google.android.maps.MapActivity;
 
 public class PtolemyMapActivity extends MapActivity {
     /** Called when the activity is first created. */
