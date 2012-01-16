@@ -15,7 +15,7 @@
             android:name=".PtolemyActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name=".PtolemyMapActivity">
+        <activity android:name=".maps.PtolemyMapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
