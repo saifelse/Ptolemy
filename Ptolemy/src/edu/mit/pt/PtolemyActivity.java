@@ -1,5 +1,6 @@
 package edu.mit.pt;
 
+import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.maps.SkyhookMapActivity;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +23,7 @@ public class PtolemyActivity extends Activity {
     	startActivityForResult(i, REQUEST_MOIRA);
     }
     public void launchSkyhook(View view){
-    	Intent i = new Intent(this, SkyhookMapActivity.class);
+    	Intent i = new Intent(this, PtolemyMapActivity.class);
     	startActivity(i);
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data){
