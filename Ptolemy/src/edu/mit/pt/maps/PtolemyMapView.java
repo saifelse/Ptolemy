@@ -142,7 +142,7 @@ public class PtolemyMapView extends MapView {
 
 			int numRows;
 			int numColumns;
-			//TODO(Josh) is this necessary
+			//TODO(josh) is this necessary
 			if (fillScreen && tileSize < IMAGE_TILE_SIZE - 2) {
 				// this a crude way to do the calculation
 				// but anything else seems to be noticably slow
@@ -153,7 +153,7 @@ public class PtolemyMapView extends MapView {
 				numColumns = pNumColumns;
 			}
 			
-			Log.v(Config.TAG, "DRAWING TILES (" + numRows + "x" + numColumns + ")");
+			Log.v(Config.TAG, "Drawing tiles (" + numRows + "x" + numColumns + "), tileSize: " + tileSize);
 			
 			if (bm == null) {
 				bm = BitmapFactory.decodeResource(getResources(), R.drawable.sample_tile);

@@ -12,6 +12,9 @@ public class PtolemyMapActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_main);
+		
+		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		mapView.getController().setZoom(21);
 	}
 
 	@Override
