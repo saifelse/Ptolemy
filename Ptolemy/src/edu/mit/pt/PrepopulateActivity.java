@@ -43,7 +43,7 @@ public class PrepopulateActivity extends Activity {
     	statusField.setText("Logging in as "+username+"@athena.dialup.mit.edu");
     	try {
     	    List<String> classes = Moira.getClasses(username, password, "fa11");
-    	    setResult(RESULT_OK, new classDataIntent(classes));
+    	    setResult(RESULT_OK, new ClassDataIntent(classes));
     	    finish();
     	}catch(Exception e){
     		e.printStackTrace();

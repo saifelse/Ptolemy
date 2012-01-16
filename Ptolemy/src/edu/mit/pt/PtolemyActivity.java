@@ -36,7 +36,7 @@ public class PtolemyActivity extends Activity {
     		if(resultCode == RESULT_OK){
     			TextView classText = (TextView) findViewById(R.id.SelectedClasses);
     			classText.setText("");
-    			String[] classes = (String[])data.getExtras().get(classDataIntent.CLASSES);
+    			String[] classes = (String[])data.getExtras().get(ClassDataIntent.CLASSES);
     			for(String classname : classes){
     				classText.append(classname+"\n");
     			}

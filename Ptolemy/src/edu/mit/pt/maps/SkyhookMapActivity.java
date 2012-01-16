@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 import com.skyhookwireless.wps.RegistrationCallback;
 import com.skyhookwireless.wps.WPS;
 import com.skyhookwireless.wps.WPSAuthentication;
@@ -33,6 +35,10 @@ public class SkyhookMapActivity extends MapActivity {
 		
 		authenticateSkyhook();
 		startLocation();
+		//Show user
+		MapView stdMapView = (MapView)findViewById(R.id.stdMapView);
+		MyLocationOverlay meOverlay = new MyLocationOverlay(this, stdMapView);
+		
 	}
 
 	@Override
