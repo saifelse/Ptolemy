@@ -101,7 +101,7 @@ public class SkyhookMapActivity extends MapActivity {
 					public WPSContinuation handleWPSPeriodicLocation(
 							final WPSLocation loc) {
 						updateLocationHandler.post(new Runnable() {
-							@Override
+							
 							public void run() {
 								printLocation(loc.getLatitude(),
 										loc.getLongitude(), loc.getAltitude());
