@@ -23,6 +23,10 @@ public class PtolemyActivity extends Activity {
     	startActivityForResult(i, REQUEST_MOIRA);
     }
     public void launchSkyhook(View view){
+    	Intent i = new Intent(this, SkyhookMapActivity.class);
+    	startActivity(i);
+    }
+    public void launchPtolemyMap(View view){
     	Intent i = new Intent(this, PtolemyMapActivity.class);
     	startActivity(i);
     }

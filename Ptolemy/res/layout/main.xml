@@ -15,7 +15,13 @@
         android:layout_height="wrap_content"  
         android:text="@string/launch_skyhook"  
         android:onClick="launchSkyhook" /> 
-            
+      	<Button  
+        android:id="@+id/ButtonLaunchMap"  
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"  
+        android:text="@string/launch_map"  
+        android:onClick="launchPtolemyMap" /> 
+        
     	<Button  
         android:id="@+id/ButtonLaunchPrepopulate"  
         android:layout_width="fill_parent" 
