@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -60,6 +59,13 @@ public class PtolemyMapView extends MapView {
 		overlays.add(new TileOverlay());
 
 		setRowsCols();
+		getController().setCenter(new GeoPoint(42385049, -71132032));
+		int size1 = computeTileSize(this, 21);
+		Log.v(Config.TAG + "XXXX", "tileSize: " + size1);
+		getController().setCenter(new GeoPoint(42339688, -71004543));
+		int size2 = computeTileSize(this, 21);
+		Log.v(Config.TAG + "XXXX", "tileSize: " + size2);
+		Log.v(Config.TAG + "XXXX", "");
 	}
 
 	private void setRowsCols() {
@@ -142,7 +148,7 @@ public class PtolemyMapView extends MapView {
 
 			int numRows;
 			int numColumns;
-			//TODO(josh) is this necessary
+			// TODO(josh) is this necessary
 			if (fillScreen && tileSize < IMAGE_TILE_SIZE - 2) {
 				// this a crude way to do the calculation
 				// but anything else seems to be noticably slow
@@ -152,11 +158,13 @@ public class PtolemyMapView extends MapView {
 				numRows = pNumRows;
 				numColumns = pNumColumns;
 			}
-			
-			Log.v(Config.TAG, "Drawing tiles (" + numRows + "x" + numColumns + "), tileSize: " + tileSize);
-			
+
+			Log.v(Config.TAG, "Drawing tiles (" + numRows + "x" + numColumns
+					+ "), tileSize: " + tileSize);
+
 			if (bm == null) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.sample_tile);
+				bm = BitmapFactory.decodeResource(getResources(),
+						R.drawable.sample_tile);
 			}
 
 			for (int row = 0; row < numRows + 1; row++) {
@@ -170,15 +178,14 @@ public class PtolemyMapView extends MapView {
 					}
 
 					/*
-					if (mtm.TileOutOfBounds(tileCol, numRows, zoomLevel)) {
-						continue;
-					}
-					*/
+					 * if (mtm.TileOutOfBounds(tileCol, numRows, zoomLevel)) {
+					 * continue; }
+					 */
 
 					int tileOriginX = col * tileSize + offsetX;
 					int tileOriginY = row * tileSize + offsetY;
 
-					//bm = mtm.getBitmap(tileCol, tileRow, zoomLevel, true);
+					// bm = mtm.getBitmap(tileCol, tileRow, zoomLevel, true);
 
 					if (bm != null) {
 
@@ -199,8 +206,8 @@ public class PtolemyMapView extends MapView {
 						boolean block = (tileSize != IMAGE_TILE_SIZE)
 								&& (bm == null);
 
-						//bm = mtm.fetchBitmapOnThread(tileCol, tileRow,
-						//		zoomLevel, block);
+						// bm = mtm.fetchBitmapOnThread(tileCol, tileRow,
+						// zoomLevel, block);
 
 						if (bm != null) {
 							src.bottom = IMAGE_TILE_SIZE;
@@ -274,6 +281,10 @@ public class PtolemyMapView extends MapView {
 		GeoPoint nextPoint = new GeoPoint(topLeftPoint.getLatitudeE6(),
 				nextTileLongitudeE6);
 		Point nextTilePoint = projection.toPixels(nextPoint, null);
+		Log.v(Config.TAG + "M", "Diff: " + (nextTileLongitudeE6 - topLeftPoint.getLongitudeE6()));
+		Log.v(Config.TAG + "M", topLeftPoint.toString() + "    " + projection.toPixels(topLeftPoint, null));
+		Log.v(Config.TAG + "M", nextPoint.toString() + "    " + projection.toPixels(nextPoint, null));
+
 		return nextTilePoint.x;
 	}
 
@@ -281,7 +292,7 @@ public class PtolemyMapView extends MapView {
 		double longitude = -180. + (360. * googleX) / Math.pow(2.0, zoomLevel);
 		return (int) Math.round(longitude * 1000000.);
 	}
-
+/*
 	private static int computeLatitudeE6(double googleY, int zoomLevel) {
 		double mercatorY = Math.PI
 				* (1 - 2 * (googleY / Math.pow(2.0, zoomLevel)));
@@ -290,7 +301,7 @@ public class PtolemyMapView extends MapView {
 		// Convert from radians to microdegrees.
 		return (int) Math.round(phi * 180. / Math.PI * 1000000.);
 	}
-
+*/
 	private double computeGoogleX(int longitudeE6, int zoomLevel) {
 		return (180. + ((double) longitudeE6 / 1000000.)) / (360.)
 				* Math.pow(2.0, zoomLevel);
