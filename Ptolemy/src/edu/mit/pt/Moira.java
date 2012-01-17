@@ -23,7 +23,7 @@ import com.jcraft.jsch.UserInfo;
 public class Moira {
 	public static List<String> getClasses(String username, String password, String semester)
 			throws JSchException, IOException {
-		
+
 		Pattern p = Pattern.compile("("+semester+"-.+)-reg");
 		
 		JSch jsch = new JSch();
