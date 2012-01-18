@@ -127,18 +127,18 @@ public class PtolemyMapView extends MapView {
 			Log.v(Config.TAG,
 					"Drawing! MapZoomLevel is " + mapView.getZoomLevel());
 
-			int tileSize = computeTileSize(mapView, zoomLevel);
+			int tileSize = GoogleTileCalculator.computeTileSize(mapView, zoomLevel);
 			Log.v("JOSH", "tileSize: " + tileSize);
 
 			GeoPoint topleftGeoPoint = mapView.getProjection().fromPixels(0, 0);
 			// googleX and googleY correspond to the ints that google maps uses
 			// to ID tiles
-			double googleX = computeGoogleX(topleftGeoPoint.getLongitudeE6(),
+			double googleX = GoogleTileCalculator.computeGoogleX(topleftGeoPoint.getLongitudeE6(),
 					zoomLevel);
-			double googleY = computeGoogleY(topleftGeoPoint.getLatitudeE6(),
+			double googleY = GoogleTileCalculator.computeGoogleY(topleftGeoPoint.getLatitudeE6(),
 					zoomLevel);
 
-			Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + " (" + topleftGeoPoint.toString() + ")");
+			Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + "@" + zoomLevel + " (" + topleftGeoPoint.toString() + ")");
 
 			// Tile[X/Y] is integer part of google[X/Y].
 			int tileX = (int) googleX;
@@ -239,55 +239,24 @@ public class PtolemyMapView extends MapView {
 
 	private void initZoomLevel(int zoomLevel) {
 		if (pWestX[zoomLevel] == 0) {
-			pWestX[zoomLevel] = (int) Math.floor(computeGoogleX(
+			pWestX[zoomLevel] = (int) Math.floor(GoogleTileCalculator.computeGoogleX(
 					WEST_LONGITUDE_E6, zoomLevel));
 		}
 
 		if (pEastX[zoomLevel] == 0) {
-			pEastX[zoomLevel] = (int) Math.ceil(computeGoogleX(
+			pEastX[zoomLevel] = (int) Math.ceil(GoogleTileCalculator.computeGoogleX(
 					EAST_LONGITUDE_E6, zoomLevel));
 		}
 
 		if (pNorthY[zoomLevel] == 0) {
-			pNorthY[zoomLevel] = (int) Math.floor(computeGoogleY(
+			pNorthY[zoomLevel] = (int) Math.floor(GoogleTileCalculator.computeGoogleY(
 					NORTH_LATITUDE_E6, zoomLevel));
 		}
 
 		if (pSouthY[zoomLevel] == 0) {
-			pSouthY[zoomLevel] = (int) Math.ceil(computeGoogleY(
+			pSouthY[zoomLevel] = (int) Math.ceil(GoogleTileCalculator.computeGoogleY(
 					SOUTH_LATITUDE_E6, zoomLevel));
 		}
-	}
-
-	private int computeTileSize(MapView mapView, int zoomLevel) {
-		return 512;
-	}
-
-	/*
-	 * private static int computeLongitudeE6(double googleX, int zoomLevel) {
-	 * double longitude = -180. + (360. * googleX) / Math.pow(2.0, zoomLevel);
-	 * return (int) Math.round(longitude * 1000000.); }
-	 * 
-	 * private static int computeLatitudeE6(double googleY, int zoomLevel) {
-	 * double mercatorY = Math.PI (1 - 2 * (googleY / Math.pow(2.0,
-	 * zoomLevel))); double phi = Math.atan(Math.sinh(mercatorY));
-	 * 
-	 * // Convert from radians to microdegrees. return (int) Math.round(phi *
-	 * 180. / Math.PI * 1000000.); }
-	 */
-	private double computeGoogleX(int longitudeE6, int zoomLevel) {
-		return (180. + ((double) longitudeE6 / 1000000.)) / (360.)
-				* Math.pow(2.0, zoomLevel);
-	}
-
-	private double computeGoogleY(int latitudeE6, int zoomLevel) {
-		// Convert to radians.
-		double phi = (double) latitudeE6 / 1000000. * Math.PI / 180.;
-		// Calculate Mercator coordinate.
-		double mercatorY = Math.log(Math.tan(phi) + 1. / Math.cos(phi));
-		// Rescale to Google coordinate.
-		return (Math.PI - mercatorY) / (2. * Math.PI)
-				* Math.pow(2.0, zoomLevel);
 	}
 	
 	public void stop() {

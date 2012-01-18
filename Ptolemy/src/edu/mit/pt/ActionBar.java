@@ -3,6 +3,8 @@ package edu.mit.pt;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +25,16 @@ public class ActionBar extends RelativeLayout {
 	static public void setTitle(String title, Activity a) {
 		TextView titleView = (TextView) a.findViewById(R.id.navTitle);
 		titleView.setText(title);
+	}
+	
+	static public void setBackAction(final Runnable r, Activity a) {
+		Button back = (Button) a.findViewById(R.id.NavBackButton);
+		back.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				r.run();
+			}
+		});
 	}
 
 }
