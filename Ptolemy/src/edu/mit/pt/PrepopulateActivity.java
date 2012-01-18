@@ -1,10 +1,8 @@
 package edu.mit.pt;
 
-import java.net.URL;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;

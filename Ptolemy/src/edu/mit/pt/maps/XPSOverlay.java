@@ -1,7 +1,5 @@
 package edu.mit.pt.maps;
 
-import edu.mit.pt.Config;
-import edu.mit.pt.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +15,9 @@ import android.util.Log;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.Projection;
+
+import edu.mit.pt.Config;
+import edu.mit.pt.R;
 
 public class XPSOverlay extends Overlay {
 	private GeoPoint point;

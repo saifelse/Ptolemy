@@ -1,7 +1,5 @@
 package edu.mit.pt.maps;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;

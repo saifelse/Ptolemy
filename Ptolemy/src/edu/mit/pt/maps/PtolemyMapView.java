@@ -15,10 +15,8 @@ import android.view.WindowManager;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.sun.org.apache.xml.internal.utils.StopParseException;
 
 import edu.mit.pt.Config;
-import edu.mit.pt.R;
 
 public class PtolemyMapView extends MapView {
 
