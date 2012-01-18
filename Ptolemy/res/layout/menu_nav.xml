@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.mit.pt.ActionBar xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Nav" >
+
+    <Button
+        android:id="@+id/NavBackButton"
+        style="@style/NavButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/navTitle"
+        style="@style/NavTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/NavBackButton" />
+
+</edu.mit.pt.ActionBar>

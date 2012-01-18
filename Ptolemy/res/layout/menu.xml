@@ -1,9 +1,0 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Nav" >
-
-    <Button
-        style="@style/NavButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
-
-</RelativeLayout>

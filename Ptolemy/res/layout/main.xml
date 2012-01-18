@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/menu"
-        layout="@layout/menu" />
+        layout="@layout/menu_home" />
 
     <Button
         android:id="@+id/ButtonSkyhookLaunch"

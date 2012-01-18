@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.Overlay;
 
+import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
 import edu.mit.pt.data.RoomLoader;
 
@@ -30,6 +31,8 @@ public class PtolemyMapActivity extends MapActivity {
 		//load rooms
     	RoomLoader roomLoader = new RoomLoader();
     	roomLoader.execute(placesItemizedOverlay);
+    	
+    	ActionBar.setTitle("MIT Map", this);
 	}
 
 	@Override

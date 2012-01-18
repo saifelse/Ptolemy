@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:drawable="@drawable/ic_menu_home_press" />
+    <item
+        android:drawable="@drawable/ic_ab_back_holo_dark"
+        android:top="16dp"
+        android:bottom="16dp"
+        android:left="0dp"
+        android:right="36dp" />
+    <item
+        android:drawable="@drawable/ic_menu_home"
+        android:left="8dp" />
+</layer-list>
