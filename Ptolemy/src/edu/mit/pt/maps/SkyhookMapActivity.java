@@ -47,7 +47,7 @@ public class SkyhookMapActivity extends MapActivity {
 
 		// Show user
 		MapView stdMapView = (MapView) findViewById(R.id.stdMapView);
-		meOverlay = new XPSOverlay();
+		meOverlay = new XPSOverlay(stdMapView);
 		stdMapView.getOverlays().add(meOverlay);
 	}
 
@@ -116,7 +116,7 @@ public class SkyhookMapActivity extends MapActivity {
 	void printLocation(double latitude, double longitude, double altitude) {
 		GeoPoint pt = new GeoPoint((int) (latitude * 1e6),
 				(int) (longitude * 1e6));
-		meOverlay.setLocation(pt, 0);
+		meOverlay.setLocation(pt);
 
 		// Animate to point
 		MapView stdMapView = (MapView) findViewById(R.id.stdMapView);

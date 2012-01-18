@@ -14,9 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
+ * 
  * TODO: Make it look pretty. (add a cancel button)
  * TODO: Make it choose the term.
  * FIXME: fix naming conventions for ids to underscores.
+ * FIXME: can't auth again after already auth'ing
  */
 public class PrepopulateActivity extends Activity {
 	private static String term = "fa11";
