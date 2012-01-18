@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,7 +21,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class RoomLoader extends AsyncTask {
-	public void getRooms() {
+	public Set<Place> getRooms() {
+		Set<Place> roomSet = new HashSet<Place>();
 		String roomJSON = readRoomJSON();
 		try {
 			JSONObject rooms = new JSONObject(roomJSON);
@@ -28,11 +31,18 @@ public class RoomLoader extends AsyncTask {
 			
 			JSONArray roomList = rooms.names();
 			for (int i = 0; i < roomList.length(); i++) {
+				String name = roomList.getString(i);
+				JSONObject coords = rooms.getJSONObject(name);
+				long lat = coords.getLong("lat");
+				long lon = coords.getLong("lon");
+				Place room = new Place(name, lat, lon);
+				roomSet.add(room);
 				Log.i(RoomLoader.class.getName(), roomList.getString(i));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return roomSet;
 	}
 	
 	public String readRoomJSON() {
