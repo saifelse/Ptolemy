@@ -46,7 +46,6 @@
                     android:host="pt.mit.edu"
                     android:scheme="http" />
             </intent-filter>
-            
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -54,7 +53,6 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-            
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".maps.PtolemyMapActivity" />
@@ -68,6 +66,11 @@
         </activity>
         <activity android:name=".PrepopulateActivity" >
         </activity>
+
+        <provider
+            android:name="edu.mit.pt.data.PlacesContentProvider"
+            android:authorities="edu.mit.pt.data.placescontentprovider" >
+        </provider>
     </application>
 
 </manifest>
