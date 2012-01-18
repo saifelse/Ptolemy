@@ -17,10 +17,15 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.OverlayItem;
+
+import edu.mit.pt.maps.PlacesItemizedOverlay;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class RoomLoader extends AsyncTask {
+public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> {
 	public Set<Place> getRooms() {
 		Set<Place> roomSet = new HashSet<Place>();
 		String roomJSON = readRoomJSON();
@@ -73,10 +78,15 @@ public class RoomLoader extends AsyncTask {
 		}
 		return builder.toString();
 	}
-
+	
 	@Override
-	protected Object doInBackground(Object... params) {
-		getRooms();
+	protected Void doInBackground(PlacesItemizedOverlay... params) {
+		Set<Place> rooms = getRooms();
+		for (Place p: rooms) {
+			GeoPoint point = new GeoPoint((int)p.getLatE6(), (int)p.getLonE6());
+			OverlayItem overlayItem = new OverlayItem(point, p.getName(), "");
+			params[0].addOverlay(overlayItem);
+		}
 		return null;
 	}
 }

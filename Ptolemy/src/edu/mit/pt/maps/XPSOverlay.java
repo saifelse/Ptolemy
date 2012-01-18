@@ -19,6 +19,7 @@ import com.google.android.maps.Overlay;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 
+//Positioning system overlay
 public class XPSOverlay extends Overlay {
 	private GeoPoint point;
 	private double dir;

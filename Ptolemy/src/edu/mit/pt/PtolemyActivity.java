@@ -14,8 +14,6 @@ public class PtolemyActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	RoomLoader roomLoader = new RoomLoader();
-    	roomLoader.execute();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
