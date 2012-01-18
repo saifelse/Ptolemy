@@ -4,19 +4,18 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.Projection;
+import com.sun.org.apache.xml.internal.utils.StopParseException;
 
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
@@ -24,8 +23,8 @@ import edu.mit.pt.R;
 public class PtolemyMapView extends MapView {
 
 	Context ctx;
-	private final int SUPPORTED_ZOOM_LEVEL = 21;
-	private final int IMAGE_TILE_SIZE = 256;
+	private final int SUPPORTED_ZOOM_LEVEL = 19;
+	private final int IMAGE_TILE_SIZE = 512;
 
 	private static final int WEST_LONGITUDE_E6 = -71132032;
 	private static final int EAST_LONGITUDE_E6 = -71004543;
@@ -34,7 +33,8 @@ public class PtolemyMapView extends MapView {
 
 	private int pNumRows = 3;
 	private int pNumColumns = 3;
-	Bitmap bm;
+	private boolean pinchZoom = false;
+	private PtolemyTileManager tm;
 
 	public PtolemyMapView(Context context, String key) {
 		super(context, key);
@@ -58,14 +58,28 @@ public class PtolemyMapView extends MapView {
 		List<Overlay> overlays = getOverlays();
 		overlays.add(new TileOverlay());
 
+		getController().setZoom(21);
+
 		setRowsCols();
-		getController().setCenter(new GeoPoint(42385049, -71132032));
-		int size1 = computeTileSize(this, 21);
-		Log.v(Config.TAG + "XXXX", "tileSize: " + size1);
-		getController().setCenter(new GeoPoint(42339688, -71004543));
-		int size2 = computeTileSize(this, 21);
-		Log.v(Config.TAG + "XXXX", "tileSize: " + size2);
-		Log.v(Config.TAG + "XXXX", "");
+		getController().setCenter(new GeoPoint(42361568, -71091825));
+		
+		tm = new PtolemyTileManager(ctx);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent ev) {
+
+		int action = ev.getAction();
+		switch (action) {
+		case MotionEvent.ACTION_DOWN:
+			invalidate();
+			break;
+		case MotionEvent.ACTION_MOVE:
+			pinchZoom = (ev.getPointerCount() > 1);
+			break;
+		}
+
+		return super.onTouchEvent(ev);
 	}
 
 	private void setRowsCols() {
@@ -91,10 +105,10 @@ public class PtolemyMapView extends MapView {
 	 * PtolemyMapView uses one giant TileOverlay to draw its maps on top of
 	 * Google Maps.
 	 * 
-	 * @author Josh
-	 * 
 	 */
 	class TileOverlay extends Overlay {
+		
+		Bitmap bm;
 
 		@Override
 		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
@@ -105,7 +119,9 @@ public class PtolemyMapView extends MapView {
 			if (shadow) {
 				return;
 			}
-			int zoomLevel = mapView.getZoomLevel();
+			// zoomLevel on web maps are 2 less than equivalent on mobile
+			// Calculations refer to web map.
+			int zoomLevel = mapView.getZoomLevel() - 2;
 			if (zoomLevel != SUPPORTED_ZOOM_LEVEL) {
 				return;
 			}
@@ -114,6 +130,7 @@ public class PtolemyMapView extends MapView {
 					"Drawing! MapZoomLevel is " + mapView.getZoomLevel());
 
 			int tileSize = computeTileSize(mapView, zoomLevel);
+			Log.v("JOSH", "tileSize: " + tileSize);
 
 			GeoPoint topleftGeoPoint = mapView.getProjection().fromPixels(0, 0);
 			// googleX and googleY correspond to the ints that google maps uses
@@ -123,6 +140,8 @@ public class PtolemyMapView extends MapView {
 			double googleY = computeGoogleY(topleftGeoPoint.getLatitudeE6(),
 					zoomLevel);
 
+			Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + " (" + topleftGeoPoint.toString() + ")");
+
 			// Tile[X/Y] is integer part of google[X/Y].
 			int tileX = (int) googleX;
 			int tileY = (int) googleY;
@@ -130,10 +149,10 @@ public class PtolemyMapView extends MapView {
 			int offsetX = -(int) Math.round((googleX - tileX) * tileSize);
 			int offsetY = -(int) Math.round((googleY - tileY) * tileSize);
 
-			drawTiles(canvas, tileX, tileY, offsetX, offsetY, zoomLevel,
-					tileSize, true);
-
-			Log.v(Config.TAG, "googleX: " + googleX + ", googleY: " + googleY);
+			if (!pinchZoom) {
+				drawTiles(canvas, tileX, tileY, offsetX, offsetY, zoomLevel,
+						tileSize, true);
+			}
 
 		}
 
@@ -151,7 +170,7 @@ public class PtolemyMapView extends MapView {
 			// TODO(josh) is this necessary
 			if (fillScreen && tileSize < IMAGE_TILE_SIZE - 2) {
 				// this a crude way to do the calculation
-				// but anything else seems to be noticably slow
+				// but anything else seems to be noticeably slow
 				numRows = pNumRows + 1;
 				numColumns = pNumColumns + 2;
 			} else {
@@ -162,11 +181,6 @@ public class PtolemyMapView extends MapView {
 			Log.v(Config.TAG, "Drawing tiles (" + numRows + "x" + numColumns
 					+ "), tileSize: " + tileSize);
 
-			if (bm == null) {
-				bm = BitmapFactory.decodeResource(getResources(),
-						R.drawable.sample_tile);
-			}
-
 			for (int row = 0; row < numRows + 1; row++) {
 				for (int col = 0; col < numColumns + 1; col++) {
 
@@ -176,19 +190,17 @@ public class PtolemyMapView extends MapView {
 					if (!isTileOnMap(tileCol, tileRow, zoomLevel)) {
 						continue;
 					}
-
-					/*
-					 * if (mtm.TileOutOfBounds(tileCol, numRows, zoomLevel)) {
-					 * continue; }
-					 */
+					
+					if (tm.isNotMapped(tileCol, tileRow)) {
+						continue;
+					}
 
 					int tileOriginX = col * tileSize + offsetX;
 					int tileOriginY = row * tileSize + offsetY;
-
-					// bm = mtm.getBitmap(tileCol, tileRow, zoomLevel, true);
+					
+					bm = tm.getBitmap(tileCol, tileRow);
 
 					if (bm != null) {
-
 						src.bottom = IMAGE_TILE_SIZE;
 						src.left = 0;
 						src.right = IMAGE_TILE_SIZE;
@@ -201,27 +213,6 @@ public class PtolemyMapView extends MapView {
 
 						canvas.drawBitmap(bm, src, dest, null);
 
-					} else {
-
-						boolean block = (tileSize != IMAGE_TILE_SIZE)
-								&& (bm == null);
-
-						// bm = mtm.fetchBitmapOnThread(tileCol, tileRow,
-						// zoomLevel, block);
-
-						if (bm != null) {
-							src.bottom = IMAGE_TILE_SIZE;
-							src.left = 0;
-							src.right = IMAGE_TILE_SIZE;
-							src.top = 0;
-
-							dest.bottom = tileOriginY + tileSize;
-							dest.left = tileOriginX;
-							dest.right = tileOriginX + tileSize;
-							dest.top = tileOriginY;
-
-							canvas.drawBitmap(bm, src, dest, null);
-						}
 					}
 				}
 
@@ -271,37 +262,21 @@ public class PtolemyMapView extends MapView {
 	}
 
 	private int computeTileSize(MapView mapView, int zoomLevel) {
-		Projection projection = mapView.getProjection();
-
-		GeoPoint topLeftPoint = projection.fromPixels(0, 0);
-		double googleX = computeGoogleX(topLeftPoint.getLongitudeE6(),
-				zoomLevel);
-		double nextTileGoogleX = googleX + 1;
-		int nextTileLongitudeE6 = computeLongitudeE6(nextTileGoogleX, zoomLevel);
-		GeoPoint nextPoint = new GeoPoint(topLeftPoint.getLatitudeE6(),
-				nextTileLongitudeE6);
-		Point nextTilePoint = projection.toPixels(nextPoint, null);
-		Log.v(Config.TAG + "M", "Diff: " + (nextTileLongitudeE6 - topLeftPoint.getLongitudeE6()));
-		Log.v(Config.TAG + "M", topLeftPoint.toString() + "    " + projection.toPixels(topLeftPoint, null));
-		Log.v(Config.TAG + "M", nextPoint.toString() + "    " + projection.toPixels(nextPoint, null));
-
-		return nextTilePoint.x;
+		return 512;
 	}
 
-	private static int computeLongitudeE6(double googleX, int zoomLevel) {
-		double longitude = -180. + (360. * googleX) / Math.pow(2.0, zoomLevel);
-		return (int) Math.round(longitude * 1000000.);
-	}
-/*
-	private static int computeLatitudeE6(double googleY, int zoomLevel) {
-		double mercatorY = Math.PI
-				* (1 - 2 * (googleY / Math.pow(2.0, zoomLevel)));
-		double phi = Math.atan(Math.sinh(mercatorY));
-
-		// Convert from radians to microdegrees.
-		return (int) Math.round(phi * 180. / Math.PI * 1000000.);
-	}
-*/
+	/*
+	 * private static int computeLongitudeE6(double googleX, int zoomLevel) {
+	 * double longitude = -180. + (360. * googleX) / Math.pow(2.0, zoomLevel);
+	 * return (int) Math.round(longitude * 1000000.); }
+	 * 
+	 * private static int computeLatitudeE6(double googleY, int zoomLevel) {
+	 * double mercatorY = Math.PI (1 - 2 * (googleY / Math.pow(2.0,
+	 * zoomLevel))); double phi = Math.atan(Math.sinh(mercatorY));
+	 * 
+	 * // Convert from radians to microdegrees. return (int) Math.round(phi *
+	 * 180. / Math.PI * 1000000.); }
+	 */
 	private double computeGoogleX(int longitudeE6, int zoomLevel) {
 		return (180. + ((double) longitudeE6 / 1000000.)) / (360.)
 				* Math.pow(2.0, zoomLevel);
@@ -315,6 +290,10 @@ public class PtolemyMapView extends MapView {
 		// Rescale to Google coordinate.
 		return (Math.PI - mercatorY) / (2. * Math.PI)
 				* Math.pow(2.0, zoomLevel);
+	}
+	
+	public void stop() {
+		PtolemyTileManager.StrongBitmapCache.releaseInstance();
 	}
 
 }
