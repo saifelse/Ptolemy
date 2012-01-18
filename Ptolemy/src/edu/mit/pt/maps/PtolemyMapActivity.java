@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.Overlay;
@@ -34,6 +36,14 @@ public class PtolemyMapActivity extends MapActivity {
     	roomLoader.execute(placesItemizedOverlay);
     	
     	ActionBar.setTitle("MIT Map", this);
+    	
+    	findViewById(R.id.searchbutton).setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				onSearchRequested();
+				
+			}
+		});
 	}
 
 	@Override

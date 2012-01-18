@@ -5,49 +5,69 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="10" />
-    
-	<!--  For Skyhook -->
-	<!-- used to communicate with Skyhook's/Google Maps servers -->
-	<uses-permission android:name="android.permission.INTERNET" />
-	<!-- enables WiFi, if disabled, for the duration of a location request -->
-	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-	<!-- used to obtain information about the WiFi environment -->
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<!-- used to obtain cell tower ID -->
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
-	<!-- used to access GPS location, for XPS functionality -->
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	
+
+    <!-- For Skyhook -->
+    <!-- used to communicate with Skyhook's/Google Maps servers -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- enables WiFi, if disabled, for the duration of a location request -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- used to obtain information about the WiFi environment -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- used to obtain cell tower ID -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
+    <!-- used to access GPS location, for XPS functionality -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
-        android:theme="@android:style/Theme.Light.NoTitleBar"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
-        <uses-library android:name="com.google.android.maps"/>
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Light.NoTitleBar" >
+        <uses-library android:name="com.google.android.maps" />
+
         <activity
             android:name=".PtolemyActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".maps.PtolemyMapActivity">
+        <activity android:name=".maps.PtolemyMapActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-            	<data android:scheme="http" android:host="pt.mit.edu" />    
+
+                <data
+                    android:host="pt.mit.edu"
+                    android:scheme="http" />
             </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".maps.PtolemyMapActivity" />
         </activity>
-        <activity android:name=".maps.SkyhookMapActivity">
+        <activity android:name=".maps.SkyhookMapActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".PrepopulateActivity">
+        <activity android:name=".PrepopulateActivity" >
         </activity>
     </application>
+
 </manifest>
