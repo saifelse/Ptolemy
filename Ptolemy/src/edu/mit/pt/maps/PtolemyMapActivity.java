@@ -21,6 +21,7 @@ public class PtolemyMapActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_main);
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		mapView.setBuiltInZoomControls(true);
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		//TODO: change blue arrow
 		Drawable drawable = this.getResources().getDrawable(R.drawable.arrow_up_blue);
