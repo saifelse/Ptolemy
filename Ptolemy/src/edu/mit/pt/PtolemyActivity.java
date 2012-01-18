@@ -1,5 +1,6 @@
 package edu.mit.pt;
 
+import edu.mit.pt.data.RoomLoader;
 import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.maps.SkyhookMapActivity;
 import android.app.Activity;
@@ -14,8 +15,11 @@ public class PtolemyActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	RoomLoader roomLoader = new RoomLoader();
+    	roomLoader.execute();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
     }
     
     public void launchTouchstoneLogin(View view){

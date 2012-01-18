@@ -38,7 +38,6 @@ public class XPSOverlay extends Overlay {
 			private float[] accData;
 			private float[] magData;
 
-			@Override
 			public void onSensorChanged(SensorEvent event) {
 				switch (event.sensor.getType()) {
 				case Sensor.TYPE_ACCELEROMETER:
@@ -61,7 +60,6 @@ public class XPSOverlay extends Overlay {
 				}
 			}
 
-			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 			}
 		};
