@@ -4,33 +4,33 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
+    <include
+        android:id="@+id/menu"
+        layout="@layout/menu_home" />
+
+    <Button
+        android:id="@+id/ButtonSkyhookLaunch"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
-    
-    	<Button  
-        android:id="@+id/ButtonSkyhookLaunch"  
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"  
-        android:text="@string/launch_skyhook"  
-        android:onClick="launchSkyhook" /> 
-      	<Button  
-        android:id="@+id/ButtonLaunchMap"  
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"  
-        android:text="@string/launch_map"  
-        android:onClick="launchPtolemyMap" /> 
-        
-    	<Button  
-        android:id="@+id/ButtonLaunchPrepopulate"  
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"  
-        android:text="@string/launch_prepopulate"  
-        android:onClick="launchTouchstoneLogin" /> 
-        
-    	<TextView
-    	android:id="@+id/SelectedClasses"
+        android:onClick="launchSkyhook"
+        android:text="@string/launch_skyhook" />
+
+    <Button
+        android:id="@+id/ButtonLaunchMap"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="launchPtolemyMap"
+        android:text="@string/launch_map" />
+
+    <Button
+        android:id="@+id/ButtonLaunchPrepopulate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="launchTouchstoneLogin"
+        android:text="@string/launch_prepopulate" />
+
+    <TextView
+        android:id="@+id/SelectedClasses"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/empty_list" />
