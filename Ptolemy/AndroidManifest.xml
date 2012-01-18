@@ -41,12 +41,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".maps.SkyhookMapActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity android:name=".PrepopulateActivity">
+        </activity>
+        <activity android:name=".courses.AddClassActivity">
         </activity>
     </application>
 </manifest>

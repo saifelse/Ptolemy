@@ -53,13 +53,13 @@ public class PrepopulateActivity extends Activity {
 				+ "@athena.dialup.mit.edu");
 		new MoiraTask().execute(username, password, term);
 	}
-
+	
 	private class MoiraTask extends AsyncTask<String, Integer, List<String>> {
 		@Override
 		protected List<String> doInBackground(String... credential) {
 			String username = credential[0];
 			String password = credential[1];
-			String term = credential[2];
+			String term = credential[2]; 
 			try {
 				List<String> result = Moira
 						.getClasses(username, password, term);
