@@ -22,10 +22,20 @@ import com.google.android.maps.OverlayItem;
 
 import edu.mit.pt.maps.PlacesItemizedOverlay;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> {
+	
+	private Context context;
+	
+	public RoomLoader(Context context) {
+		this.context = context;
+	}
+	
 	public Set<Place> getRooms() {
 		Set<Place> roomSet = new HashSet<Place>();
 		String roomJSON = readRoomJSON();
@@ -81,11 +91,22 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 	
 	@Override
 	protected Void doInBackground(PlacesItemizedOverlay... params) {
+		PlacesContentProvider pcp = new PlacesContentProvider();
 		Set<Place> rooms = getRooms();
 		for (Place p: rooms) {
-			GeoPoint point = new GeoPoint((int)p.getLatE6(), (int)p.getLonE6());
-			OverlayItem overlayItem = new OverlayItem(point, p.getName(), "");
-			params[0].addOverlay(overlayItem);
+			ContentValues values = new ContentValues();
+			
+			//pcp.insert(null, )
+//			GeoPoint point = new GeoPoint((int)p.getLatE6(), (int)p.getLonE6());
+//			OverlayItem overlayItem = new OverlayItem(point, p.getName(), "");
+//			params[0].addOverlay(overlayItem);
+//			
+			values.put(PlacesTable.COLUMN_NAME, p.getName());
+			values.put(PlacesTable.COLUMN_LAT, p.getLatE6());
+			values.put(PlacesTable.COLUMN_LON, p.getLonE6());
+			Uri CONTENT_URI = Uri.parse("content://edu.mit.pt.data.placescontentprovider/");
+			
+			Uri uri = this.context.getContentResolver().insert(CONTENT_URI, values);
 		}
 		return null;
 	}
