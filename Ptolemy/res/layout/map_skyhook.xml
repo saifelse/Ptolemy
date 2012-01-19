@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mainlayout"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
 
             <requestFocus />
         </EditText>
-
+
         <com.google.android.maps.MapView
             android:id="@+id/stdMapView"
             android:layout_width="match_parent"
@@ -27,9 +27,7 @@
             android:layout_marginRight="46dp"
             android:apiKey="@string/map_key"
             android:clickable="true" >
-
         </com.google.android.maps.MapView>
-
     </LinearLayout>
 
 </RelativeLayout>

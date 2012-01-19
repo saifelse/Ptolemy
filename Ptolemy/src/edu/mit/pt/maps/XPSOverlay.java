@@ -19,6 +19,7 @@ import com.google.android.maps.Overlay;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 
+//Positioning system overlay
 public class XPSOverlay extends Overlay {
 	private GeoPoint point;
 	private double dir;
@@ -38,7 +39,6 @@ public class XPSOverlay extends Overlay {
 			private float[] accData;
 			private float[] magData;
 
-			@Override
 			public void onSensorChanged(SensorEvent event) {
 				switch (event.sensor.getType()) {
 				case Sensor.TYPE_ACCELEROMETER:
@@ -61,7 +61,6 @@ public class XPSOverlay extends Overlay {
 				}
 			}
 
-			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 			}
 		};
