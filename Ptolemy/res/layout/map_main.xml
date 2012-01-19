@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/menu"
-        layout="@layout/menu_nav" />
+        layout="@layout/menu_home" />
 
     <edu.mit.pt.maps.PtolemyMapView
         android:id="@+id/mapview"
@@ -16,13 +16,5 @@
         android:layout_height="fill_parent"
         android:apiKey="@string/map_key"
         android:clickable="true" />
-
-    <Button
-        android:id="@+id/searchbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="Search" />
 
 </RelativeLayout>

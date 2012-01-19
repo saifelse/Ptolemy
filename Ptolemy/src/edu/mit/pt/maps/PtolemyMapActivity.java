@@ -21,6 +21,8 @@ public class PtolemyMapActivity extends MapActivity {
 	PtolemyMapView mapView;
 	PlacesItemizedOverlay placesItemizedOverlay;
 	
+	private final String ACTIVITY_TITLE = "Ptolemy";
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,35 +40,37 @@ public class PtolemyMapActivity extends MapActivity {
 		}
 		
 		List<Overlay> mapOverlays = mapView.getOverlays();
-		//TODO: change blue arrow
-		Drawable drawable = this.getResources().getDrawable(R.drawable.arrow_up_blue);
+		// TODO: change blue arrow
+		Drawable drawable = this.getResources().getDrawable(
+				R.drawable.arrow_up_blue);
 		placesItemizedOverlay = new PlacesItemizedOverlay(drawable);
 		mapOverlays.add(placesItemizedOverlay);
-		
-		//load rooms
-    	RoomLoader roomLoader = new RoomLoader(this);
-    	roomLoader.execute(placesItemizedOverlay);
-    	
-    	ActionBar.setTitle("MIT Map", this);
-    	
-    	findViewById(R.id.searchbutton).setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				onSearchRequested();
-				
-			}
-		});
+
+		// load rooms
+		RoomLoader roomLoader = new RoomLoader(this);
+		roomLoader.execute(placesItemizedOverlay);
+
+		ActionBar.setTitle(ACTIVITY_TITLE, this);
+
+		findViewById(R.id.searchbutton).setOnClickListener(
+				new OnClickListener() {
+
+					public void onClick(View v) {
+						onSearchRequested();
+
+					}
+				});
 	}
 
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		//PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		// PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.stop();
 	}
 }
