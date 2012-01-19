@@ -23,7 +23,7 @@ public class ActionBar extends RelativeLayout {
 	}
 	
 	static public void setTitle(String title, Activity a) {
-		TextView titleView = (TextView) a.findViewById(R.id.navTitle);
+		TextView titleView = (TextView) a.findViewById(R.id.homeTitle);
 		titleView.setText(title);
 	}
 	

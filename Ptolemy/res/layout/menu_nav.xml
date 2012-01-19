@@ -2,9 +2,9 @@
 <edu.mit.pt.ActionBar xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Nav" >
 
-    <Button
+    <ImageButton
         android:id="@+id/NavBackButton"
-        style="@style/NavButton"
+        style="@style/NavButtonBack"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 

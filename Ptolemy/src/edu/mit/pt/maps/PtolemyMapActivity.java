@@ -2,7 +2,6 @@ package edu.mit.pt.maps;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -20,6 +19,8 @@ import edu.mit.pt.data.RoomLoader;
 public class PtolemyMapActivity extends MapActivity {
 	PtolemyMapView mapView;
 	PlacesItemizedOverlay placesItemizedOverlay;
+	
+	private final String ACTIVITY_TITLE = "Ptolemy";
 
 	/** Called when the activity is first created. */
 	@Override
@@ -46,13 +47,7 @@ public class PtolemyMapActivity extends MapActivity {
 		RoomLoader roomLoader = new RoomLoader();
 		roomLoader.execute(placesItemizedOverlay);
 
-		ActionBar.setTitle("MIT Map", this);
-		final Activity a = this;
-		ActionBar.setBackAction(new Runnable() {
-			public void run() {
-				a.finish();
-			}
-		}, a);
+		ActionBar.setTitle(ACTIVITY_TITLE, this);
 
 		findViewById(R.id.searchbutton).setOnClickListener(
 				new OnClickListener() {
