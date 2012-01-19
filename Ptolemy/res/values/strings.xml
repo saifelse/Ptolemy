@@ -23,6 +23,7 @@
 	<string name="search">search</string>
 	<string name="home">home</string>
 	<string name="bookmarks">bookmarks</string>
+	<string name="back">back</string>
 	
 	
 </resources>

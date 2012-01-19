@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ActionBar extends RelativeLayout {
-	
+
 	public ActionBar(Context context) {
 		super(context);
 	}
@@ -21,20 +21,24 @@ public class ActionBar extends RelativeLayout {
 	public ActionBar(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
-	
-	static public void setTitle(String title, Activity a) {
-		TextView titleView = (TextView) a.findViewById(R.id.homeTitle);
+
+	static public void setTitle(Activity a, String title) {
+		TextView titleView = (TextView) a.findViewById(R.id.navTitle);
 		titleView.setText(title);
 	}
+
+	static public void setBackAction(Activity a, final Runnable r) {
+		a.findViewById(R.id.navBackButton).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						r.run();
+					}
+				});
+	}
 	
-	static public void setBackAction(final Runnable r, Activity a) {
-		Button back = (Button) a.findViewById(R.id.NavBackButton);
-		back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				r.run();
-			}
-		});
+	static public ViewGroup getInstance(Activity a) {
+		return (RelativeLayout) a.findViewById(R.id.nav);
 	}
 
 }

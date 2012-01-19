@@ -38,8 +38,8 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 			for (int i = 0; i < roomList.length(); i++) {
 				String name = roomList.getString(i);
 				JSONObject coords = rooms.getJSONObject(name);
-				long lat = coords.getLong("lat");
-				long lon = coords.getLong("lon");
+				int lat = coords.getInt("lat");
+				int lon = coords.getInt("lon");
 				Place room = new Place(name, lat, lon);
 				roomSet.add(room);
 				Log.i(RoomLoader.class.getName(), roomList.getString(i));

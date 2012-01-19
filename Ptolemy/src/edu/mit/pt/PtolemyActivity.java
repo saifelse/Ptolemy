@@ -15,7 +15,6 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
     }
     
     public void launchTouchstoneLogin(View view){

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <include
+        android:id="@+id/menu"
+        layout="@layout/menu_nav" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/menu"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <EditText
+            android:id="@+id/edit_class_title"
+            android:layout_width="fill_parent"
+            android:layout_height="36dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="4dp"
+            android:hint="@string/class_title_hint"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:ellipsize="end"
+            android:paddingTop="0dp"
+            android:singleLine="true"
+            android:text="@string/class_name"
+            android:textSize="8dp" />
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp" >
+
+            <RadioButton
+                android:id="@+id/radio_lec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lec" />
+
+            <RadioButton
+                android:id="@+id/radio_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rec" />
+
+            <RadioButton
+                android:id="@+id/radio_oth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other" />
+        </RadioGroup>
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp" >
+
+            <EditText
+                android:id="@+id/edit_class_room_no"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_toLeftOf="@+id/ButtonLogin"
+                android:hint="@string/class_room_hint" />
+
+            <Button
+                android:id="@+id/ButtonLogin"
+                android:layout_width="80dp"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="0dp"
+                android:onClick="loginTouchstone"
+                android:text="@string/room_browse_button" />
+'
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="287dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/x158608y193914" />
+    </LinearLayout>
+
+</RelativeLayout>

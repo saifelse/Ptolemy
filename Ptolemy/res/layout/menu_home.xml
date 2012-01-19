@@ -9,23 +9,23 @@
         style="@style/NavButtonHome" />
 
     <TextView
-        android:id="@+id/homeTitle"
+        android:id="@+id/navTitle"
         style="@style/NavTitle"
         android:layout_toRightOf="@+id/homeButton"
         android:text="@string/app_name" />
     
     <ImageButton
-        android:id="@+id/searchbutton"
-        android:contentDescription="@string/search"
         style="@style/NavButton"
+        android:id="@+id/searchbutton"
         android:src="@drawable/ic_menu_search"
+        android:contentDescription="@string/search"
         android:layout_toLeftOf="@+id/bookmarksbutton" />
     
     <ImageButton
-        android:id="@+id/bookmarksbutton"
-        android:contentDescription="@string/bookmarks"
         style="@style/NavButton"
+        android:id="@+id/bookmarksbutton"
         android:src="@drawable/ic_menu_bookmark"
+        android:contentDescription="@string/bookmarks"
         android:layout_alignParentRight="true" />
 
 </RelativeLayout>

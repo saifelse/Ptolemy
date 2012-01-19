@@ -14,12 +14,13 @@ import com.google.android.maps.Overlay;
 
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
+import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.data.RoomLoader;
 
 public class PtolemyMapActivity extends MapActivity {
 	PtolemyMapView mapView;
 	PlacesItemizedOverlay placesItemizedOverlay;
-	
+
 	private final String ACTIVITY_TITLE = "Ptolemy";
 
 	/** Called when the activity is first created. */
@@ -29,13 +30,13 @@ public class PtolemyMapActivity extends MapActivity {
 		setContentView(R.layout.map_main);
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-		
+
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			System.out.println(query);
 		}
-		
+
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		// TODO: change blue arrow
 		Drawable drawable = this.getResources().getDrawable(
@@ -47,14 +48,22 @@ public class PtolemyMapActivity extends MapActivity {
 		RoomLoader roomLoader = new RoomLoader();
 		roomLoader.execute(placesItemizedOverlay);
 
-		ActionBar.setTitle(ACTIVITY_TITLE, this);
+		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
 		findViewById(R.id.searchbutton).setOnClickListener(
 				new OnClickListener() {
-
 					public void onClick(View v) {
 						onSearchRequested();
 
+					}
+				});
+
+		findViewById(R.id.bookmarksbutton).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(v.getContext(), BookmarksActivity.class);
+						startActivity(intent);
 					}
 				});
 	}

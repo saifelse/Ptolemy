@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <edu.mit.pt.ActionBar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav"
     style="@style/Nav" >
 
     <ImageButton
-        android:id="@+id/NavBackButton"
+        android:id="@+id/navBackButton"
         style="@style/NavButtonBack"
+        android:contentDescription="@string/back"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 
@@ -14,6 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/NavBackButton" />
+        android:layout_toRightOf="@+id/navBackButton" />
 
 </edu.mit.pt.ActionBar>
