@@ -1,12 +1,13 @@
 package edu.mit.pt.data;
 
+import android.app.SearchManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class PlacesTable {
 	public static final String PLACES_TABLE_NAME = "places";
 	public static final String COLUMN_ID = "_id";
-	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1;
 	public static final String COLUMN_LAT = "lat";
 	public static final String COLUMN_LON = "lon";
 	
@@ -26,7 +27,7 @@ public class PlacesTable {
 		Log.w(PlacesOpenHelper.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS" + PLACES_TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + PLACES_TABLE_NAME);
 		onCreate(db);
 	}
 }

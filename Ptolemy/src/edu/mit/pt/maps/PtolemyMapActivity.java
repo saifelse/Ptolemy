@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -31,7 +32,9 @@ public class PtolemyMapActivity extends MapActivity {
 		Intent intent = getIntent();
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			System.out.println(query);
+			if (query == null)
+				System.out.println("I AM IN YOUR NULLZ");
+			Log.i(PtolemyMapActivity.class.toString(), query);
 		}
 		
 		List<Overlay> mapOverlays = mapView.getOverlays();
@@ -41,7 +44,7 @@ public class PtolemyMapActivity extends MapActivity {
 		mapOverlays.add(placesItemizedOverlay);
 		
 		//load rooms
-    	RoomLoader roomLoader = new RoomLoader();
+    	RoomLoader roomLoader = new RoomLoader(this);
     	roomLoader.execute(placesItemizedOverlay);
     	
     	ActionBar.setTitle("MIT Map", this);
