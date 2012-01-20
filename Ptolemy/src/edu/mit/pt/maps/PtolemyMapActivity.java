@@ -53,7 +53,7 @@ public class PtolemyMapActivity extends MapActivity {
 		roomLoader.execute(placesItemizedOverlay);
 
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
-
+		
 		// Set up meOverlay:
 		// Show user
 		XPSOverlay meOverlay = new XPSOverlay(mapView);
@@ -78,8 +78,7 @@ public class PtolemyMapActivity extends MapActivity {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(v.getContext(),
-								BookmarksActivity.class);
+						Intent intent = new Intent(v.getContext(), BookmarksActivity.class);
 						startActivity(intent);
 					}
 				});
