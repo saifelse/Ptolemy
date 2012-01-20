@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.ActionBar;
@@ -52,6 +53,18 @@ public class PtolemyMapActivity extends MapActivity {
 		roomLoader.execute(placesItemizedOverlay);
 
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
+		
+		// Set up meOverlay:
+		// Show user
+		XPSOverlay meOverlay = new XPSOverlay(mapView);
+		mapView.getOverlays().add(meOverlay);
+
+		// Start Location data
+		String skyhookUsername = getString(R.string.skyhook_username);
+		String skyhookRealm = getString(R.string.skyhook_realm);
+
+		LocationSetter.init(this, skyhookUsername, skyhookRealm, meOverlay);
+		LocationSetter.resume();
 
 		findViewById(R.id.searchbutton).setOnClickListener(
 				new OnClickListener() {
@@ -71,6 +84,11 @@ public class PtolemyMapActivity extends MapActivity {
 				});
 	}
 
+	/*
+	 * @Override public void onPause(){ LocationSetter.pause(); }
+	 * 
+	 * @Override public void onResume(){ LocationSetter.resume(); }
+	 */
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -80,6 +98,7 @@ public class PtolemyMapActivity extends MapActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		// PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		LocationSetter.stop();
 		mapView.stop();
 	}
 }

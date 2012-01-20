@@ -36,14 +36,11 @@
         <activity android:name=".maps.PtolemyMapActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="pt.mit.edu"
                     android:scheme="http" />
@@ -59,8 +56,6 @@
                 android:name="android.app.default_searchable"
                 android:value=".maps.PtolemyMapActivity" />
         </activity>
-        <activity android:name=".maps.SkyhookMapActivity" >
-        </activity>
         <activity android:name=".PrepopulateActivity" >
         </activity>
         <activity android:name=".bookmarks.AddBookmarkActivity" >
@@ -74,7 +69,6 @@
         <activity android:name=".courses.AddClassActivity" >
         </activity>
     </application>
-
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:label="Tests for Ptolemy"
