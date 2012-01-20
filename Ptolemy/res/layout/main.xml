@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <include
@@ -10,28 +10,28 @@
 
     <Button
         android:id="@+id/ButtonSkyhookLaunch"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchSkyhook"
         android:text="@string/launch_skyhook" />
 
     <Button
         android:id="@+id/ButtonLaunchMap"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchPtolemyMap"
         android:text="@string/launch_map" />
 
     <Button
         android:id="@+id/ButtonLaunchPrepopulate"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchTouchstoneLogin"
         android:text="@string/launch_prepopulate" />
 
     <TextView
         android:id="@+id/SelectedClasses"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/empty_list" />
 

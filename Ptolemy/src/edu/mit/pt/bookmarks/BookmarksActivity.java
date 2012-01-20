@@ -5,13 +5,14 @@ import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
@@ -22,6 +23,7 @@ public class BookmarksActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bookmarks);
+		
 		ActionBar.setTitle(this, "Bookmarks");
 		final Activity that = this;
 		ActionBar.setBackAction(this, new Runnable() {
@@ -30,13 +32,13 @@ public class BookmarksActivity extends ListActivity {
 				that.finish();
 			}
 		});
-
 		
 		// Add nav button.
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, ActionBar.getInstance(this));
-		LayoutParams layout = (LayoutParams) addButton.getLayoutParams();
-		//layout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				R.layout.menu_nav_button, null);
+		RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		layout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		ActionBar.setButtons(this, new View[] { addButton });
 
 		ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {

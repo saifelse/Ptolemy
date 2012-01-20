@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,9 +35,14 @@ public class ActionBar extends RelativeLayout {
 					}
 				});
 	}
-	
-	static public ViewGroup getInstance(Activity a) {
-		return (RelativeLayout) a.findViewById(R.id.nav);
+
+	static public void setButtons(Activity a, View[] buttons) {
+		ActionBar actionBar = (ActionBar) a.findViewById(R.id.nav);
+		for (int i = 0; i < buttons.length; i++) {
+			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+			actionBar.addView(buttons[i], layout);
+		}
 	}
 
 }
