@@ -18,13 +18,13 @@
         <EditText
             android:id="@+id/edit_class_title"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="4dp"
             android:hint="@string/class_title_hint"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="4dp"
             android:paddingTop="10dp"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:layout_height="36dp"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="0dp" />
 
         <TextView
             android:layout_width="match_parent"
