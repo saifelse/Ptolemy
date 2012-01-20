@@ -35,7 +35,6 @@ public class ActionBar extends RelativeLayout {
 	 */
 	static public void setDefaultBackAction(final Activity a) {
 		setBackAction(a, new Runnable() {
-			@Override
 			public void run() {
 				a.finish();
 			}
@@ -50,7 +49,6 @@ public class ActionBar extends RelativeLayout {
 	static public void setBackAction(Activity a, final Runnable r) {
 		a.findViewById(R.id.navBackButton).setOnClickListener(
 				new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						r.run();
 					}

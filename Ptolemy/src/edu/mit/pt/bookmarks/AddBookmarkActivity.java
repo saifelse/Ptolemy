@@ -37,7 +37,6 @@ public class AddBookmarkActivity extends MapActivity {
 
 		typeButton.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				new AlertDialog.Builder(v.getContext())
 						.setTitle(
@@ -46,7 +45,6 @@ public class AddBookmarkActivity extends MapActivity {
 						.setAdapter(adapter,
 								new DialogInterface.OnClickListener() {
 
-									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
 										changeType(types[which]);
@@ -61,7 +59,6 @@ public class AddBookmarkActivity extends MapActivity {
 		TextView titleView = (TextView) findViewById(R.id.editBookmarkTitle);
 		titleView.setOnKeyListener(new OnKeyListener() {
 			
-			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				Toast toast = Toast.makeText(v.getContext(), "" + keyCode, 2000);
 				toast.show();

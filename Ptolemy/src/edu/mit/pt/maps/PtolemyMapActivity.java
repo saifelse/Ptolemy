@@ -74,7 +74,6 @@ public class PtolemyMapActivity extends MapActivity {
 
 		findViewById(R.id.bookmarksbutton).setOnClickListener(
 				new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(v.getContext(),
 								BookmarksActivity.class);

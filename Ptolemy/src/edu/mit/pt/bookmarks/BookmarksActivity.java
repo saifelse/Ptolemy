@@ -33,7 +33,6 @@ public class BookmarksActivity extends ListActivity {
 		addButton.setImageResource(R.drawable.ic_menu_bookmark_add);
 		addButton.setContentDescription(getString(R.string.add_bookmark));
 		addButton.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(that, AddBookmarkActivity.class);
 				startActivity(intent);
@@ -43,7 +42,6 @@ public class BookmarksActivity extends ListActivity {
 
 		ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
