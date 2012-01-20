@@ -24,6 +24,7 @@
 	<string name="home">home</string>
 	<string name="bookmarks">bookmarks</string>
 	<string name="back">back</string>
+	<string name="add_bookmark">add_bookmark</string>
 	
 	
 </resources>
