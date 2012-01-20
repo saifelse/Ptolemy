@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ActionBar extends RelativeLayout {
+
+	private static final float BUTTON_WIDTH_DP = 48.0f;
+	// Arbitrary offset, just don't make it 0 because id=0=NO_ID.
+	private static final int BASE_ID = 100;
 
 	public ActionBar(Context context) {
 		super(context);
@@ -26,7 +29,24 @@ public class ActionBar extends RelativeLayout {
 		TextView titleView = (TextView) a.findViewById(R.id.navTitle);
 		titleView.setText(title);
 	}
+	
+	/**
+	 * Helper function to configure back button to go back to last activity.
+	 */
+	static public void setDefaultBackAction(final Activity a) {
+		setBackAction(a, new Runnable() {
+			@Override
+			public void run() {
+				a.finish();
+			}
+		});
+	}
 
+	/**
+	 * Configures back button to run r when pressed.
+	 * @param a Activity.
+	 * @param r Runnable to run.
+	 */
 	static public void setBackAction(Activity a, final Runnable r) {
 		a.findViewById(R.id.navBackButton).setOnClickListener(
 				new OnClickListener() {
@@ -37,8 +57,27 @@ public class ActionBar extends RelativeLayout {
 				});
 	}
 	
-	static public ViewGroup getInstance(Activity a) {
-		return (RelativeLayout) a.findViewById(R.id.nav);
+	static public void setButton(Activity a, View button) {
+		setButtons(a, new View[] { button });
+	}
+
+	static public void setButtons(Activity a, View[] buttons) {
+		ActionBar actionBar = (ActionBar) a.findViewById(R.id.nav);
+		final float scale = a.getResources().getDisplayMetrics().density;
+		int width = (int) (BUTTON_WIDTH_DP * scale + 0.5f);
+
+		for (int i = 0; i < buttons.length; i++) {
+			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(
+					width, LayoutParams.FILL_PARENT);
+			View b = buttons[i];
+			b.setId(BASE_ID + i);
+			if (i == 0) {
+				layout.addRule(ALIGN_PARENT_RIGHT);
+			} else {
+				layout.addRule(LEFT_OF, BASE_ID + i - 1);
+			}
+			actionBar.addView(b, layout);
+		}
 	}
 
 }

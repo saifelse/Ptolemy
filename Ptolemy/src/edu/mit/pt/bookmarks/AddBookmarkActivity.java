@@ -12,5 +12,6 @@ public class AddBookmarkActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_bookmark);
 		ActionBar.setTitle(this, "Add Bookmark");
+		ActionBar.setDefaultBackAction(this);
 	}
 }

@@ -60,6 +60,7 @@ public class PtolemyTileManager {
 		Log.v(Config.TAG, "Trying to load: " + bitmapKey);
 		if (bmId == 0) {
 			Log.v(Config.TAG, bitmapKey + " not found.");
+			notMapped.put(bitmapKey, true);
 			return null;
 		}
 

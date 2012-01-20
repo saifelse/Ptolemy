@@ -2,11 +2,11 @@ package edu.mit.pt.bookmarks;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -22,21 +22,24 @@ public class BookmarksActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bookmarks);
+
 		ActionBar.setTitle(this, "Bookmarks");
 		final Activity that = this;
-		ActionBar.setBackAction(this, new Runnable() {
-			@Override
-			public void run() {
-				that.finish();
-			}
-		});
+		ActionBar.setDefaultBackAction(this);
 
-		
 		// Add nav button.
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, ActionBar.getInstance(this));
-		LayoutParams layout = (LayoutParams) addButton.getLayoutParams();
-		//layout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				R.layout.menu_nav_button, null);
+		addButton.setImageResource(R.drawable.ic_menu_bookmark_add);
+		addButton.setContentDescription(getString(R.string.add_bookmark));
+		addButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(that, AddBookmarkActivity.class);
+				startActivity(intent);
+			}
+		});
+		ActionBar.setButton(this, addButton);
 
 		ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {
