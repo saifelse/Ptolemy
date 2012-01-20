@@ -19,20 +19,23 @@
         android:id="@+id/centrebutton"
         android:src="@drawable/ic_menu_compass"
         android:contentDescription="@string/centre"
-        android:layout_toLeftOf="@+id/searchbutton" />
+        android:layout_toLeftOf="@+id/searchbutton"
+        android:onClick="centerMap" />
        
     <ImageButton
         style="@style/NavButton"
         android:id="@+id/searchbutton"
         android:src="@drawable/ic_menu_search"
         android:contentDescription="@string/search"
-        android:layout_toLeftOf="@+id/bookmarksbutton" />
+        android:layout_toLeftOf="@+id/bookmarksbutton"
+        android:onClick="showSearch" />
     
     <ImageButton
         style="@style/NavButton"
         android:id="@+id/bookmarksbutton"
         android:src="@drawable/ic_menu_bookmark"
         android:contentDescription="@string/bookmarks"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:onClick="showBookmarks" />
 
 </RelativeLayout>

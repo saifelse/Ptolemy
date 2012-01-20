@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.ActionBar;
@@ -53,7 +52,7 @@ public class PtolemyMapActivity extends MapActivity {
 		roomLoader.execute(placesItemizedOverlay);
 
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
-		
+
 		// Set up meOverlay:
 		// Show user
 		XPSOverlay meOverlay = new XPSOverlay(mapView);
@@ -77,17 +76,24 @@ public class PtolemyMapActivity extends MapActivity {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(v.getContext(), BookmarksActivity.class);
+						Intent intent = new Intent(v.getContext(),
+								BookmarksActivity.class);
 						startActivity(intent);
 					}
 				});
-		findViewById(R.id.centrebutton).setOnClickListener(
-				new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mapView.getController().animateTo(LocationSetter.getPoint());
-					}
-				});
+	}
+
+	public void showSearch(View v) {
+		onSearchRequested();
+	}
+
+	public void showBookmarks(View v) {
+		Intent intent = new Intent(this, BookmarksActivity.class);
+		startActivity(intent);
+	}
+
+	public void centerMap(View v) {
+		mapView.getController().animateTo(LocationSetter.getPoint());
 	}
 
 	/*
