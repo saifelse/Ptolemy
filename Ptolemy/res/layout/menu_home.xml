@@ -14,6 +14,13 @@
         android:layout_toRightOf="@+id/homeButton"
         android:text="@string/app_name" />
     
+     <ImageButton
+        style="@style/NavButton"
+        android:id="@+id/centrebutton"
+        android:src="@drawable/ic_menu_compass"
+        android:contentDescription="@string/centre"
+        android:layout_toLeftOf="@+id/searchbutton" />
+       
     <ImageButton
         style="@style/NavButton"
         android:id="@+id/searchbutton"

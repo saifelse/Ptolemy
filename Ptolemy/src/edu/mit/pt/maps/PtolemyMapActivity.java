@@ -70,7 +70,6 @@ public class PtolemyMapActivity extends MapActivity {
 				new OnClickListener() {
 					public void onClick(View v) {
 						onSearchRequested();
-
 					}
 				});
 
@@ -80,6 +79,13 @@ public class PtolemyMapActivity extends MapActivity {
 					public void onClick(View v) {
 						Intent intent = new Intent(v.getContext(), BookmarksActivity.class);
 						startActivity(intent);
+					}
+				});
+		findViewById(R.id.centrebutton).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mapView.getController().animateTo(LocationSetter.getPoint());
 					}
 				});
 	}
