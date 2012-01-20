@@ -3,10 +3,14 @@ package edu.mit.pt.bookmarks;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.MapActivity;
 
@@ -25,6 +29,7 @@ public class AddBookmarkActivity extends MapActivity {
 		ActionBar.setTitle(this, "Add Bookmark");
 		ActionBar.setDefaultBackAction(this);
 
+		// Configure button to show list of types to choose from.
 		Button typeButton = (Button) findViewById(R.id.typeButton);
 		final BookmarkType[] types = BookmarkType.values();
 		final ArrayAdapter<BookmarkType> adapter = new ArrayAdapter<BookmarkType>(
@@ -51,7 +56,21 @@ public class AddBookmarkActivity extends MapActivity {
 			}
 		});
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		
+		// Autocomplete on title.
+		TextView titleView = (TextView) findViewById(R.id.editBookmarkTitle);
+		titleView.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				Toast toast = Toast.makeText(v.getContext(), "" + keyCode, 2000);
+				toast.show();
+				return false;
+			}
+		});
 	}
+	
+	
 
 	private void changeType(BookmarkType newType) {
 		type = newType;

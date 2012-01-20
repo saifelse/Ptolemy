@@ -21,12 +21,13 @@
             android:layout_height="wrap_content" >
 
             <EditText
-                android:id="@+id/edit_class_title"
+                android:id="@+id/editBookmarkTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/typeButton"
+                android:singleLine="true"
                 android:hint="@string/class_title_hint" >
 
                 <requestFocus />
