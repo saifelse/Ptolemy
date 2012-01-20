@@ -29,7 +29,7 @@ public class MITClassesOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CLASSES_TABLE_CREATE);
-		// TODO: Query server for data 
+		MITClass.loadClasses();
 	}
 
 	@Override

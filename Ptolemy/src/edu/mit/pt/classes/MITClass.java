@@ -1,5 +1,6 @@
 package edu.mit.pt.classes;
 
+import java.io.InputStreamReader;
 import java.util.List;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -22,7 +23,6 @@ public class MITClass {
 		this.name = name;
 		this.place = place;
 	}
-	
 	public String getId() {
 		return id;
 	}
@@ -38,7 +38,6 @@ public class MITClass {
 	public Place getPlace() {
 		return place;
 	}
-
 	private static boolean addOrReplaceClass(MITClass mitClass) {
 		//db.insertWithOnConflict(CLASSES_TABLE_NAME, nullColumnHack, initialValues, conflictAlgorithm)		
 		return false;
@@ -55,10 +54,6 @@ public class MITClass {
 	public static List<MITClass> getClasses(String search) {
 		return null;
 	}
-	
-	
-	
-	
-	
-	
+	protected static void loadClasses(){
+	}
 }
