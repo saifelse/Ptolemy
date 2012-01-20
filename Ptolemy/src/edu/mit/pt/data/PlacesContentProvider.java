@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class PlacesContentProvider extends ContentProvider {
-	private PlacesOpenHelper db;
+	private PtolemyOpenHelper db;
 	private static final String AUTHORITY = "edu.mit.pt.data.placescontentprovider";
 
 	@Override
@@ -32,7 +32,7 @@ public class PlacesContentProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		db = new PlacesOpenHelper(getContext());
+		db = new PtolemyOpenHelper(getContext());
 		return false;
 	}
 

@@ -24,7 +24,7 @@ public class PlacesTable {
 	}
 
 	public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(PlacesOpenHelper.class.getName(),
+		Log.w(PtolemyOpenHelper.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS " + PLACES_TABLE_NAME);
