@@ -34,7 +34,7 @@ public class XPSOverlay extends Overlay {
 		point = p;
 		mapView.postInvalidate();
 	}
-
+	// TODO: draw differently depending what floor is being examined.
 	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
 		if (point == null) return;
 

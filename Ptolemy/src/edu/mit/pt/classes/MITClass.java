@@ -2,9 +2,15 @@ package edu.mit.pt.classes;
 
 import java.util.List;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import edu.mit.pt.data.Place;
 
 public class MITClass {
+	private static final String DATABASE_NAME = "mitclasses.db";
+	private static final String CLASSES_TABLE_NAME = "classes";
+	private static final SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DATABASE_NAME, null);
+	
 	private String id;
 	private String term;
 	private String name;
@@ -34,6 +40,7 @@ public class MITClass {
 	}
 
 	private static boolean addOrReplaceClass(MITClass mitClass) {
+		//db.insertWithOnConflict(CLASSES_TABLE_NAME, nullColumnHack, initialValues, conflictAlgorithm)		
 		return false;
 	}
 
@@ -48,4 +55,10 @@ public class MITClass {
 	public static List<MITClass> getClasses(String search) {
 		return null;
 	}
+	
+	
+	
+	
+	
+	
 }
