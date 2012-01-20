@@ -63,8 +63,7 @@ public class ActionBar extends RelativeLayout {
 
 	static public void setButtons(Activity a, View[] buttons) {
 		ActionBar actionBar = (ActionBar) a.findViewById(R.id.nav);
-		final float scale = a.getResources().getDisplayMetrics().density;
-		int width = (int) (BUTTON_WIDTH_DP * scale + 0.5f);
+		int width = Config.getPixelsFromDp(a, BUTTON_WIDTH_DP);
 
 		for (int i = 0; i < buttons.length; i++) {
 			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(

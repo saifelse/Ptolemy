@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.ActionBar;
@@ -73,17 +72,17 @@ public class PtolemyMapActivity extends MapActivity {
 
 					}
 				});
-
-		findViewById(R.id.bookmarksbutton).setOnClickListener(
-				new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(v.getContext(), BookmarksActivity.class);
-						startActivity(intent);
-					}
-				});
 	}
-
+	
+	public void showSearch(View v) {
+		onSearchRequested();
+	}
+	
+	public void showBookmarks(View v) {
+		Intent intent = new Intent(this, BookmarksActivity.class);
+		startActivity(intent);
+	}
+	
 	/*
 	 * @Override public void onPause(){ LocationSetter.pause(); }
 	 * 

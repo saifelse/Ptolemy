@@ -10,10 +10,6 @@ import edu.mit.pt.data.Place;
 
 public class Bookmark {
 
-	public enum BookmarkType {
-		LECTURE, RECITATION, OFFICE_HOURS, OTHER
-	}
-
 	private int id;
 	private String customName;
 	private Place place;

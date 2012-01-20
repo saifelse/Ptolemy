@@ -128,7 +128,6 @@ public class PtolemyMapView extends MapView {
 					"Drawing! MapZoomLevel is " + mapView.getZoomLevel());
 
 			int tileSize = GoogleTileCalculator.computeTileSize(mapView, zoomLevel);
-			Log.v("JOSH", "tileSize: " + tileSize);
 
 			GeoPoint topleftGeoPoint = mapView.getProjection().fromPixels(0, 0);
 			// googleX and googleY correspond to the ints that google maps uses
