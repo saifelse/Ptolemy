@@ -51,6 +51,9 @@ public class LocationSetter {
 	public static double getAltitude(){
 		return altitude;
 	}
+	public static GeoPoint getPoint(){
+		return new GeoPoint((int)(latitude*1e6),(int)(longitude*1e6));
+	}
 	public static void init(Context context, String username, String realm, XPSOverlay o){
 		overlay = o;
 		updateLocationHandler = new Handler();
@@ -69,7 +72,6 @@ public class LocationSetter {
 		pause();
 		xps.abort();
 	}
-	// Location
 
 	private static void initLocation(Context context, String username,
 			String realm) {

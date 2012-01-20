@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="hello">Hello World, PtolemyActivity!</string>
     <string name="launch_prepopulate">Load from Moira</string>
     <string name="launch_skyhook">Use Skyhook</string>
     <string name="launch_map">Use Custom Map!!!</string>
     <string name="empty_list">You haven\'t selected any classes</string>
-    
     <string name="app_name">Ptolemy</string>
     <string name="hello_map">Hello MapActivity!</string>
-    
-	<string name="touchstone_login">Log into your Kerberos account to import classes you are registered for this semester:</string>
-	<string name="form_username">Username</string>
-	<string name="form_password">Password</string>
-	<string name="login_button">Prepopulate!</string>
-	
-	<!-- AddClassActivity -->
-	<string name="class_title">Title:</string>
-	<string name="class_title_hint">Title (hint: try \'6.570\')</string>
-	<string name="class_name">The Study of Men Who Fuck Goats While Peeing in the Shower</string>
-	<string name="pick_place_hint">Pick a location</string>
-	<string name="search">search</string>
-	<string name="home">home</string>
-	<string name="bookmarks">bookmarks</string>
-	<string name="back">back</string>
-	<string name="add_bookmark">add bookmark</string>
-	<string name="bookmark_type_prompt">Pick the bookmark type:</string>
-	<string-array name="bookmark_types">
-	    <item>Lecture</item>
-	    <item>Recitation</item>
-	    <item>Office hours</item>
-	    <item>None of the above</item>
-	</string-array>
-	<string name="type_button_empty">></string>
-	
-	
-</resources>
+    <string name="touchstone_login">Log into your Kerberos account to import classes you are registered for this semester:</string>
+    <string name="form_username">Username</string>
+    <string name="form_password">Password</string>
+    <string name="login_button">Prepopulate!</string>
 
+    <!-- AddClassActivity -->
+    <string name="class_title">Title:</string>
+    <string name="class_title_hint">Title (hint: try \'6.570\')</string>
+    <string name="class_name">The Study of Men Who Fuck Goats While Peeing in the Shower</string>
+    <string name="pick_place_hint">Pick a location</string>
+    <string name="class_room_hint">Room #</string>
+    <string name="room_browse_button">Browse</string>
+
+    <!-- Menu -->
+    <string name="search">search</string>
+    <string name="home">home</string>
+    <string name="bookmarks">bookmarks</string>
+    <string name="back">back</string>
+    <string name="centre">centre</string>
+    <string name="add_bookmark">add bookmark</string>
+    <string name="bookmark_type_prompt">Pick the bookmark type:</string>
+
+    <string-array name="bookmark_types">
+        <item>Lecture</item>
+        <item>Recitation</item>
+        <item>Office hours</item>
+        <item>None of the above</item>
+    </string-array>
+
+    <string name="type_button_empty">></string>
+
+</resources>
