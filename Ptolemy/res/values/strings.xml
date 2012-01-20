@@ -20,6 +20,10 @@
 	<string name="class_name">The Study of Men Who Fuck Goats While Peeing in the Shower</string>
 	<string name="class_room_hint">Room #</string>
 	<string name="room_browse_button">Browse</string>
+	<string name="search">search</string>
+	<string name="home">home</string>
+	<string name="bookmarks">bookmarks</string>
+	<string name="back">back</string>
 	
 	
 </resources>

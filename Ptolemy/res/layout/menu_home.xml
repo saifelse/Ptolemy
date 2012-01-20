@@ -3,18 +3,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Nav" >
 
-    <Button
+    <ImageButton
         android:id="@+id/homeButton"
-        style="@style/NavButtonHome"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:contentDescription="@string/home"
+        style="@style/NavButtonHome" />
 
     <TextView
+        android:id="@+id/navTitle"
         style="@style/NavTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/homeButton"
         android:text="@string/app_name" />
+    
+    <ImageButton
+        style="@style/NavButton"
+        android:id="@+id/searchbutton"
+        android:src="@drawable/ic_menu_search"
+        android:contentDescription="@string/search"
+        android:layout_toLeftOf="@+id/bookmarksbutton" />
+    
+    <ImageButton
+        style="@style/NavButton"
+        android:id="@+id/bookmarksbutton"
+        android:src="@drawable/ic_menu_bookmark"
+        android:contentDescription="@string/bookmarks"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

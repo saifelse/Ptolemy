@@ -18,18 +18,6 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-		// Show user
-		MapView mapView = (MapView) findViewById(R.id.mapview);
-		XPSOverlay meOverlay = new XPSOverlay(mapView);
-		mapView.getOverlays().add(meOverlay);
-        
-		// Start Location data
-        String skyhookUsername = getString(R.string.skyhook_username);
-        String skyhookRealm = getString(R.string.skyhook_realm);
-        LocationSetter.init(this, skyhookUsername, skyhookRealm, meOverlay);
-        LocationSetter.resume();
-        
     }
     
     public void onPause(){
