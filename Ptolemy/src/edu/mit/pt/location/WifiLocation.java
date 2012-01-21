@@ -16,6 +16,7 @@ public class WifiLocation {
 		List<ScanResult> results = wifi.getScanResults();
 		for (ScanResult r: results) {
 			System.out.println(r.BSSID);
+			System.out.println(r.level);
 		}
 	}
 	
