@@ -10,15 +10,15 @@ public class MITClassTable {
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_MITID = "mitid";
 	public static final String COLUMN_TERM = "term";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_PLACEID = "place_id";
+	public static final String COLUMN_NAME = "name";	
+	public static final String COLUMN_ROOM = "room";
+
 
 	private static final String CLASSES_TABLE_CREATE = "CREATE TABLE "
 			+ CLASSES_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_MITID
 			+ " TEXT not null, " + COLUMN_TERM + " TEXT not null, "
-			+ COLUMN_NAME + " TEXT not null, " + COLUMN_PLACEID + " INTEGER);" +
-					"INSERT INTO classes (mitid, term, name, place_id) VALUES ('6.006', 'fa11', 'Algorithms', '1');";
+			+ COLUMN_NAME + " TEXT not null, " + COLUMN_ROOM + " TEXT);";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(CLASSES_TABLE_CREATE);
