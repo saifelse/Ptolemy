@@ -19,7 +19,6 @@ public class MITClassTable {
 			+ " integer primary key autoincrement, " + COLUMN_MITID
 			+ " TEXT not null, " + COLUMN_TERM + " TEXT not null, "
 			+ COLUMN_NAME + " TEXT not null, " + COLUMN_ROOM + " TEXT);";
-	
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(CLASSES_TABLE_CREATE);
