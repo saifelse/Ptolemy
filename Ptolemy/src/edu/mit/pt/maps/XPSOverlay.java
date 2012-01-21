@@ -26,7 +26,7 @@ public class XPSOverlay extends Overlay {
 		dir = 0;
 	}
 	public void setBearing(double bearing) {
-		Log.v(Config.TAG, "bearing: "+bearing);
+		//Log.v(Config.TAG, "bearing: "+bearing);
 		dir = bearing;
 		mapView.postInvalidate();
 	}
