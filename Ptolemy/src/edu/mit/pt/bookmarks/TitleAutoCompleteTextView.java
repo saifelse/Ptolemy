@@ -7,11 +7,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 import edu.mit.pt.R;
 import edu.mit.pt.classes.MITClassTable;
 import edu.mit.pt.data.Place;
@@ -46,28 +47,34 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 		this.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				activity.changeType(BookmarkType.LECTURE, false);
-				
+
 				Cursor c = (Cursor) parent.getItemAtPosition(position);
-				String room = c.getString(c.getColumnIndex(MITClassTable.COLUMN_ROOM));
+				String room = c.getString(c
+						.getColumnIndex(MITClassTable.COLUMN_ROOM));
 				Place place = Place.getPlace(activity, room);
 				activity.setPlace(place, false);
+				InputMethodManager imm = (InputMethodManager) activity
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(getWindowToken(), 0);
 			}
 		});
 	}
 
 	private class CourseAdapter extends CursorAdapter {
-		
+
 		public CourseAdapter(Context context, Cursor c) {
 			super(context, c);
 		}
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			String mitId = cursor.getString(cursor.getColumnIndex(MITClassTable.COLUMN_MITID));
-			String fullName = cursor.getString(cursor.getColumnIndex(MITClassTable.COLUMN_NAME));
+			String mitId = cursor.getString(cursor
+					.getColumnIndex(MITClassTable.COLUMN_MITID));
+			String fullName = cursor.getString(cursor
+					.getColumnIndex(MITClassTable.COLUMN_NAME));
 			TextView text = (TextView) view.findViewById(R.id.autocompleteText);
 			text.setText(mitId + " (" + fullName + ")");
 		}
@@ -76,28 +83,32 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View v = inflater.inflate(R.layout.bookmark_text_autocomplete, null);
+			View v = inflater
+					.inflate(R.layout.bookmark_text_autocomplete, null);
 			return v;
 		}
-		
+
 		@Override
 		public CharSequence convertToString(Cursor cursor) {
-			return cursor.getString(cursor.getColumnIndex(MITClassTable.COLUMN_MITID));
+			return cursor.getString(cursor
+					.getColumnIndex(MITClassTable.COLUMN_MITID));
 		}
-		
+
 		@Override
 		public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-	        String filter = "";
-	        if (constraint != null) {
-	        	filter = constraint.toString();
-	        }
+			String filter = "";
+			if (constraint != null) {
+				filter = constraint.toString();
+			}
 
 			Cursor c = db.query(MITClassTable.CLASSES_TABLE_NAME, new String[] {
 					MITClassTable.COLUMN_ID, MITClassTable.COLUMN_MITID,
 					MITClassTable.COLUMN_NAME, MITClassTable.COLUMN_ROOM },
-					MITClassTable.COLUMN_MITID + " LIKE ? || '%'", new String[] { filter }, null, null, MITClassTable.COLUMN_MITID, "20");
-	        return c;
-	    }
+					MITClassTable.COLUMN_MITID + " LIKE ? || '%'",
+					new String[] { filter }, null, null,
+					MITClassTable.COLUMN_MITID, "20");
+			return c;
+		}
 
 	}
 

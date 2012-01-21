@@ -61,7 +61,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="3dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginTop="1dp"
                 android:layout_toLeftOf="@+id/buttonLogin"
                 android:background="@drawable/pick_place_bg"
