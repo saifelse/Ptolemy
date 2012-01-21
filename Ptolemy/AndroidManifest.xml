@@ -69,9 +69,5 @@
         <activity android:name=".courses.AddClassActivity" >
         </activity>
     </application>
-    <instrumentation
-        android:name="android.test.InstrumentationTestRunner"
-        android:label="Tests for Ptolemy"
-        android:targetPackage="edu.mit.pt" />
 
 </manifest>

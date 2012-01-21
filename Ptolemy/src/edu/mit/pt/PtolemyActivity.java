@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import edu.mit.pt.location.WifiLocation;
 import edu.mit.pt.maps.LocationSetter;
 import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.maps.XPSOverlay;
@@ -18,6 +19,8 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        WifiLocation w = new WifiLocation(this);
+        w.scanResults();
     }
     
     public void onPause(){
