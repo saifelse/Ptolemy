@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import edu.mit.pt.location.AP;
 import edu.mit.pt.location.WifiLocation;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.PtolemyOpenHelper;
@@ -23,8 +24,10 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        WifiLocation w = new WifiLocation(this);
-        w.scanResults();
+        //WifiLocation w = new WifiLocation(this);
+        //w.scanResults();
+        SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+        new AP.APLoader(db).execute(this);
     }
     /*
     public void onPause(){

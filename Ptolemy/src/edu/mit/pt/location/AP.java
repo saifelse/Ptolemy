@@ -1,26 +1,18 @@
 package edu.mit.pt.location;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
-import edu.mit.pt.classes.MITClass;
-import edu.mit.pt.data.PlacesTable;
 
 public class AP {
 
@@ -37,13 +29,17 @@ public class AP {
 			BufferedReader reader = new BufferedReader(isr);
 			reader.readLine(); //first line
 			String line = null;
+			db.beginTransaction();
 			while ((line = reader.readLine()) != null) {
 				String[] splitLine = line.split(",");
 				if (splitLine.length != 2)
 					continue;
-				String name = splitLine[0].trim();
+				String location = splitLine[0].trim();
 				String bssid = splitLine[1].trim();
+				if (addAP(location, bssid, db))
+					count++;
 			}
+			db.endTransaction();
 		} catch (Exception e) {
 			System.out.println("EXCEPTION");
 		}
@@ -51,7 +47,20 @@ public class AP {
 		
 	}
 	
-	public class APLoader extends AsyncTask<Context, Integer, Integer>{
+	private static boolean addAP(String location, String bssid, SQLiteDatabase db) {
+		ContentValues cv = new ContentValues();;
+		cv.put(APTable.COLUMN_LOCATION, location);
+		cv.put(APTable.COLUMN_BSSID, bssid);
+		try {
+			db.insertOrThrow(APTable.AP_TABLE_NAME, null, cv);
+			return true;
+		} catch (SQLException e) {
+			Log.v(Config.TAG, "Couldn't insert. " + e.getMessage());
+		}
+		return false;
+	}
+
+	public static class APLoader extends AsyncTask<Context, Integer, Integer>{
 		private SQLiteDatabase db;
 		public APLoader(SQLiteDatabase db){
 			super();
