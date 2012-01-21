@@ -6,18 +6,19 @@ import android.util.Log;
 
 public class MITClassTable {
 
-	static final String CLASSES_TABLE_NAME = "classes";
-	static final String COLUMN_ID = "_id";
-	static final String COLUMN_MITID = "mitid";
-	static final String COLUMN_TERM = "term";
-	static final String COLUMN_NAME = "name";
-	static final String COLUMN_PLACEID = "place_id";
+	public static final String CLASSES_TABLE_NAME = "classes";
+	public static final String COLUMN_ID = "_id";
+	public static final String COLUMN_MITID = "mitid";
+	public static final String COLUMN_TERM = "term";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_PLACEID = "place_id";
 
 	private static final String CLASSES_TABLE_CREATE = "CREATE TABLE "
 			+ CLASSES_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_MITID
 			+ " TEXT not null, " + COLUMN_TERM + " TEXT not null, "
-			+ COLUMN_NAME + " TEXT not null, " + COLUMN_PLACEID + " INTEGER);";
+			+ COLUMN_NAME + " TEXT not null, " + COLUMN_PLACEID + " INTEGER);" +
+					"INSERT INTO classes (mitid, term, name, place_id) VALUES ('6.006', 'fa11', 'Algorithms', '1');";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(CLASSES_TABLE_CREATE);
