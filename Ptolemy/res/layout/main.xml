@@ -9,11 +9,11 @@
         layout="@layout/menu_home" />
 
     <Button
-        android:id="@+id/ButtonSkyhookLaunch"
+        android:id="@+id/ButtonMITClassLaunch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="launchSkyhook"
-        android:text="@string/launch_skyhook" />
+        android:onClick="loadClasses"
+        android:text="@string/launch_mitclasses" />
 
     <Button
         android:id="@+id/ButtonLaunchMap"

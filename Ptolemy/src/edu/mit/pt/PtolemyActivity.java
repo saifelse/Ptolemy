@@ -3,10 +3,14 @@ package edu.mit.pt;
 import com.google.android.maps.MapView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import edu.mit.pt.classes.MITClass;
+import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.LocationSetter;
 import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.maps.XPSOverlay;
@@ -19,20 +23,21 @@ public class PtolemyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     }
-    
+    /*
     public void onPause(){
     	LocationSetter.pause();
     }
     public void onResume(){
     	LocationSetter.resume();	
+    }*/
+    
+    public void loadClasses(View view){
+    	SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+    	new MITClass.MITClassLoader(db).execute(new Context[]{this});
     }
-    
-    
     public void launchTouchstoneLogin(View view){
     	Intent i = new Intent(this, PrepopulateActivity.class);
     	startActivityForResult(i, REQUEST_MOIRA);
-    }
-    public void launchSkyhook(View view){
     }
     public void launchPtolemyMap(View view){
     	Intent i = new Intent(this, PtolemyMapActivity.class);
