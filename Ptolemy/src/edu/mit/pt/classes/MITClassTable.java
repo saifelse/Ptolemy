@@ -24,7 +24,8 @@ public class MITClassTable {
 		db.execSQL(CLASSES_TABLE_CREATE);
 	}
 
-	public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public static void onUpgrade(SQLiteDatabase db, int oldVersion,
+			int newVersion) {
 		Log.w(PtolemyOpenHelper.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
