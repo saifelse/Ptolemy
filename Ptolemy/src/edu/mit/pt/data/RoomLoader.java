@@ -101,6 +101,10 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 //			OverlayItem overlayItem = new OverlayItem(point, p.getName(), "");
 //			params[0].addOverlay(overlayItem);
 //			
+			if (p.getName() == null) {
+				System.out.println("ROOM IS NULL!");
+				continue;
+			}
 			values.put(PlacesTable.COLUMN_NAME, p.getName());
 			values.put(PlacesTable.COLUMN_LAT, p.getLatE6());
 			values.put(PlacesTable.COLUMN_LON, p.getLonE6());

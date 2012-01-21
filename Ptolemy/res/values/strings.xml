@@ -39,4 +39,6 @@
 
     <string name="type_button_empty">></string>
 
+    <string name="wifiLocalizerStart">Start WIFI Localizer</string>
+
 </resources>

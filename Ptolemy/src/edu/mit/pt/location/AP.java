@@ -7,15 +7,37 @@ import java.io.Reader;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.AsyncTask;
 import android.util.Log;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.data.PlacesTable;
 
 public class AP {
 
+	public static String getAPLocation(String bssid, SQLiteDatabase database) {
+		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+		
+		queryBuilder.setTables(APTable.AP_TABLE_NAME);
+		
+		queryBuilder.appendWhere(APTable.COLUMN_BSSID + " = '" + bssid + "'");
+		
+		//SQLiteDatabase database = db.getReadableDatabase();
+		Cursor cursor = queryBuilder.query(database, null, null,
+				null, null, null, null);
+				
+		System.out.println(cursor.getCount() + " ssids found");
+		if (cursor.getCount() == 0)
+			return "";
+		int locationIndex = cursor.getColumnIndex(APTable.COLUMN_LOCATION);
+		cursor.moveToFirst();
+		return cursor.getString(locationIndex);
+	}
+	
 	public static Integer loadAPs(Context context, SQLiteDatabase db) {
 		// Delete all rows
 		db.delete(APTable.AP_TABLE_NAME, "", new String[] {});
@@ -39,6 +61,7 @@ public class AP {
 				if (addAP(location, bssid, db))
 					count++;
 			}
+			db.setTransactionSuccessful();
 			db.endTransaction();
 		} catch (Exception e) {
 			System.out.println("EXCEPTION");

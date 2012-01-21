@@ -60,6 +60,8 @@
         </activity>
         <activity android:name=".bookmarks.AddBookmarkActivity" >
         </activity>
+        <activity android:name=".location.WifiDisplayActivity" >
+        </activity>
 
         <provider
             android:name="edu.mit.pt.data.PlacesContentProvider"

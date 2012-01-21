@@ -2,28 +2,30 @@ package edu.mit.pt.bookmarks;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.MapActivity;
 
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.data.PtolemyOpenHelper;
 
 public class AddBookmarkActivity extends MapActivity {
 
 	private BookmarkType type = BookmarkType.OTHER;
+	private SQLiteDatabase db;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.v(Config.TAG, "ADDBOOKMARKACTIVITY CREATE");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_bookmark);
 		ActionBar.setTitle(this, "Add Bookmark");
@@ -54,20 +56,12 @@ public class AddBookmarkActivity extends MapActivity {
 			}
 		});
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
+
 		// Autocomplete on title.
-		TextView titleView = (TextView) findViewById(R.id.editBookmarkTitle);
-		titleView.setOnKeyListener(new OnKeyListener() {
-			
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				Toast toast = Toast.makeText(v.getContext(), "" + keyCode, 2000);
-				toast.show();
-				return false;
-			}
-		});
+		TitleAutoCompleteTextView autoComplete = (TitleAutoCompleteTextView) findViewById(R.id.editBookmarkTitle);
+		db = new PtolemyOpenHelper(this).getReadableDatabase();
+		autoComplete.setup(db);
 	}
-	
-	
 
 	private void changeType(BookmarkType newType) {
 		type = newType;
@@ -78,5 +72,11 @@ public class AddBookmarkActivity extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		db.close();
 	}
 }
