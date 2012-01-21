@@ -10,7 +10,7 @@ public class BookmarksOpenHelper extends SQLiteOpenHelper {
 	static final String BOOKMARKS_TABLE_NAME = "bookmarks";
 	static final String COLUMN_ID = "_id";
 	static final String COLUMN_NAME = "customName";
-	static final String COLUMN_PLACE = "place";
+	static final String COLUMN_PLACE_ID = "place";
 	static final String COLUMN_TYPE = "type";
 
 	public BookmarksOpenHelper(Context context) {
@@ -20,7 +20,7 @@ public class BookmarksOpenHelper extends SQLiteOpenHelper {
 	private static final String PLACES_TABLE_CREATE = "CREATE TABLE "
 			+ BOOKMARKS_TABLE_NAME + " (" + COLUMN_ID + " integer primary key autoincrement, " +
 			COLUMN_NAME + " TEXT not null, " +
-			COLUMN_PLACE + " INTEGER, " +
+			COLUMN_PLACE_ID + " INTEGER, " +
 			COLUMN_TYPE + " TEXT);";
 
 	@Override

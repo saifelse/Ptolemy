@@ -20,18 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <EditText
+            <edu.mit.pt.bookmarks.TitleAutoCompleteTextView
                 android:id="@+id/editBookmarkTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/typeButton"
-                android:singleLine="true"
-                android:hint="@string/class_title_hint" >
-
-                <requestFocus />
-            </EditText>
+                android:hint="@string/class_title_hint"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/typeButton"
@@ -65,13 +62,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
+                android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/buttonLogin"
                 android:background="@drawable/pick_place_bg"
                 android:gravity="center_vertical"
+                android:paddingLeft="16dp"
                 android:text="@string/pick_place_hint"
                 android:textColor="#666"
-                android:paddingLeft="16dp"
-                android:layout_marginRight="8dp"
                 android:textSize="16dp" />
 
             <ImageButton
@@ -87,8 +84,8 @@
         <edu.mit.pt.maps.PtolemyMapView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:apiKey="@string/map_key" >
         </edu.mit.pt.maps.PtolemyMapView>
     </LinearLayout>

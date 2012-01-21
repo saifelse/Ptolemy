@@ -124,9 +124,6 @@ public class PtolemyMapView extends MapView {
 				return;
 			}
 
-			Log.v(Config.TAG,
-					"Drawing! MapZoomLevel is " + mapView.getZoomLevel());
-
 			int tileSize = GoogleTileCalculator.computeTileSize(mapView, zoomLevel);
 
 			GeoPoint topleftGeoPoint = mapView.getProjection().fromPixels(0, 0);
@@ -137,7 +134,7 @@ public class PtolemyMapView extends MapView {
 			double googleY = GoogleTileCalculator.computeGoogleY(topleftGeoPoint.getLatitudeE6(),
 					zoomLevel);
 
-			Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + "@" + zoomLevel + " (" + topleftGeoPoint.toString() + ")");
+			//Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + "@" + zoomLevel + " (" + topleftGeoPoint.toString() + ")");
 
 			// Tile[X/Y] is integer part of google[X/Y].
 			int tileX = (int) googleX;
@@ -174,9 +171,6 @@ public class PtolemyMapView extends MapView {
 				numRows = pNumRows;
 				numColumns = pNumColumns;
 			}
-
-			Log.v(Config.TAG, "Drawing tiles (" + numRows + "x" + numColumns
-					+ "), tileSize: " + tileSize);
 
 			for (int row = 0; row < numRows + 1; row++) {
 				for (int col = 0; col < numColumns + 1; col++) {
