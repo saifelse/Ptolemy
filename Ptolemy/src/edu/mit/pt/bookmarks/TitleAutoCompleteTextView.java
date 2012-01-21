@@ -7,16 +7,20 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import edu.mit.pt.R;
 import edu.mit.pt.classes.MITClassTable;
+import edu.mit.pt.data.Place;
 
 public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 
 	Context ctx;
 	SQLiteDatabase db;
+	AddBookmarkActivity activity;
 
 	public TitleAutoCompleteTextView(Context context) {
 		super(context);
@@ -34,10 +38,24 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 		this.ctx = context;
 	}
 
-	void setup(SQLiteDatabase db) {
+	void setup(SQLiteDatabase db, final AddBookmarkActivity activity) {
 		CourseAdapter adapter = new CourseAdapter(ctx, null);
 		this.setAdapter(adapter);
 		this.db = db;
+		this.activity = activity;
+		this.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				activity.changeType(BookmarkType.LECTURE, false);
+				
+				Cursor c = (Cursor) parent.getItemAtPosition(position);
+				String room = c.getString(c.getColumnIndex(MITClassTable.COLUMN_ROOM));
+				Place place = Place.getPlace(activity, room);
+				activity.setPlace(place, false);
+			}
+		});
 	}
 
 	private class CourseAdapter extends CursorAdapter {

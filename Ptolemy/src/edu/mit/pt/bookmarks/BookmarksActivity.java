@@ -17,6 +17,8 @@ import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
 
 public class BookmarksActivity extends ListActivity {
+	
+	ArrayAdapter<Bookmark> adapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class BookmarksActivity extends ListActivity {
 			}
 		});
 
-		ArrayAdapter<Bookmark> adapter = new ArrayAdapter<Bookmark>(this,
+		adapter = new ArrayAdapter<Bookmark>(this,
 				R.layout.bookmark_list_item) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -70,6 +72,12 @@ public class BookmarksActivity extends ListActivity {
 		};
 
 		setListAdapter(adapter);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		adapter.clear();
 		for (Bookmark b : Bookmark.getBookmarks(this)) {
 			adapter.add(b);
 		}
