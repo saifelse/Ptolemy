@@ -43,13 +43,13 @@ public class Bookmark {
 		Cursor cursor = db.query(BookmarksOpenHelper.BOOKMARKS_TABLE_NAME,
 				new String[] { BookmarksOpenHelper.COLUMN_ID,
 						BookmarksOpenHelper.COLUMN_NAME,
-						BookmarksOpenHelper.COLUMN_PLACE,
+						BookmarksOpenHelper.COLUMN_PLACE_ID,
 						BookmarksOpenHelper.COLUMN_TYPE }, null, null, null,
 				null, null);
 		List<Bookmark> bookmarks = new ArrayList<Bookmark>();
 		int idIndex = cursor.getColumnIndex(BookmarksOpenHelper.COLUMN_ID);
 		int customNameIndex = cursor.getColumnIndex(BookmarksOpenHelper.COLUMN_NAME);
-		int placeIndex = cursor.getColumnIndex(BookmarksOpenHelper.COLUMN_PLACE);
+		int placeIndex = cursor.getColumnIndex(BookmarksOpenHelper.COLUMN_PLACE_ID);
 		int typeIndex = cursor.getColumnIndex(BookmarksOpenHelper.COLUMN_TYPE);
 		for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 			int id = cursor.getInt(idIndex);

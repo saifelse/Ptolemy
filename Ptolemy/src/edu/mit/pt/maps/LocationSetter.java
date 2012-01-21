@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.Overlay;
 import com.skyhookwireless.wps.RegistrationCallback;
 import com.skyhookwireless.wps.WPSAuthentication;
 import com.skyhookwireless.wps.WPSContinuation;

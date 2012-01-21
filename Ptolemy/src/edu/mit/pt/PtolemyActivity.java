@@ -1,7 +1,5 @@
 package edu.mit.pt;
 
-import com.google.android.maps.MapView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.PtolemyOpenHelper;
-import edu.mit.pt.maps.LocationSetter;
 import edu.mit.pt.maps.PtolemyMapActivity;
-import edu.mit.pt.maps.XPSOverlay;
 
 public class PtolemyActivity extends Activity {
 	final static int REQUEST_MOIRA = 1;

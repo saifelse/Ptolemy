@@ -7,35 +7,30 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.pt.Config;
-
-import edu.mit.pt.R;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
+import edu.mit.pt.Config;
+import edu.mit.pt.R;
 
 public class MITClass {
-	private static boolean addClass(String id, String term, String name,
+	private static void addClass(String id, String term, String name,
 			String room, SQLiteDatabase db) {
 		ContentValues cv = new ContentValues();
 		cv.put(MITClassTable.COLUMN_MITID, id);
 		cv.put(MITClassTable.COLUMN_TERM, term);
 		cv.put(MITClassTable.COLUMN_NAME, name);
 		cv.put(MITClassTable.COLUMN_ROOM, room);
-		try {
-			db.insertOrThrow(MITClassTable.CLASSES_TABLE_NAME, null, cv);
-			return true;
-		} catch (SQLException e) {
-			Log.v(Config.TAG, "Couldn't insert. " + e.getMessage());
-		}
-		return false;
+		db.insertOrThrow(MITClassTable.CLASSES_TABLE_NAME, null, cv);
 	}
 
 	private static String readJSON(Context context, int resource)
@@ -79,23 +74,26 @@ public class MITClass {
 			return 0;
 		}
 		db.beginTransaction();
-		for (int i = 0; i < classes.length(); i++) {
-			String mitID, term, room, name;
-			try {
-				JSONObject c = classes.getJSONObject(i);
-				mitID = c.getString("id");
-				term = c.getString("term");
-				room = c.getString("room");
-				name = c.getString("name");
-			} catch (JSONException e) {
-				Log.v(Config.TAG, "Error: Couldn't parse element " + i
-						+ " in classes.json");
-				continue;
+		try {
+			for (int i = 0; i < classes.length(); i++) {
+				String mitID, term, room, name;
+				try {
+					JSONObject c = classes.getJSONObject(i);
+					mitID = c.getString("id");
+					term = c.getString("term");
+					room = c.getString("room");
+					name = c.getString("name");
+					addClass(mitID, term, name, room, db);
+				} catch (JSONException e) {
+					Log.v(Config.TAG, "Error: Couldn't parse element " + i
+							+ " in classes.json");
+				}
 			}
-			if (addClass(mitID, term, name, room, db))
-				count++;
+			db.setTransactionSuccessful();
+		} finally {
+			// TODO: expose to UI if error occurred. quit?
+			db.endTransaction();
 		}
-		db.endTransaction();
 		return count;
 	}
 
@@ -107,6 +105,7 @@ public class MITClass {
 			super();
 			this.db = db;
 		}
+
 		@Override
 		protected Integer doInBackground(Context... context) {
 			return MITClass.loadClasses(context[0], db);
