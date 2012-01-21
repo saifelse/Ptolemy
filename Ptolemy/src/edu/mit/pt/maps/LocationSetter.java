@@ -123,7 +123,7 @@ public class LocationSetter {
 
 					public WPSContinuation handleWPSPeriodicLocation(
 							final WPSLocation loc) {
-						Log.v(Config.TAG + "_xps", loc.getLatitude()+", "+loc.getLongitude());
+						//Log.v(Config.TAG + "_xps", loc.getLatitude()+", "+loc.getLongitude());
 						handleLocation(loc.getLatitude(),
 								loc.getLongitude(), loc.getAltitude());
 						/*
