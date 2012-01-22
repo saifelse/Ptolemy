@@ -10,6 +10,9 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+	
+	OnTapListener tapListener;
+	
 	private List<OverlayItem> pOverlays = Collections
 			.synchronizedList(new ArrayList<OverlayItem>());
 
@@ -19,8 +22,8 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();
 	}
 
-	public void addOverlay(OverlayItem overlay) {
-		pOverlays.add(overlay);
+	public void addOverlayItem(OverlayItem overlayItem) {
+		pOverlays.add(overlayItem);
 		populate();
 	}
 
@@ -34,6 +37,16 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public int size() {
 		return pOverlays.size();
+	}
+	
+	public void setOnTapListener(OnTapListener listener) {
+		this.tapListener = listener;
+	}
+	
+	@Override
+	public boolean onTap(int index) {
+		// TODO need to implement.
+		return true;
 	}
 
 }

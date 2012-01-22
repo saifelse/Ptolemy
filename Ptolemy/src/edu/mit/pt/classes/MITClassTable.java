@@ -14,7 +14,7 @@ public class MITClassTable {
 	public static final String COLUMN_ROOM = "room";
 
 
-	private static final String CLASSES_TABLE_CREATE = "CREATE TABLE "
+	public static final String CLASSES_TABLE_CREATE = "CREATE TABLE "
 			+ CLASSES_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_MITID
 			+ " TEXT not null, " + COLUMN_TERM + " TEXT not null, "

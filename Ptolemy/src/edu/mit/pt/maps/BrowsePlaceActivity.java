@@ -12,6 +12,7 @@ import com.google.android.maps.MapActivity;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
+import edu.mit.pt.data.Classroom;
 import edu.mit.pt.data.Place;
 
 public class BrowsePlaceActivity extends MapActivity {
@@ -59,7 +60,7 @@ public class BrowsePlaceActivity extends MapActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO: replace with actually getting a place.
-				setPlace(new Place(0, "6-120", 42000000, -71000000));
+				setPlace(new Classroom(0, "6-120", 42000000, -71000000));
 				finish();
 			}
 		});
