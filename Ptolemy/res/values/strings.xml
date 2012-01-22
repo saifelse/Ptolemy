@@ -38,5 +38,6 @@
     </string-array>
 
     <string name="type_button_empty">></string>
+    <string name="enter_title">Enter a title!</string>
 
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/nav"
+        layout="@layout/menu_nav" />
+
+    <edu.mit.pt.maps.PtolemyMapView
+        android:id="@+id/mapview"
+        android:layout_below="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:apiKey="@string/map_key"
+        android:layout_above="@+id/backToAddTitle"
+        android:clickable="true" />
+    
+    <Button android:id="@+id/backToAddTitle"
+        style="@style/BlueButton"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/enter_title" />
+
+</RelativeLayout>

@@ -1,101 +1,55 @@
 package edu.mit.pt;
 
-import java.util.List;
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-
-import com.google.android.maps.Overlay;
-
-import edu.mit.pt.bookmarks.BookmarksActivity;
-import edu.mit.pt.data.Place;
-import edu.mit.pt.data.RoomLoader;
-import edu.mit.pt.maps.LocationSetter;
-import edu.mit.pt.maps.PlacesItemizedOverlay;
+import android.widget.TextView;
+import edu.mit.pt.classes.MITClass;
+import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.PtolemyMapActivity;
-import edu.mit.pt.maps.XPSOverlay;
 
-public class PtolemyActivity extends PtolemyMapActivity {
-
-	private final String ACTIVITY_TITLE = "Ptolemy";
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		List<Overlay> mapOverlays = super.mapView.getOverlays();
-		// TODO: change blue arrow
-		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.arrow_up_blue);
-		super.placesItemizedOverlay = new PlacesItemizedOverlay(drawable);
-		mapOverlays.add(placesItemizedOverlay);
-
-		// load rooms
-		RoomLoader roomLoader = new RoomLoader(this);
-		roomLoader.execute(placesItemizedOverlay);
-
-		ActionBar.setTitle(this, ACTIVITY_TITLE);
-
-		// Set up meOverlay:
-		// Show user
-		XPSOverlay meOverlay = new XPSOverlay(mapView);
-		mapView.getOverlays().add(meOverlay);
-
-		// Start Location data
-		String skyhookUsername = getString(R.string.skyhook_username);
-		String skyhookRealm = getString(R.string.skyhook_realm);
-
-		LocationSetter.init(this, skyhookUsername, skyhookRealm, meOverlay);
-		LocationSetter.resume();
-
-		ImageButton compassButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
-		compassButton.setImageResource(R.drawable.ic_menu_compass);
-		compassButton.setContentDescription(getString(R.string.centre));
-		compassButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mapView.getController().animateTo(LocationSetter.getPoint());
-			}
-		});
-
-		ImageButton searchButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
-		searchButton.setImageResource(R.drawable.ic_menu_search);
-		searchButton.setContentDescription(getString(R.string.search));
-		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSearchRequested();
-			}
-		});
-
-		ImageButton bookmarksButton = (ImageButton) getLayoutInflater()
-				.inflate(R.layout.menu_nav_button, null);
-		bookmarksButton.setImageResource(R.drawable.ic_menu_bookmark);
-		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
-		bookmarksButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSearchRequested();
-				startActivity(new Intent(v.getContext(),
-						BookmarksActivity.class));
-			}
-		});
-
-		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
-				bookmarksButton });
-
-	}
-
-	@Override
-	public void onMarkerSelected(Place p) {
-		// TODO Auto-generated method stub
-
-	}
-
+public class PtolemyActivity extends Activity {
+	final static int REQUEST_MOIRA = 1;
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+    }
+    /*
+    public void onPause(){
+    	LocationSetter.pause();
+    }
+    public void onResume(){
+    	LocationSetter.resume();	
+    }*/
+    
+    public void loadClasses(View view){
+    	SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+    	new MITClass.MITClassLoader(db).execute(new Context[]{this});
+    }
+    public void launchTouchstoneLogin(View view){
+    	Intent i = new Intent(this, PrepopulateActivity.class);
+    	startActivityForResult(i, REQUEST_MOIRA);
+    }
+    public void launchPtolemyMap(View view){
+    	Intent i = new Intent(this, PtolemyMapActivity.class);
+    	startActivity(i);
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    	switch(requestCode){
+    	case REQUEST_MOIRA:
+    		if(resultCode == RESULT_OK){
+    			TextView classText = (TextView) findViewById(R.id.SelectedClasses);
+    			classText.setText("");
+    			String[] classes = (String[])data.getExtras().get(ClassDataIntent.CLASSES);
+    			for(String classname : classes){
+    				classText.append(classname+"\n");
+    			}
+    		}
+    	}
+    }
 }
