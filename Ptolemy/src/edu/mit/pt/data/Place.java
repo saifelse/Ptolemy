@@ -103,11 +103,15 @@ abstract public class Place implements Parcelable {
 					tc.moveToFirst();
 					gender = GenderEnum.values()[tc.getInt(tc.getColumnIndex(ToiletMetaTable.COLUMN_TYPE))];
 				}else{
-					Log.v(Config.TAG, tc.getCount()+" entries found for Toilet id "+id+". Expected 1 entry.");
+					Log.v(Config.TAG, tc.getCount()+" entries found for Toilet id "+id+". Expected 1 entry. Defaulting to BOTH.");
 					gender = GenderEnum.BOTH;
 				}
 				p = new Toilet(id, name, latE6, lonE6, gender);
 				break;
+			case FOUNTAIN:
+				p = new Fountain(id, name, latE6, lonE6);
+			case CLUSTER:
+				p = new Athena(id, name, latE6, lonE6);
 			default:
 				continue;
 			}
