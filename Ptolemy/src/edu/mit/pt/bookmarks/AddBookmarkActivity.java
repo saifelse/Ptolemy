@@ -21,6 +21,7 @@ import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.BrowsePlaceActivity;
+import edu.mit.pt.maps.PtolemyMapView;
 
 public class AddBookmarkActivity extends MapActivity {
 
@@ -29,7 +30,7 @@ public class AddBookmarkActivity extends MapActivity {
 	private Place place;
 	private boolean userHasEditedType = false;
 	private boolean userHasEditedPlace = false;
-	
+
 	public final static String CUSTOM_NAME = "customName";
 	public final static String PLACE = "place";
 	private final int BROWSE_REQUEST = 1;
@@ -88,27 +89,31 @@ public class AddBookmarkActivity extends MapActivity {
 	}
 
 	void setPlace(Place place, boolean byUser) {
-		if (!userHasEditedPlace || byUser) {
-			this.place = place;
-			Button placeButton = (Button) findViewById(R.id.pickedPlace);
-			Log.v(Config.TAG,
-					"Setting placeButton to have text " + place.getName());
-			placeButton.setText(place.getName());
-			placeButton.setTextColor(Color.parseColor("#111111"));
-			if (byUser) {
-				userHasEditedPlace = true;
-			}
+		if (userHasEditedPlace && !byUser) {
+			return;
+		}
+		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		mapView.getController().setCenter(place.getPoint());
+		
+		this.place = place;
+		Button placeButton = (Button) findViewById(R.id.pickedPlace);
+		Log.v(Config.TAG, "Setting placeButton to have text " + place.getName());
+		placeButton.setText(place.getName());
+		placeButton.setTextColor(Color.parseColor("#111111"));
+		if (byUser) {
+			userHasEditedPlace = true;
 		}
 	}
-	
+
 	public void pickPlace(View v) {
 		Intent intent = new Intent(this, BrowsePlaceActivity.class);
 		TextView customNameView = (TextView) findViewById(R.id.editBookmarkTitle);
 		String customName = customNameView.getText().toString();
 		intent.putExtra(CUSTOM_NAME, customName);
+		intent.putExtra(PLACE, place);
 		startActivityForResult(intent, BROWSE_REQUEST);
 	}
-	
+
 	public void addBookmark(View v) {
 		TextView autoComplete = (TextView) findViewById(R.id.editBookmarkTitle);
 		String customName = autoComplete.getText().toString();
@@ -118,7 +123,7 @@ public class AddBookmarkActivity extends MapActivity {
 		Bookmark.addBookmark(this, customName, place, type);
 		finish();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -126,7 +131,6 @@ public class AddBookmarkActivity extends MapActivity {
 			switch (resultCode) {
 			case RESULT_OK:
 				Place p = (Place) data.getParcelableExtra(PLACE);
-				Log.v(Config.TAG, "GOT RESULT! " + p.getName());
 				setPlace(p, true);
 				break;
 			}
