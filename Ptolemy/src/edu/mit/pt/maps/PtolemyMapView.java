@@ -68,17 +68,19 @@ public class PtolemyMapView extends MapView {
 		tm = new PtolemyTileManager(ctx);
 
 		// Load places.
-		List<Place> places = Place.getPlaces(ctx);
+		List<Place> places = Place.getPlacesExceptClassrooms(ctx);
 		Log.v(Config.TAG, "Setting up PtolemyMapView with " + places.size()
 				+ " places.");
-		Drawable defaultMarker = getResources().getDrawable(R.drawable.green_point);
+		Drawable defaultMarker = getResources().getDrawable(
+				R.drawable.green_point);
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
 		for (Place p : places) {
-			placesOverlay.addOverlayItem(p.getOverlayItem());
+			placesOverlay.addOverlayItem(new PlacesOverlayItem(getContext(), p, p
+					.getName(), p.getName()));
 		}
 		overlays.add(placesOverlay);
 	}
-	
+
 	public void setOnTapListener(OnTapListener listener) {
 		placesOverlay.setOnTapListener(listener);
 	}
@@ -189,7 +191,7 @@ public class PtolemyMapView extends MapView {
 				numRows = pNumRows;
 				numColumns = pNumColumns;
 			}
-			
+
 			for (int row = 0; row < numRows + 1; row++) {
 				for (int col = 0; col < numColumns + 1; col++) {
 

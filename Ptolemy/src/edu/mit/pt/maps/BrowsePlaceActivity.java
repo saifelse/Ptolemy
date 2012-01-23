@@ -1,5 +1,6 @@
 package edu.mit.pt.maps;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -54,6 +55,8 @@ public class BrowsePlaceActivity extends MapActivity {
 			Button nameButton = (Button) findViewById(R.id.backToAddTitle);
 			nameButton.setText(customName);
 		}
+		
+		final Activity activity = this;
 		
 		findViewById(R.id.backToAddTitle).setOnClickListener(new OnClickListener() {
 			

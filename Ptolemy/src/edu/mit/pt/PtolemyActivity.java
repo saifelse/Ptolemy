@@ -69,7 +69,7 @@ public class PtolemyActivity extends Activity {
 		}
 		
 		// Insert test data.
-		Place.addPlace(view.getContext(), "38-501", 42361130, -71092296, PlaceType.CLASSROOM);
+		Place.addPlace(view.getContext(), "Toilet (male)", 42361130, -71092296, PlaceType.TOILET);
 		
 		db.close();
 		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "

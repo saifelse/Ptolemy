@@ -20,7 +20,6 @@ abstract public class Place implements Parcelable {
 	int lonE6;
 	String name;
 
-
 	public Place(int id, String name, int latE6, int lonE6) {
 		this.id = id;
 		this.name = name;
@@ -50,10 +49,6 @@ abstract public class Place implements Parcelable {
 
 	abstract public PlaceType getPlaceType();
 	
-	public PlacesOverlayItem getOverlayItem() {
-		return new PlacesOverlayItem(this, name, name);
-	}
-	
 	abstract public Drawable getMarker(Context context);
 
 	public static Place getPlace(Context context, int id) {
@@ -78,8 +73,7 @@ abstract public class Place implements Parcelable {
 		db.close();
 	}
 
-	// TODO: modify this to not show classrooms (and change method name)
-	public static List<Place> getPlaces(Context context) {
+	public static List<Place> getPlacesExceptClassrooms(Context context) {
 		SQLiteDatabase db = new PtolemyOpenHelper(context)
 				.getReadableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
@@ -99,8 +93,8 @@ abstract public class Place implements Parcelable {
 			PlaceType type = PlaceType.valueOf(typeName);
 			Place p;
 			switch (type) {
-			case CLASSROOM:
-				p = new Classroom(id, name, latE6, lonE6);
+			case TOILET:
+				p = new Toilet(id, name, latE6, lonE6);
 				break;
 			default:
 				continue;
@@ -135,6 +129,8 @@ abstract public class Place implements Parcelable {
 			switch (type) {
 			case CLASSROOM:
 				return new Classroom(in);
+			case TOILET:
+				return new Toilet(in);
 				// TODO implement it for other abstract classes.
 			default:
 				return new Classroom(in);
