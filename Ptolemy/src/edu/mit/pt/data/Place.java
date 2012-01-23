@@ -11,8 +11,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
+
+import edu.mit.pt.Config;
 
 abstract public class Place implements Parcelable {
 	int id;
@@ -98,8 +101,22 @@ abstract public class Place implements Parcelable {
 			Place p;
 			switch (type) {
 			case TOILET:
-				p = new Toilet(id, name, latE6, lonE6);
+				// Determine gender
+				GenderEnum gender;
+				Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME, new String[]{ToiletMetaTable.COLUMN_TYPE}, "PLACE_ID=?", new String[]{Integer.toString(id)}, null, null, null);
+				if(tc.getCount() == 1){
+					tc.moveToFirst();
+					gender = GenderEnum.valueOf(tc.getString(tc.getColumnIndex(ToiletMetaTable.COLUMN_TYPE)));
+				}else{
+					Log.v(Config.TAG, tc.getCount()+" entries found for Toilet id "+id+". Expected 1 entry. Defaulting to BOTH.");
+					gender = GenderEnum.BOTH;
+				}
+				p = new Toilet(id, name, latE6, lonE6, gender);
 				break;
+			case FOUNTAIN:
+				p = new Fountain(id, name, latE6, lonE6);
+			case CLUSTER:
+				p = new Athena(id, name, latE6, lonE6);
 			default:
 				continue;
 			}
@@ -135,7 +152,10 @@ abstract public class Place implements Parcelable {
 				return new Classroom(in);
 			case TOILET:
 				return new Toilet(in);
-				// TODO implement it for other abstract classes.
+			case CLUSTER:
+				return new Athena(in);
+			case FOUNTAIN:
+				return new Fountain(in);
 			default:
 				return new Classroom(in);
 			}
