@@ -64,12 +64,23 @@ public class BrowsePlaceActivity extends MapActivity {
 				finish();
 			}
 		});
+
+		final PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		mapView.setOnTapListener(new OnTapListener() {
+			
+			@Override
+			public void onTap(Place p) {
+				mapView.getController().setCenter(p.getPoint());
+				setPlace(p);
+			}
+		});
 	}
 	
 	void setPlace(Place p) {
 		Intent data = new Intent();
 		data.putExtra(AddBookmarkActivity.PLACE, p);
 		setResult(RESULT_OK, data);
+		finish();
 	}
 
 	@Override

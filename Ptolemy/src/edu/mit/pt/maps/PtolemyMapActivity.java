@@ -101,6 +101,7 @@ public class PtolemyMapActivity extends MapActivity {
 
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
+		
 	}
 
 	/*

@@ -36,6 +36,7 @@ public class PtolemyMapView extends MapView {
 	private int pNumColumns = 3;
 	private boolean pinchZoom = false;
 	private PtolemyTileManager tm;
+	private PlacesItemizedOverlay placesOverlay;
 
 	public PtolemyMapView(Context context, String key) {
 		super(context, key);
@@ -71,11 +72,15 @@ public class PtolemyMapView extends MapView {
 		Log.v(Config.TAG, "Setting up PtolemyMapView with " + places.size()
 				+ " places.");
 		Drawable defaultMarker = getResources().getDrawable(R.drawable.green_point);
-		PlacesItemizedOverlay placeOverlay = new PlacesItemizedOverlay(defaultMarker);
+		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
 		for (Place p : places) {
-			placeOverlay.addOverlayItem(p.getOverlayItem());
+			placesOverlay.addOverlayItem(p.getOverlayItem());
 		}
-		overlays.add(placeOverlay);
+		overlays.add(placesOverlay);
+	}
+	
+	public void setOnTapListener(OnTapListener listener) {
+		placesOverlay.setOnTapListener(listener);
 	}
 
 	@Override

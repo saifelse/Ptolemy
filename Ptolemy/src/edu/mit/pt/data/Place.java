@@ -3,24 +3,16 @@ package edu.mit.pt.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.maps.GeoPoint;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
-import com.google.android.maps.Projection;
-
-import edu.mit.pt.R;
+import edu.mit.pt.maps.PlacesOverlayItem;
 
 abstract public class Place implements Parcelable {
 	int id;
@@ -47,6 +39,10 @@ abstract public class Place implements Parcelable {
 	public int getLonE6() {
 		return lonE6;
 	}
+	
+	public GeoPoint getPoint() {
+		return new GeoPoint(latE6, lonE6);
+	}
 
 	public String getName() {
 		return name;
@@ -54,8 +50,8 @@ abstract public class Place implements Parcelable {
 
 	abstract public PlaceType getPlaceType();
 	
-	public OverlayItem getOverlayItem() {
-		return new OverlayItem(new GeoPoint(latE6, lonE6), name, name);
+	public PlacesOverlayItem getOverlayItem() {
+		return new PlacesOverlayItem(this, name, name);
 	}
 	
 	abstract public Drawable getMarker(Context context);

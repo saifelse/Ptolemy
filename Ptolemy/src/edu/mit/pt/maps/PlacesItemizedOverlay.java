@@ -9,12 +9,14 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.mit.pt.data.Place;
+
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	
-	OnTapListener tapListener;
+	OnTapListener tapListener = null;
 	
-	private List<OverlayItem> pOverlays = Collections
-			.synchronizedList(new ArrayList<OverlayItem>());
+	private List<PlacesOverlayItem> pOverlayItems = Collections
+			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
 	public PlacesItemizedOverlay(Drawable defaultMarker) {
 		super(boundCenterBottom(defaultMarker));
@@ -22,8 +24,8 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();
 	}
 
-	public void addOverlayItem(OverlayItem overlayItem) {
-		pOverlays.add(overlayItem);
+	public void addOverlayItem(PlacesOverlayItem overlayItem) {
+		pOverlayItems.add(overlayItem);
 		populate();
 	}
 
@@ -31,12 +33,12 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	protected OverlayItem createItem(int i) {
 		// System.out.println("Size: " + size());
 		// System.out.println("i: " + i);
-		return pOverlays.get(i);
+		return pOverlayItems.get(i);
 	}
 
 	@Override
 	public int size() {
-		return pOverlays.size();
+		return pOverlayItems.size();
 	}
 	
 	public void setOnTapListener(OnTapListener listener) {
@@ -45,7 +47,10 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	@Override
 	public boolean onTap(int index) {
-		// TODO need to implement.
+		if (tapListener != null) {
+			Place p = pOverlayItems.get(index).getPlace();
+			tapListener.onTap(p);
+		}
 		return true;
 	}
 
