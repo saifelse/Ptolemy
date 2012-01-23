@@ -10,8 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
+
+import edu.mit.pt.Config;
 
 abstract public class Place implements Parcelable {
 	int id;
@@ -93,7 +96,17 @@ abstract public class Place implements Parcelable {
 			Place p;
 			switch (type) {
 			case TOILET:
-				p = new Toilet(id, name, latE6, lonE6);
+				// Determine gender
+				GenderEnum gender;
+				Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME, new String[]{ToiletMetaTable.COLUMN_TYPE}, "PLACE_ID=?", new String[]{Integer.toString(id)}, null, null, null);
+				if(tc.getCount() == 1){
+					tc.moveToFirst();
+					gender = GenderEnum.values()[tc.getInt(tc.getColumnIndex(ToiletMetaTable.COLUMN_TYPE))];
+				}else{
+					Log.v(Config.TAG, tc.getCount()+" entries found for Toilet id "+id+". Expected 1 entry.");
+					gender = GenderEnum.BOTH;
+				}
+				p = new Toilet(id, name, latE6, lonE6, gender);
 				break;
 			default:
 				continue;
