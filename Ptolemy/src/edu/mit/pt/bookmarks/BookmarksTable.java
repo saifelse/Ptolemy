@@ -5,13 +5,13 @@ import android.util.Log;
 import edu.mit.pt.data.PtolemyOpenHelper;
 
 public class BookmarksTable {
-	static final String BOOKMARKS_TABLE_NAME = "bookmarks";
+	public static final String BOOKMARKS_TABLE_NAME = "bookmarks";
 	static final String COLUMN_ID = "_id";
 	static final String COLUMN_NAME = "customName";
 	static final String COLUMN_PLACE_ID = "place";
 	static final String COLUMN_TYPE = "type";
 
-	private static final String BOOKMARKS_TABLE_CREATE = "CREATE TABLE "
+	public static final String BOOKMARKS_TABLE_CREATE = "CREATE TABLE "
 			+ BOOKMARKS_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_NAME
 			+ " TEXT not null, " + COLUMN_PLACE_ID + " INTEGER, " + COLUMN_TYPE

@@ -17,16 +17,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
-
-import edu.mit.pt.maps.PlacesItemizedOverlay;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import edu.mit.pt.maps.PlacesItemizedOverlay;
 
 public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> {
 	
@@ -50,7 +46,7 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 				JSONObject coords = rooms.getJSONObject(name);
 				int lat = coords.getInt("lat");
 				int lon = coords.getInt("lon");
-				Place room = new Place(name, lat, lon);
+				Place room = new Classroom(0, name, lat, lon);
 				roomSet.add(room);
 				Log.i(RoomLoader.class.getName(), roomList.getString(i));
 			}

@@ -1,101 +1,94 @@
 package edu.mit.pt;
 
-import java.util.List;
+import java.util.Arrays;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-
-import com.google.android.maps.Overlay;
-
-import edu.mit.pt.bookmarks.BookmarksActivity;
+import android.widget.TextView;
+import android.widget.Toast;
+import edu.mit.pt.bookmarks.BookmarksTable;
+import edu.mit.pt.classes.MITClass;
+import edu.mit.pt.classes.MITClassTable;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.data.RoomLoader;
-import edu.mit.pt.maps.LocationSetter;
-import edu.mit.pt.maps.PlacesItemizedOverlay;
+import edu.mit.pt.data.PlaceType;
+import edu.mit.pt.data.PlacesTable;
+import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.PtolemyMapActivity;
-import edu.mit.pt.maps.XPSOverlay;
 
-public class PtolemyActivity extends PtolemyMapActivity {
+public class PtolemyActivity extends Activity {
+	final static int REQUEST_MOIRA = 1;
 
-	private final String ACTIVITY_TITLE = "Ptolemy";
-
+	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		List<Overlay> mapOverlays = super.mapView.getOverlays();
-		// TODO: change blue arrow
-		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.arrow_up_blue);
-		super.placesItemizedOverlay = new PlacesItemizedOverlay(drawable);
-		mapOverlays.add(placesItemizedOverlay);
-
-		// load rooms
-		RoomLoader roomLoader = new RoomLoader(this);
-		roomLoader.execute(placesItemizedOverlay);
-
-		ActionBar.setTitle(this, ACTIVITY_TITLE);
-
-		// Set up meOverlay:
-		// Show user
-		XPSOverlay meOverlay = new XPSOverlay(mapView);
-		mapView.getOverlays().add(meOverlay);
-
-		// Start Location data
-		String skyhookUsername = getString(R.string.skyhook_username);
-		String skyhookRealm = getString(R.string.skyhook_realm);
-
-		LocationSetter.init(this, skyhookUsername, skyhookRealm, meOverlay);
-		LocationSetter.resume();
-
-		ImageButton compassButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
-		compassButton.setImageResource(R.drawable.ic_menu_compass);
-		compassButton.setContentDescription(getString(R.string.centre));
-		compassButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mapView.getController().animateTo(LocationSetter.getPoint());
-			}
-		});
-
-		ImageButton searchButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
-		searchButton.setImageResource(R.drawable.ic_menu_search);
-		searchButton.setContentDescription(getString(R.string.search));
-		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSearchRequested();
-			}
-		});
-
-		ImageButton bookmarksButton = (ImageButton) getLayoutInflater()
-				.inflate(R.layout.menu_nav_button, null);
-		bookmarksButton.setImageResource(R.drawable.ic_menu_bookmark);
-		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
-		bookmarksButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onSearchRequested();
-				startActivity(new Intent(v.getContext(),
-						BookmarksActivity.class));
-			}
-		});
-
-		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
-				bookmarksButton });
-
+		setContentView(R.layout.main);
 	}
 
-	@Override
-	public void onMarkerSelected(Place p) {
-		// TODO Auto-generated method stub
+	/*
+	 * public void onPause(){ LocationSetter.pause(); } public void onResume(){
+	 * LocationSetter.resume(); }
+	 */
 
+	public void loadClasses(View view) {
+		SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+		new MITClass.MITClassLoader(db).execute(new Context[] { this });
 	}
 
+	public void launchTouchstoneLogin(View view) {
+		Intent i = new Intent(this, PrepopulateActivity.class);
+		startActivityForResult(i, REQUEST_MOIRA);
+	}
+
+	public void launchPtolemyMap(View view) {
+		Intent i = new Intent(this, PtolemyMapActivity.class);
+		startActivity(i);
+	}
+
+	public void resetData(View view) {
+		SQLiteDatabase db = new PtolemyOpenHelper(view.getContext())
+				.getWritableDatabase();
+		// Recreate tables.
+		String[] tables = new String[] { PlacesTable.PLACES_TABLE_NAME,
+				BookmarksTable.BOOKMARKS_TABLE_NAME,
+				MITClassTable.CLASSES_TABLE_NAME };
+		for (String table : tables) {
+			db.execSQL("DROP TABLE IF EXISTS " + table);
+		}
+		String[] create = new String[] {
+				PlacesTable.PLACES_TABLE_CREATE,
+				BookmarksTable.BOOKMARKS_TABLE_CREATE,
+				MITClassTable.CLASSES_TABLE_CREATE
+		};
+		for (String stmt : create) {
+			db.execSQL(stmt);
+		}
+		
+		// Insert test data.
+		Place.addPlace(view.getContext(), "38-501", 42361130, -71092296, PlaceType.CLASSROOM);
+		
+		db.close();
+		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "
+				+ Arrays.toString(tables), 1000);
+		toast.show();
+	}
+
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case REQUEST_MOIRA:
+			if (resultCode == RESULT_OK) {
+				TextView classText = (TextView) findViewById(R.id.SelectedClasses);
+				classText.setText("");
+				String[] classes = (String[]) data.getExtras().get(
+						ClassDataIntent.CLASSES);
+				for (String classname : classes) {
+					classText.append(classname + "\n");
+				}
+			}
+		}
+	}
 }

@@ -5,7 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -17,6 +18,8 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.Config;
+import edu.mit.pt.R;
+import edu.mit.pt.data.Place;
 
 public class PtolemyMapView extends MapView {
 
@@ -33,6 +36,7 @@ public class PtolemyMapView extends MapView {
 	private int pNumColumns = 3;
 	private boolean pinchZoom = false;
 	private PtolemyTileManager tm;
+	private PlacesItemizedOverlay placesOverlay;
 
 	public PtolemyMapView(Context context, String key) {
 		super(context, key);
@@ -59,9 +63,24 @@ public class PtolemyMapView extends MapView {
 		getController().setZoom(21);
 
 		setRowsCols();
-		getController().setCenter(new GeoPoint(42361568, -71091825));
-		
+		getController().setCenter(new GeoPoint(42361440, -71091789));
+
 		tm = new PtolemyTileManager(ctx);
+
+		// Load places.
+		List<Place> places = Place.getPlaces(ctx);
+		Log.v(Config.TAG, "Setting up PtolemyMapView with " + places.size()
+				+ " places.");
+		Drawable defaultMarker = getResources().getDrawable(R.drawable.green_point);
+		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
+		for (Place p : places) {
+			placesOverlay.addOverlayItem(p.getOverlayItem());
+		}
+		overlays.add(placesOverlay);
+	}
+	
+	public void setOnTapListener(OnTapListener listener) {
+		placesOverlay.setOnTapListener(listener);
 	}
 
 	@Override
@@ -105,7 +124,7 @@ public class PtolemyMapView extends MapView {
 	 * 
 	 */
 	class TileOverlay extends Overlay {
-		
+
 		Bitmap bm;
 
 		@Override
@@ -124,17 +143,19 @@ public class PtolemyMapView extends MapView {
 				return;
 			}
 
-			int tileSize = GoogleTileCalculator.computeTileSize(mapView, zoomLevel);
+			int tileSize = GoogleTileCalculator.computeTileSize(mapView,
+					zoomLevel);
 
 			GeoPoint topleftGeoPoint = mapView.getProjection().fromPixels(0, 0);
 			// googleX and googleY correspond to the ints that google maps uses
 			// to ID tiles
-			double googleX = GoogleTileCalculator.computeGoogleX(topleftGeoPoint.getLongitudeE6(),
-					zoomLevel);
-			double googleY = GoogleTileCalculator.computeGoogleY(topleftGeoPoint.getLatitudeE6(),
-					zoomLevel);
+			double googleX = GoogleTileCalculator.computeGoogleX(
+					topleftGeoPoint.getLongitudeE6(), zoomLevel);
+			double googleY = GoogleTileCalculator.computeGoogleY(
+					topleftGeoPoint.getLatitudeE6(), zoomLevel);
 
-			//Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + "@" + zoomLevel + " (" + topleftGeoPoint.toString() + ")");
+			// Log.v(Config.TAG, "Drawing " + googleX + ", " + googleY + "@" +
+			// zoomLevel + " (" + topleftGeoPoint.toString() + ")");
 
 			// Tile[X/Y] is integer part of google[X/Y].
 			int tileX = (int) googleX;
@@ -154,9 +175,6 @@ public class PtolemyMapView extends MapView {
 				int offsetX, int offsetY, int zoomLevel, int tileSize,
 				boolean fillScreen) {
 
-			Rect src = new Rect();
-			Rect dest = new Rect();
-
 			int tileRow, tileCol;
 
 			int numRows;
@@ -171,7 +189,7 @@ public class PtolemyMapView extends MapView {
 				numRows = pNumRows;
 				numColumns = pNumColumns;
 			}
-
+			
 			for (int row = 0; row < numRows + 1; row++) {
 				for (int col = 0; col < numColumns + 1; col++) {
 
@@ -181,29 +199,20 @@ public class PtolemyMapView extends MapView {
 					if (!isTileOnMap(tileCol, tileRow, zoomLevel)) {
 						continue;
 					}
-					
+
 					if (tm.isNotMapped(tileCol, tileRow)) {
 						continue;
 					}
 
 					int tileOriginX = col * tileSize + offsetX;
 					int tileOriginY = row * tileSize + offsetY;
-					
+
 					bm = tm.getBitmap(tileCol, tileRow);
 
 					if (bm != null) {
-						src.bottom = IMAGE_TILE_SIZE;
-						src.left = 0;
-						src.right = IMAGE_TILE_SIZE;
-						src.top = 0;
-
-						dest.bottom = tileOriginY + tileSize;
-						dest.left = tileOriginX;
-						dest.right = tileOriginX + tileSize;
-						dest.top = tileOriginY;
-
-						canvas.drawBitmap(bm, src, dest, null);
-
+						Matrix placementMatrix = new Matrix();
+						placementMatrix.setTranslate(tileOriginX, tileOriginY);
+						canvas.drawBitmap(bm, placementMatrix, null);
 					}
 				}
 
@@ -232,26 +241,26 @@ public class PtolemyMapView extends MapView {
 
 	private void initZoomLevel(int zoomLevel) {
 		if (pWestX[zoomLevel] == 0) {
-			pWestX[zoomLevel] = (int) Math.floor(GoogleTileCalculator.computeGoogleX(
-					WEST_LONGITUDE_E6, zoomLevel));
+			pWestX[zoomLevel] = (int) Math.floor(GoogleTileCalculator
+					.computeGoogleX(WEST_LONGITUDE_E6, zoomLevel));
 		}
 
 		if (pEastX[zoomLevel] == 0) {
-			pEastX[zoomLevel] = (int) Math.ceil(GoogleTileCalculator.computeGoogleX(
-					EAST_LONGITUDE_E6, zoomLevel));
+			pEastX[zoomLevel] = (int) Math.ceil(GoogleTileCalculator
+					.computeGoogleX(EAST_LONGITUDE_E6, zoomLevel));
 		}
 
 		if (pNorthY[zoomLevel] == 0) {
-			pNorthY[zoomLevel] = (int) Math.floor(GoogleTileCalculator.computeGoogleY(
-					NORTH_LATITUDE_E6, zoomLevel));
+			pNorthY[zoomLevel] = (int) Math.floor(GoogleTileCalculator
+					.computeGoogleY(NORTH_LATITUDE_E6, zoomLevel));
 		}
 
 		if (pSouthY[zoomLevel] == 0) {
-			pSouthY[zoomLevel] = (int) Math.ceil(GoogleTileCalculator.computeGoogleY(
-					SOUTH_LATITUDE_E6, zoomLevel));
+			pSouthY[zoomLevel] = (int) Math.ceil(GoogleTileCalculator
+					.computeGoogleY(SOUTH_LATITUDE_E6, zoomLevel));
 		}
 	}
-	
+
 	public void stop() {
 		PtolemyTileManager.StrongBitmapCache.releaseInstance();
 	}

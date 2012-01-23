@@ -2,6 +2,7 @@ package edu.mit.pt.bookmarks;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyOpenHelper;
+import edu.mit.pt.maps.BrowsePlaceActivity;
 
 public class AddBookmarkActivity extends MapActivity {
 
@@ -27,6 +29,10 @@ public class AddBookmarkActivity extends MapActivity {
 	private Place place;
 	private boolean userHasEditedType = false;
 	private boolean userHasEditedPlace = false;
+	
+	public final static String CUSTOM_NAME = "customName";
+	public final static String PLACE = "place";
+	private final int BROWSE_REQUEST = 1;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -95,6 +101,14 @@ public class AddBookmarkActivity extends MapActivity {
 		}
 	}
 	
+	public void pickPlace(View v) {
+		Intent intent = new Intent(this, BrowsePlaceActivity.class);
+		TextView customNameView = (TextView) findViewById(R.id.editBookmarkTitle);
+		String customName = customNameView.getText().toString();
+		intent.putExtra(CUSTOM_NAME, customName);
+		startActivityForResult(intent, BROWSE_REQUEST);
+	}
+	
 	public void addBookmark(View v) {
 		TextView autoComplete = (TextView) findViewById(R.id.editBookmarkTitle);
 		String customName = autoComplete.getText().toString();
@@ -103,6 +117,21 @@ public class AddBookmarkActivity extends MapActivity {
 		}
 		Bookmark.addBookmark(this, customName, place, type);
 		finish();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case BROWSE_REQUEST:
+			switch (resultCode) {
+			case RESULT_OK:
+				Place p = (Place) data.getParcelableExtra(PLACE);
+				Log.v(Config.TAG, "GOT RESULT! " + p.getName());
+				setPlace(p, true);
+				break;
+			}
+			break;
+		}
 	}
 
 	@Override
