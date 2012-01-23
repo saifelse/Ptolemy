@@ -33,9 +33,9 @@ def getJSON(term="2012SP"):
     classMap = {}
     for i in range(len(classes)):
         if validPlace(classes[i]['room']):
-            if classes[i]['room'] not in classMap:
-                classMap[classes[i]['room']] = []
-            classMap[classes[i]['room']].append(classes[i])
+            if classes[i]['id'] not in classMap:
+                classMap[classes[i]['id']] = []
+            classMap[classes[i]['id']].append(classes[i])
         else:
             print "Invalid place for %s: %s" % (classes[i]['id'], classes[i]['room'])
     # Resolve conflicts.
