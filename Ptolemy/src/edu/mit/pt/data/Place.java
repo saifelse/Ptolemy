@@ -1,6 +1,7 @@
 package edu.mit.pt.data;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 public class Place {
 	int id;
@@ -16,7 +17,7 @@ public class Place {
 	}
 
 	public Place(String name, int latE6, int lonE6) {
-		// TODO write this constructor to save to db.
+		this(-1, name, latE6, lonE6);
 	}
 
 	public int getId() {
@@ -34,7 +35,10 @@ public class Place {
 	public String getName() {
 		return name;
 	}
-
+	public Drawable getMarker(){
+		/* TODO: return default marker */
+		return null;
+	}
 	public static Place getPlace(Context context, int id) {
 		// TODO: implement this.
 		return new Place(id, "10-250", 42361113, -71092261);
