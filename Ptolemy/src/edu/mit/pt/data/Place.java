@@ -30,6 +30,7 @@ abstract public class Place implements Parcelable {
 		this.lonE6 = lonE6;
 	}
 
+	// TODO: is this necessary?
 	public int getId() {
 		return id;
 	}
@@ -41,7 +42,7 @@ abstract public class Place implements Parcelable {
 	public int getLonE6() {
 		return lonE6;
 	}
-	
+
 	public GeoPoint getPoint() {
 		return new GeoPoint(latE6, lonE6);
 	}
@@ -51,11 +52,11 @@ abstract public class Place implements Parcelable {
 	}
 
 	abstract public PlaceType getPlaceType();
-	
+
 	public Drawable getMarker(Resources resources) {
 		return resources.getDrawable(getMarkerId());
 	}
-	
+
 	abstract public int getMarkerId();
 
 	public static Place getPlace(Context context, int id) {
@@ -63,12 +64,39 @@ abstract public class Place implements Parcelable {
 		return new Classroom(id, "10-250", 42361113, -71092261);
 	}
 
-	public static Place getPlace(Context context, String room) {
-		// TODO: implement this.
-		return new Classroom(1, "10-250", 42361113, -71092261);
+	public static Place getClassroom(Context context, String room) {
+		if (room == null) {
+			return null;
+		}
+		SQLiteDatabase db = new PtolemyOpenHelper(context)
+				.getWritableDatabase();
+		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
+				PlacesTable.COLUMN_NAME, PlacesTable.COLUMN_LAT,
+				PlacesTable.COLUMN_LON, PlacesTable.COLUMN_TYPE },
+				PlacesTable.COLUMN_NAME + "=?", new String[] { room }, null,
+				null, null);
+		if (c.getCount() == 0) {
+			return null;
+		}
+		c.moveToFirst();
+		int id = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_ID));
+		String name = c.getString(c.getColumnIndex(PlacesTable.COLUMN_NAME));
+		int latE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LAT));
+		int lonE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LON));
+		String typeName = c
+				.getString(c.getColumnIndex(PlacesTable.COLUMN_TYPE));
+		PlaceType type = PlaceType.valueOf(typeName);
+		c.close();
+		db.close();
+		// This only searches classrooms.
+		if (type != PlaceType.CLASSROOM) {
+			return null;
+		}
+		return new Classroom(id, name, latE6, lonE6);
 	}
 
-	public static void addPlace(Context context, String name, int latE6, int lonE6, PlaceType type) {
+	public static void addPlace(Context context, String name, int latE6,
+			int lonE6, PlaceType type) {
 		SQLiteDatabase db = new PtolemyOpenHelper(context)
 				.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -103,12 +131,18 @@ abstract public class Place implements Parcelable {
 			case TOILET:
 				// Determine gender
 				GenderEnum gender;
-				Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME, new String[]{ToiletMetaTable.COLUMN_TYPE}, "PLACE_ID=?", new String[]{Integer.toString(id)}, null, null, null);
-				if(tc.getCount() == 1){
+				Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME,
+						new String[] { ToiletMetaTable.COLUMN_TYPE },
+						"PLACE_ID=?", new String[] { Integer.toString(id) },
+						null, null, null);
+				if (tc.getCount() == 1) {
 					tc.moveToFirst();
-					gender = GenderEnum.valueOf(tc.getString(tc.getColumnIndex(ToiletMetaTable.COLUMN_TYPE)));
-				}else{
-					Log.v(Config.TAG, tc.getCount()+" entries found for Toilet id "+id+". Expected 1 entry. Defaulting to BOTH.");
+					gender = GenderEnum.valueOf(tc.getString(tc
+							.getColumnIndex(ToiletMetaTable.COLUMN_TYPE)));
+				} else {
+					Log.v(Config.TAG, tc.getCount()
+							+ " entries found for Toilet id " + id
+							+ ". Expected 1 entry. Defaulting to BOTH.");
 					gender = GenderEnum.BOTH;
 				}
 				p = new Toilet(id, name, latE6, lonE6, gender);

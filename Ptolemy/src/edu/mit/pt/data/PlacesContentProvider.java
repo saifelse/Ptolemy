@@ -45,7 +45,6 @@ public class PlacesContentProvider extends ContentProvider {
 		queryBuilder.setTables(PlacesTable.PLACES_TABLE_NAME);
 		
 		String query = uri.getLastPathSegment();
-		System.out.println("QUERY is " + query);
 		//queryBuilder.appendWhere(PlacesTable.PLACES_TABLE_NAME + " MATCH '" + query + "'");
 		queryBuilder.appendWhere(PlacesTable.COLUMN_NAME + " LIKE '" + query + "%'");
 		
@@ -53,7 +52,6 @@ public class PlacesContentProvider extends ContentProvider {
 		Cursor cursor = queryBuilder.query(database, projection, selection,
 				selectionArgs, null, null, sortOrder);
 				
-		System.out.println(cursor.getCount());
 		// Make sure that potential listeners are getting notified
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		

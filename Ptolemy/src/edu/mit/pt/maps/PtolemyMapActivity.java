@@ -15,8 +15,11 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.BookmarksActivity;
+import edu.mit.pt.data.Place;
+import edu.mit.pt.data.RoomLoader;
 
 public class PtolemyMapActivity extends MapActivity {
 	protected PtolemyMapView mapView;
@@ -27,18 +30,10 @@ public class PtolemyMapActivity extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.map_main);
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			if (query == null)
-				System.out.println("I AM IN YOUR NULLZ");
-			Log.i(PtolemyMapActivity.class.toString(), query);
-		}
 
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		// TODO: change blue arrow
@@ -48,8 +43,8 @@ public class PtolemyMapActivity extends MapActivity {
 		mapOverlays.add(placesItemizedOverlay);
 
 		// load rooms
-		// RoomLoader roomLoader = new RoomLoader(this);
-		// roomLoader.execute(placesItemizedOverlay);
+		RoomLoader roomLoader = new RoomLoader(this);
+		roomLoader.execute(placesItemizedOverlay);
 
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
@@ -101,7 +96,24 @@ public class PtolemyMapActivity extends MapActivity {
 
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
-		
+
+	}
+	
+	@Override
+	public void onNewIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			handleClassroomSearch(query);
+		}
+	}
+	
+	private void handleClassroomSearch(String query) {
+		Log.v(Config.TAG, "Handling search for " + query);
+		// TODO: this query is null when its autocompleting?
+		Place place = Place.getClassroom(this, query);
+		if (place != null) {
+			Log.v(Config.TAG, "Place found: " + place.getName());
+		}
 	}
 
 	/*
@@ -112,6 +124,11 @@ public class PtolemyMapActivity extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.v(Config.TAG, "Received requestCode " + requestCode);
 	}
 
 	@Override

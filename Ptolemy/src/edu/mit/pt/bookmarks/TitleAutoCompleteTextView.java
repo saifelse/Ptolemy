@@ -54,7 +54,7 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 				Cursor c = (Cursor) parent.getItemAtPosition(position);
 				String room = c.getString(c
 						.getColumnIndex(MITClassTable.COLUMN_ROOM));
-				Place place = Place.getPlace(activity, room);
+				Place place = Place.getClassroom(activity, room);
 				activity.setPlace(place, false);
 				InputMethodManager imm = (InputMethodManager) activity
 						.getSystemService(Context.INPUT_METHOD_SERVICE);

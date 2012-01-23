@@ -53,7 +53,7 @@ public class BrowsePlaceActivity extends MapActivity {
 
 		String customName = getIntent().getStringExtra(
 				AddBookmarkActivity.CUSTOM_NAME);
-		if (customName.length() != 0) {
+		if (customName != null && customName.length() != 0) {
 			Button nameButton = (Button) findViewById(R.id.backToAddTitle);
 			nameButton.setText(customName);
 		}
