@@ -1,23 +1,23 @@
 package edu.mit.pt.data;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 public class ToiletMetaTable {
 	public static final String TOILET_TABLE_NAME = "toilet";
-	public static final String COLUMN_ID = "_id";
-	public static final String COLUMN_PLACEID = "place_id";
+	public static final String COLUMN_ID = BaseColumns._ID;
+	public static final String COLUMN_PLACEID = "place" + BaseColumns._ID;
 	public static final String COLUMN_TYPE = "type";
-
 
 	public static final String TOILET_TABLE_CREATE = "CREATE TABLE "
 			+ TOILET_TABLE_NAME + " (" + COLUMN_ID
-			+ " integer primary key autoincrement, " 
-			+ COLUMN_PLACEID + " INTEGER not null, "
-		    + COLUMN_TYPE + " TEXT not null, "
-		    + "FOREIGN KEY("+COLUMN_PLACEID+") REFERENCES "+PlacesTable.PLACES_TABLE_NAME+"("+PlacesTable.COLUMN_ID+")"
+			+ " integer primary key autoincrement, " + COLUMN_PLACEID
+			+ " INTEGER not null, " + COLUMN_TYPE + " TEXT not null, "
+			+ "FOREIGN KEY(" + COLUMN_PLACEID + ") REFERENCES "
+			+ PlacesTable.PLACES_TABLE_NAME + "(" + PlacesTable.COLUMN_ID + ")"
 			+ ");";
-	
+
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(TOILET_TABLE_CREATE);
 	}

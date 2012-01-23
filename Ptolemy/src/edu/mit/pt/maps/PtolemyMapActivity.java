@@ -2,9 +2,14 @@ package edu.mit.pt.maps;
 
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +31,8 @@ public class PtolemyMapActivity extends MapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
+	private final int DIALOG_INVALID_ROOM = 0;
+	private String roomQuery = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,22 +105,67 @@ public class PtolemyMapActivity extends MapActivity {
 				bookmarksButton });
 
 	}
-	
+
 	@Override
 	public void onNewIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			handleClassroomSearch(query);
+			// Try autocomplete ID first.
+			Uri dataUri = intent.getData();
+			Place p;
+			if (dataUri != null) {
+				int classroomId = Integer.valueOf(dataUri.getLastPathSegment());
+				p = Place.getPlace(this, classroomId);
+				roomQuery = p.getName();
+			} else {
+				roomQuery = intent.getStringExtra(SearchManager.QUERY);
+				p = Place.getClassroom(this, roomQuery);
+				if (p == null) {
+					showDialog(DIALOG_INVALID_ROOM);
+					return;
+				}
+			}
+			showClassroom(p);
 		}
 	}
 	
-	private void handleClassroomSearch(String query) {
-		Log.v(Config.TAG, "Handling search for " + query);
-		// TODO: this query is null when its autocompleting?
-		Place place = Place.getClassroom(this, query);
-		if (place != null) {
-			Log.v(Config.TAG, "Place found: " + place.getName());
+	@Override
+	public boolean onSearchRequested() {
+		startSearch(roomQuery, true, null, false);
+		return true;
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		switch (id) {
+		case DIALOG_INVALID_ROOM:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setNeutralButton("OK",
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							onSearchRequested();
+						}
+					}).setTitle("Hm...").setMessage("");
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
 		}
+		return dialog;
+	}
+
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+		Resources res = getResources();
+		((AlertDialog) dialog).setMessage(String.format(
+				res.getString(R.string.room_not_found), roomQuery));
+	}
+
+	private void showClassroom(Place p) {
+		Log.v(Config.TAG, "PLACE: " + p.getName());
 	}
 
 	/*
