@@ -22,12 +22,13 @@ import edu.mit.pt.R;
 
 public class MITClass {
 	private static void addClass(String id, String term, String name,
-			String room, SQLiteDatabase db) {
+			String room, String resolve, SQLiteDatabase db) {
 		ContentValues cv = new ContentValues();
 		cv.put(MITClassTable.COLUMN_MITID, id);
 		cv.put(MITClassTable.COLUMN_TERM, term);
 		cv.put(MITClassTable.COLUMN_NAME, name);
 		cv.put(MITClassTable.COLUMN_ROOM, room);
+		cv.put(MITClassTable.COLUMN_RESOLVE, resolve);
 		db.insertOrThrow(MITClassTable.CLASSES_TABLE_NAME, null, cv);
 	}
 
@@ -74,14 +75,14 @@ public class MITClass {
 		db.beginTransaction();
 		try {
 			for (int i = 0; i < classes.length(); i++) {
-				String mitID, term, room, name;
 				try {
 					JSONObject c = classes.getJSONObject(i);
-					mitID = c.getString("id");
-					term = c.getString("term");
-					room = c.getString("room");
-					name = c.getString("name");
-					addClass(mitID, term, name, room, db);
+					String mitID = c.getString("id");
+					String term = c.getString("term");
+					String room = c.getString("room");
+					String name = c.getString("name");
+					String resolve = c.has("resolve") ? c.getString("resolve") : "";
+					addClass(mitID, term, name, room, resolve, db);
 				} catch (JSONException e) {
 					Log.v(Config.TAG, "Error: Couldn't parse element " + i
 							+ " in classes.json");

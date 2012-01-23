@@ -73,10 +73,14 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 		public void bindView(View view, Context context, Cursor cursor) {
 			String mitId = cursor.getString(cursor
 					.getColumnIndex(MITClassTable.COLUMN_MITID));
+			
+			String resolve = cursor.getString(cursor.getColumnIndex(MITClassTable.COLUMN_RESOLVE));
+			resolve = resolve.equals("") ? "" : resolve+" - ";
+			
 			String fullName = cursor.getString(cursor
 					.getColumnIndex(MITClassTable.COLUMN_NAME));
 			TextView text = (TextView) view.findViewById(R.id.autocompleteText);
-			text.setText(mitId + " (" + fullName + ")");
+			text.setText(mitId + " (" + resolve + fullName + ")");
 		}
 
 		@Override
@@ -103,7 +107,7 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 
 			Cursor c = db.query(MITClassTable.CLASSES_TABLE_NAME, new String[] {
 					MITClassTable.COLUMN_ID, MITClassTable.COLUMN_MITID,
-					MITClassTable.COLUMN_NAME, MITClassTable.COLUMN_ROOM },
+					MITClassTable.COLUMN_NAME, MITClassTable.COLUMN_ROOM, MITClassTable.COLUMN_RESOLVE},
 					MITClassTable.COLUMN_MITID + " LIKE ? || '%'",
 					new String[] { filter }, null, null,
 					MITClassTable.COLUMN_MITID, "20");

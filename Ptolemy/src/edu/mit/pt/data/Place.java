@@ -3,8 +3,6 @@ package edu.mit.pt.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.maps.GeoPoint;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import edu.mit.pt.maps.PlacesOverlayItem;
+
+import com.google.android.maps.GeoPoint;
 
 abstract public class Place implements Parcelable {
 	int id;
