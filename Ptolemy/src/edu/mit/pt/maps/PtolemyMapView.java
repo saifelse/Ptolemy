@@ -3,6 +3,7 @@ package edu.mit.pt.maps;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -74,9 +75,11 @@ public class PtolemyMapView extends MapView {
 		Drawable defaultMarker = getResources().getDrawable(
 				R.drawable.green_point);
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
+		Resources resources = getContext().getResources();
 		for (Place p : places) {
-			placesOverlay.addOverlayItem(new PlacesOverlayItem(getContext(), p, p
-					.getName(), p.getName()));
+			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
+					p.getName(), p.getMarker(resources));
+			placesOverlay.addOverlayItem(item);
 		}
 		overlays.add(placesOverlay);
 	}

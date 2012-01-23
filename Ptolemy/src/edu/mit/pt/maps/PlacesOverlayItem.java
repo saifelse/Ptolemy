@@ -1,6 +1,5 @@
 package edu.mit.pt.maps;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.maps.OverlayItem;
@@ -10,12 +9,13 @@ import edu.mit.pt.data.Place;
 public class PlacesOverlayItem extends OverlayItem {
 	
 	Place place;
-	Context context;
+	Drawable marker;
 
-	public PlacesOverlayItem(Context context, Place p, String title, String snippet) {
+	public PlacesOverlayItem(Place p, String title, String snippet, Drawable marker) {
 		super(p.getPoint(), title, snippet);
 		this.place = p;
-		this.context = context;
+		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
+		this.marker = marker;
 	}
 	
 	public Place getPlace() {
@@ -24,7 +24,7 @@ public class PlacesOverlayItem extends OverlayItem {
 	
 	@Override
 	public Drawable getMarker(int stateBitset) {
-		return place.getMarker(context);
+		return marker;
 	}
 
 }

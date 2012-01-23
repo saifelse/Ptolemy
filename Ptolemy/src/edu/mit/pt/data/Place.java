@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -48,7 +49,11 @@ abstract public class Place implements Parcelable {
 
 	abstract public PlaceType getPlaceType();
 	
-	abstract public Drawable getMarker(Context context);
+	public Drawable getMarker(Resources resources) {
+		return resources.getDrawable(getMarkerId());
+	}
+	
+	abstract public int getMarkerId();
 
 	public static Place getPlace(Context context, int id) {
 		// TODO: implement this.

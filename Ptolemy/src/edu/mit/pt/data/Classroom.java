@@ -1,7 +1,5 @@
 package edu.mit.pt.data;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import edu.mit.pt.R;
 
@@ -21,8 +19,8 @@ public class Classroom extends Place {
 	}
 
 	@Override
-	public Drawable getMarker(Context context) {
-		return context.getResources().getDrawable(R.drawable.green_point);
+	public int getMarkerId() {
+		return R.drawable.green_point;
 	}
 
 }
