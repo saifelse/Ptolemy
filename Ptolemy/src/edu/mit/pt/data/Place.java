@@ -71,10 +71,10 @@ abstract public class Place implements Parcelable {
 		SQLiteDatabase db = new PtolemyOpenHelper(context)
 				.getWritableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
-				PlacesTable.COLUMN_NAME, PlacesTable.COLUMN_LAT,
-				PlacesTable.COLUMN_LON, PlacesTable.COLUMN_TYPE },
-				PlacesTable.COLUMN_NAME + "=?", new String[] { room }, null,
-				null, null);
+				PlacesTable.COLUMN_ID, PlacesTable.COLUMN_NAME,
+				PlacesTable.COLUMN_LAT, PlacesTable.COLUMN_LON,
+				PlacesTable.COLUMN_TYPE }, PlacesTable.COLUMN_NAME + "=?",
+				new String[] { room }, null, null, null);
 		if (c.getCount() == 0) {
 			return null;
 		}

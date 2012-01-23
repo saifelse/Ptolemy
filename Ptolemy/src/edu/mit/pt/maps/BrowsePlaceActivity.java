@@ -1,30 +1,34 @@
 package edu.mit.pt.maps;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import com.google.android.maps.MapActivity;
-
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;
 
-public class BrowsePlaceActivity extends MapActivity {
+public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	private final String ACTIVITY_TITLE = "Pick a location";
 	private Place place;
+	private PtolemyMapView mapView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_browse);
+		mapView = (PtolemyMapView) findViewById(R.id.mapview);
 
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 		ActionBar.setDefaultBackAction(this);
@@ -36,15 +40,6 @@ public class BrowsePlaceActivity extends MapActivity {
 		searchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onSearchRequested();
-			}
-		});
-
-		searchButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Thomas how did you do this lol.
 				onSearchRequested();
 			}
 		});
@@ -106,6 +101,17 @@ public class BrowsePlaceActivity extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+
+	@Override
+	void showClassroom(final Place p) {
+		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
+		places.add(new PlacesOverlayItem(p, p.getName(), p.getName(), p
+				.getMarker(getResources())));
+		mapView.getPlacesOverlay().setExtras(places);
+		mapView.getController().animateTo(p.getPoint());
+		setPlace(p);
 	}
 
 }
