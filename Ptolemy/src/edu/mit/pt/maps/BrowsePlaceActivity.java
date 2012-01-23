@@ -2,6 +2,7 @@ package edu.mit.pt.maps;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -89,7 +90,7 @@ public class BrowsePlaceActivity extends MapActivity {
 
 	void setPlace(Place p) {
 		TextView lowerText = (TextView) findViewById(R.id.backToAddTitle);
-		lowerText.setText("Use " + p.getName());
+		lowerText.setText(Html.fromHtml("&#171; " + p.getName()));
 		lowerText.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.green_button_bg));
 		place = p;
