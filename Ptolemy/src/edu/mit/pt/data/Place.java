@@ -147,7 +147,10 @@ abstract public class Place implements Parcelable {
 				return new Classroom(in);
 			case TOILET:
 				return new Toilet(in);
-				// TODO implement it for other abstract classes.
+			case CLUSTER:
+				return new Athena(in);
+			case FOUNTAIN:
+				return new Fountain(in);
 			default:
 				return new Classroom(in);
 			}
