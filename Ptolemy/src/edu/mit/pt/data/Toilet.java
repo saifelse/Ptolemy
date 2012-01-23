@@ -14,12 +14,25 @@ public class Toilet extends Place {
 
 	public Toilet(Parcel in) {
 		super(in);
-		gender = GenderEnum.values()[in.readInt()];
+		gender = GenderEnum.valueOf(in.readString());
+	}
+	@Override
+	public String getName(){
+		String prefix;
+		switch(gender){
+		case MALE:
+			prefix = "Men's "; break;
+		case FEMALE:
+			prefix = "Women's "; break;
+		case BOTH: default:
+			prefix = "";
+		}
+		return prefix+"Bathroom ("+name+")";
 	}
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeInt(this.gender.ordinal());
+		dest.writeString(this.gender.name());
 	}
 	@Override
 	public PlaceType getPlaceType() {
@@ -40,5 +53,4 @@ public class Toilet extends Place {
 		}
 		return context.getResources().getDrawable(resourceId);
 	}
-
 }

@@ -14,7 +14,7 @@ public class ToiletMetaTable {
 			+ TOILET_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " 
 			+ COLUMN_PLACEID + " INTEGER not null, "
-		    + COLUMN_TYPE + " INTEGER not null, "
+		    + COLUMN_TYPE + " TEXT not null, "
 		    + "FOREIGN KEY("+COLUMN_PLACEID+") REFERENCES "+PlacesTable.PLACES_TABLE_NAME+"("+PlacesTable.COLUMN_ID+")"
 			+ ");";
 	

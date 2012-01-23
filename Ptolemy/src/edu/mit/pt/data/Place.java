@@ -101,7 +101,7 @@ abstract public class Place implements Parcelable {
 				Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME, new String[]{ToiletMetaTable.COLUMN_TYPE}, "PLACE_ID=?", new String[]{Integer.toString(id)}, null, null, null);
 				if(tc.getCount() == 1){
 					tc.moveToFirst();
-					gender = GenderEnum.values()[tc.getInt(tc.getColumnIndex(ToiletMetaTable.COLUMN_TYPE))];
+					gender = GenderEnum.valueOf(tc.getString(tc.getColumnIndex(ToiletMetaTable.COLUMN_TYPE)));
 				}else{
 					Log.v(Config.TAG, tc.getCount()+" entries found for Toilet id "+id+". Expected 1 entry. Defaulting to BOTH.");
 					gender = GenderEnum.BOTH;
