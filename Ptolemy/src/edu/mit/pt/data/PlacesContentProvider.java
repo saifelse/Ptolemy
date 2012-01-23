@@ -1,15 +1,20 @@
 package edu.mit.pt.data;
 
+import java.util.HashMap;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
+import edu.mit.pt.Config;
 
 public class PlacesContentProvider extends ContentProvider {
 	private PtolemyOpenHelper db;
 	private static final String AUTHORITY = "edu.mit.pt.data.placescontentprovider";
+	private static final HashMap<String,String> columnMap = PlacesTable.buildColumnMap();
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -45,6 +50,7 @@ public class PlacesContentProvider extends ContentProvider {
 		queryBuilder.setTables(PlacesTable.PLACES_TABLE_NAME);
 		
 		String query = uri.getLastPathSegment();
+		queryBuilder.setProjectionMap(columnMap);
 		//queryBuilder.appendWhere(PlacesTable.PLACES_TABLE_NAME + " MATCH '" + query + "'");
 		queryBuilder.appendWhere(PlacesTable.COLUMN_NAME + " LIKE '" + query + "%'");
 		

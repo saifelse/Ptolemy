@@ -2,12 +2,13 @@ package edu.mit.pt.classes;
 
 import edu.mit.pt.data.PtolemyOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 public class MITClassTable {
 
 	public static final String CLASSES_TABLE_NAME = "classes";
-	public static final String COLUMN_ID = "_id";
+	public static final String COLUMN_ID = BaseColumns._ID;
 	public static final String COLUMN_MITID = "mitid"; 
 	public static final String COLUMN_RESOLVE = "resolve";
 	public static final String COLUMN_TERM = "term";

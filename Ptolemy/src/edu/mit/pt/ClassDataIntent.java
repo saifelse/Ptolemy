@@ -6,8 +6,9 @@ import android.content.Intent;
 
 public class ClassDataIntent extends Intent {
 	final static String CLASSES = "classes";
-	public ClassDataIntent(List<String> classes){
+
+	public ClassDataIntent(List<String> classes) {
 		super();
-		this.putExtra(CLASSES, classes.toArray(new String[]{}));
+		this.putExtra(CLASSES, classes.toArray(new String[] {}));
 	}
 }
