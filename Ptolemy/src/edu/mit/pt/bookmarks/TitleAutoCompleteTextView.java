@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.classes.MITClassTable;
 import edu.mit.pt.data.Place;
@@ -55,10 +57,14 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 				String room = c.getString(c
 						.getColumnIndex(MITClassTable.COLUMN_ROOM));
 				Place place = Place.getClassroom(activity, room);
-				activity.setPlace(place, false);
-				InputMethodManager imm = (InputMethodManager) activity
-						.getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(getWindowToken(), 0);
+				if (place != null) {
+					activity.setPlace(place, false);
+					InputMethodManager imm = (InputMethodManager) activity
+							.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(getWindowToken(), 0);
+				} else {
+					Log.wtf(Config.TAG, "Place should not be null!");
+				}
 			}
 		});
 	}
@@ -73,10 +79,11 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 		public void bindView(View view, Context context, Cursor cursor) {
 			String mitId = cursor.getString(cursor
 					.getColumnIndex(MITClassTable.COLUMN_MITID));
-			
-			String resolve = cursor.getString(cursor.getColumnIndex(MITClassTable.COLUMN_RESOLVE));
-			resolve = resolve.equals("") ? "" : resolve+" - ";
-			
+
+			String resolve = cursor.getString(cursor
+					.getColumnIndex(MITClassTable.COLUMN_RESOLVE));
+			resolve = resolve.equals("") ? "" : resolve + " - ";
+
 			String fullName = cursor.getString(cursor
 					.getColumnIndex(MITClassTable.COLUMN_NAME));
 			TextView text = (TextView) view.findViewById(R.id.autocompleteText);
@@ -107,9 +114,9 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 
 			Cursor c = db.query(MITClassTable.CLASSES_TABLE_NAME, new String[] {
 					MITClassTable.COLUMN_ID, MITClassTable.COLUMN_MITID,
-					MITClassTable.COLUMN_NAME, MITClassTable.COLUMN_ROOM, MITClassTable.COLUMN_RESOLVE},
-					MITClassTable.COLUMN_MITID + " LIKE ? || '%'",
-					new String[] { filter }, null, null,
+					MITClassTable.COLUMN_NAME, MITClassTable.COLUMN_ROOM,
+					MITClassTable.COLUMN_RESOLVE }, MITClassTable.COLUMN_MITID
+					+ " LIKE ? || '%'", new String[] { filter }, null, null,
 					MITClassTable.COLUMN_MITID, "20");
 			return c;
 		}

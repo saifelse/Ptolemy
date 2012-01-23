@@ -3,9 +3,9 @@
 
     <string name="hello">Hello World, PtolemyActivity!</string>
     <string name="launch_prepopulate">Load from Moira</string>
-    <string name="launch_mitclasses">Load classes!</string>
     <string name="launch_map">Use Custom Map!!!</string>
-    <string name="launch_resetdata">Clear Database</string>
+    <string name="launch_resetdata">Reset database (adds rooms)</string>
+    <string name="launch_loadclasses">Load classes</string>
     <string name="empty_list">You haven\'t selected any classes</string>
     <string name="app_name">Ptolemy</string>
     <string name="hello_map">Hello MapActivity!</string>

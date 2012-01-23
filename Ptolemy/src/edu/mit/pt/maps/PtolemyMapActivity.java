@@ -41,10 +41,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		placesItemizedOverlay = new PlacesItemizedOverlay(drawable);
 		mapOverlays.add(placesItemizedOverlay);
 
-		// load rooms
-		RoomLoader roomLoader = new RoomLoader(this);
-		roomLoader.execute(placesItemizedOverlay);
-
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
 		// Set up meOverlay:

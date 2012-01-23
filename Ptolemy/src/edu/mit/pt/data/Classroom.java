@@ -5,7 +5,7 @@ import edu.mit.pt.R;
 
 public class Classroom extends Place {
 
-	public Classroom(int id, String name, int latE6, int lonE6) {
+	public Classroom(long id, String name, int latE6, int lonE6) {
 		super(id, name, latE6, lonE6);
 	}
 

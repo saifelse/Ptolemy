@@ -83,6 +83,7 @@ public class MITClass {
 					String name = c.getString("name");
 					String resolve = c.has("resolve") ? c.getString("resolve") : "";
 					addClass(mitID, term, name, room, resolve, db);
+					count++;
 				} catch (JSONException e) {
 					Log.v(Config.TAG, "Error: Couldn't parse element " + i
 							+ " in classes.json");
