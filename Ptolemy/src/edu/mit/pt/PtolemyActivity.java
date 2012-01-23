@@ -1,5 +1,7 @@
 package edu.mit.pt;
 
+import java.util.Arrays;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +12,13 @@ import android.widget.TextView;
 import edu.mit.pt.location.AP;
 import edu.mit.pt.location.WifiDisplayActivity;
 import edu.mit.pt.location.WifiLocation;
+import android.widget.Toast;
+import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
+import edu.mit.pt.classes.MITClassTable;
+import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PlaceType;
+import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.PtolemyMapActivity;
 
@@ -21,8 +29,6 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        WifiLocation w = new WifiLocation(this);
-        w.scanResults();
         SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
         new AP.APLoader(db).execute(this);
     }
@@ -50,6 +56,33 @@ public class PtolemyActivity extends Activity {
     	Intent i = new Intent(this, WifiDisplayActivity.class);
     	startActivity(i);
     }
+	public void resetData(View view) {
+		SQLiteDatabase db = new PtolemyOpenHelper(view.getContext())
+				.getWritableDatabase();
+		// Recreate tables.
+		String[] tables = new String[] { PlacesTable.PLACES_TABLE_NAME,
+				BookmarksTable.BOOKMARKS_TABLE_NAME,
+				MITClassTable.CLASSES_TABLE_NAME };
+		for (String table : tables) {
+			db.execSQL("DROP TABLE IF EXISTS " + table);
+		}
+		String[] create = new String[] {
+				PlacesTable.PLACES_TABLE_CREATE,
+				BookmarksTable.BOOKMARKS_TABLE_CREATE,
+				MITClassTable.CLASSES_TABLE_CREATE
+		};
+		for (String stmt : create) {
+			db.execSQL(stmt);
+		}
+		
+		// Insert test data.
+		Place.addPlace(view.getContext(), "Toilet (male)", 42361130, -71092296, PlaceType.TOILET);
+		
+		db.close();
+		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "
+				+ Arrays.toString(tables), 1000);
+		toast.show();
+	}
     public void onActivityResult(int requestCode, int resultCode, Intent data){
     	switch(requestCode){
     	case REQUEST_MOIRA:

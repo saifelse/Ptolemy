@@ -9,36 +9,31 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.BookmarksActivity;
+import edu.mit.pt.data.Place;
 import edu.mit.pt.data.RoomLoader;
 
 public class PtolemyMapActivity extends MapActivity {
-	PtolemyMapView mapView;
-	PlacesItemizedOverlay placesItemizedOverlay;
+	protected PtolemyMapView mapView;
+	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.map_main);
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			if (query == null)
-				System.out.println("I AM IN YOUR NULLZ");
-			Log.i(PtolemyMapActivity.class.toString(), query);
-		}
 
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		// TODO: change blue arrow
@@ -65,34 +60,60 @@ public class PtolemyMapActivity extends MapActivity {
 		LocationSetter.init(this, skyhookUsername, skyhookRealm, meOverlay);
 		LocationSetter.resume();
 
-		findViewById(R.id.searchbutton).setOnClickListener(
-				new OnClickListener() {
-					public void onClick(View v) {
-						onSearchRequested();
-					}
-				});
+		ImageButton compassButton = (ImageButton) getLayoutInflater().inflate(
+				R.layout.menu_nav_button, null);
+		compassButton.setImageResource(R.drawable.ic_menu_compass);
+		compassButton.setContentDescription(getString(R.string.centre));
+		compassButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mapView.getController().animateTo(LocationSetter.getPoint());
+			}
+		});
 
-		findViewById(R.id.bookmarksbutton).setOnClickListener(
-				new OnClickListener() {
-					public void onClick(View v) {
-						Intent intent = new Intent(v.getContext(),
-								BookmarksActivity.class);
-						startActivity(intent);
-					}
-				});
+		ImageButton searchButton = (ImageButton) getLayoutInflater().inflate(
+				R.layout.menu_nav_button, null);
+		searchButton.setImageResource(R.drawable.ic_menu_search);
+		searchButton.setContentDescription(getString(R.string.search));
+		searchButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onSearchRequested();
+			}
+		});
+
+		ImageButton bookmarksButton = (ImageButton) getLayoutInflater()
+				.inflate(R.layout.menu_nav_button, null);
+		bookmarksButton.setImageResource(R.drawable.ic_menu_bookmark);
+		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
+		bookmarksButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(),
+						BookmarksActivity.class));
+			}
+		});
+
+		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
+				bookmarksButton });
+
 	}
-
-	public void showSearch(View v) {
-		onSearchRequested();
+	
+	@Override
+	public void onNewIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			handleClassroomSearch(query);
+		}
 	}
-
-	public void showBookmarks(View v) {
-		Intent intent = new Intent(this, BookmarksActivity.class);
-		startActivity(intent);
-	}
-
-	public void centerMap(View v) {
-		mapView.getController().animateTo(LocationSetter.getPoint());
+	
+	private void handleClassroomSearch(String query) {
+		Log.v(Config.TAG, "Handling search for " + query);
+		// TODO: this query is null when its autocompleting?
+		Place place = Place.getClassroom(this, query);
+		if (place != null) {
+			Log.v(Config.TAG, "Place found: " + place.getName());
+		}
 	}
 
 	/*
@@ -103,6 +124,11 @@ public class PtolemyMapActivity extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.v(Config.TAG, "Received requestCode " + requestCode);
 	}
 
 	@Override

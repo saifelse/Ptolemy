@@ -5,13 +5,20 @@ import java.util.Collections;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.mit.pt.Config;
+import edu.mit.pt.data.Place;
+
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
-	private List<OverlayItem> pOverlays = Collections
-			.synchronizedList(new ArrayList<OverlayItem>());
+	
+	OnTapListener tapListener = null;
+	
+	private List<PlacesOverlayItem> pOverlayItems = Collections
+			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
 	public PlacesItemizedOverlay(Drawable defaultMarker) {
 		super(boundCenterBottom(defaultMarker));
@@ -19,8 +26,8 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();
 	}
 
-	public void addOverlay(OverlayItem overlay) {
-		pOverlays.add(overlay);
+	public void addOverlayItem(PlacesOverlayItem overlayItem) {
+		pOverlayItems.add(overlayItem);
 		populate();
 	}
 
@@ -28,12 +35,26 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	protected OverlayItem createItem(int i) {
 		// System.out.println("Size: " + size());
 		// System.out.println("i: " + i);
-		return pOverlays.get(i);
+		Log.v(Config.TAG, "I AM CREATING AN ITEM.");
+		return pOverlayItems.get(i);
 	}
 
 	@Override
 	public int size() {
-		return pOverlays.size();
+		return pOverlayItems.size();
+	}
+	
+	public void setOnTapListener(OnTapListener listener) {
+		this.tapListener = listener;
+	}
+	
+	@Override
+	public boolean onTap(int index) {
+		if (tapListener != null) {
+			Place p = pOverlayItems.get(index).getPlace();
+			tapListener.onTap(p);
+		}
+		return true;
 	}
 
 }

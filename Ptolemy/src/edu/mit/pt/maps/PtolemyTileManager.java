@@ -53,7 +53,6 @@ public class PtolemyTileManager {
 		}
 
 		// Load from a file.
-		Log.v(Config.TAG, "Missed cache, loading bitmap file.");
 		Resources resources = ctx.getResources();
 		int bmId = resources
 				.getIdentifier(bitmapKey, "drawable", "edu.mit.pt");

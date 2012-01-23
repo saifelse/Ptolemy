@@ -5,6 +5,7 @@
     <string name="launch_prepopulate">Load from Moira</string>
     <string name="launch_mitclasses">Load classes!</string>
     <string name="launch_map">Use Custom Map!!!</string>
+    <string name="launch_resetdata">Clear Database</string>
     <string name="empty_list">You haven\'t selected any classes</string>
     <string name="app_name">Ptolemy</string>
     <string name="hello_map">Hello MapActivity!</string>
@@ -27,7 +28,7 @@
     <string name="bookmarks">bookmarks</string>
     <string name="back">back</string>
     <string name="centre">centre</string>
-    <string name="add_bookmark">add bookmark</string>
+    <string name="add_bookmark">Add Bookmark</string>
     <string name="bookmark_type_prompt">Pick the bookmark type:</string>
 
     <string-array name="bookmark_types">
@@ -38,6 +39,7 @@
     </string-array>
 
     <string name="type_button_empty">></string>
+    <string name="enter_title">&#171;  Enter a title!</string>
 
     <string name="wifiLocalizerStart">Start WIFI Localizer</string>
 

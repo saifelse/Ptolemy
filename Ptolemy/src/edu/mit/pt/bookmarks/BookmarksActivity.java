@@ -17,15 +17,19 @@ import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
 
 public class BookmarksActivity extends ListActivity {
+	
+	ArrayAdapter<Bookmark> adapter;
+	private final String ACTIVITY_TILE = "Bookmarks";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bookmarks);
 
-		ActionBar.setTitle(this, "Bookmarks");
-		final Activity that = this;
+		ActionBar.setTitle(this, ACTIVITY_TILE);
 		ActionBar.setDefaultBackAction(this);
+		
+		final Activity that = this;
 
 		// Add nav button.
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
@@ -48,7 +52,7 @@ public class BookmarksActivity extends ListActivity {
 			}
 		});
 
-		ArrayAdapter<Bookmark> adapter = new ArrayAdapter<Bookmark>(this,
+		adapter = new ArrayAdapter<Bookmark>(this,
 				R.layout.bookmark_list_item) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -68,6 +72,12 @@ public class BookmarksActivity extends ListActivity {
 		};
 
 		setListAdapter(adapter);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		adapter.clear();
 		for (Bookmark b : Bookmark.getBookmarks(this)) {
 			adapter.add(b);
 		}

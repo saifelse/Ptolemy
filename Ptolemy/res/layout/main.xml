@@ -36,6 +36,13 @@
         android:text="@string/wifiLocalizerStart" 
         android:onClick="launchWifiDisplay"/>
 
+    <Button
+        android:id="@+id/ButtonLaunchResetData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="resetData"
+        android:text="@string/launch_resetdata" />
+
     <TextView
         android:id="@+id/SelectedClasses"
         android:layout_width="match_parent"

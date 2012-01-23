@@ -17,25 +17,21 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
-
-import edu.mit.pt.maps.PlacesItemizedOverlay;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import edu.mit.pt.maps.PlacesItemizedOverlay;
 
 public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> {
-	
+
 	private Context context;
-	
+
 	public RoomLoader(Context context) {
 		this.context = context;
 	}
-	
+
 	public Set<Place> getRooms() {
 		Set<Place> roomSet = new HashSet<Place>();
 		String roomJSON = readRoomJSON();
@@ -43,14 +39,14 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 			JSONObject rooms = new JSONObject(roomJSON);
 			Log.i(RoomLoader.class.getName(),
 					"Number of rooms " + rooms.length());
-			
+
 			JSONArray roomList = rooms.names();
 			for (int i = 0; i < roomList.length(); i++) {
 				String name = roomList.getString(i);
 				JSONObject coords = rooms.getJSONObject(name);
 				int lat = coords.getInt("lat");
 				int lon = coords.getInt("lon");
-				Place room = new Place(name, lat, lon);
+				Place room = new Classroom(0, name, lat, lon);
 				roomSet.add(room);
 				Log.i(RoomLoader.class.getName(), roomList.getString(i));
 			}
@@ -59,12 +55,11 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 		}
 		return roomSet;
 	}
-	
+
 	public String readRoomJSON() {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(
-				"http://mit.edu/~georgiou/pt/rooms.json");
+		HttpGet httpGet = new HttpGet("http://mit.edu/~georgiou/pt/rooms.json");
 		try {
 			HttpResponse response = client.execute(httpGet);
 			StatusLine statusLine = response.getStatusLine();
@@ -88,12 +83,12 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 		}
 		return builder.toString();
 	}
-	
+
 	@Override
 	protected Void doInBackground(PlacesItemizedOverlay... params) {
 		PlacesContentProvider pcp = new PlacesContentProvider();
 		Set<Place> rooms = getRooms();
-		for (Place p: rooms) {
+		for (Place p : rooms) {
 			ContentValues values = new ContentValues();
 			
 			//pcp.insert(null, )
@@ -108,9 +103,12 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 			values.put(PlacesTable.COLUMN_NAME, p.getName());
 			values.put(PlacesTable.COLUMN_LAT, p.getLatE6());
 			values.put(PlacesTable.COLUMN_LON, p.getLonE6());
-			Uri CONTENT_URI = Uri.parse("content://edu.mit.pt.data.placescontentprovider/");
-			
-			Uri uri = this.context.getContentResolver().insert(CONTENT_URI, values);
+			values.put(PlacesTable.COLUMN_TYPE, p.getPlaceType().name());
+			Uri CONTENT_URI = Uri
+					.parse("content://edu.mit.pt.data.placescontentprovider/");
+
+			context.getContentResolver().insert(CONTENT_URI,
+					values);
 		}
 		return null;
 	}
