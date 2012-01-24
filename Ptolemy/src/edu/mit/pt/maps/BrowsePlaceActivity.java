@@ -34,7 +34,6 @@ public class BrowsePlaceActivity extends MapActivity {
 		searchButton.setImageResource(R.drawable.ic_menu_search);
 		searchButton.setContentDescription(getString(R.string.search));
 		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				onSearchRequested();
 			}
@@ -42,7 +41,6 @@ public class BrowsePlaceActivity extends MapActivity {
 
 		searchButton.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				// TODO Thomas how did you do this lol.
 				onSearchRequested();
@@ -61,7 +59,6 @@ public class BrowsePlaceActivity extends MapActivity {
 		findViewById(R.id.backToAddTitle).setOnClickListener(
 				new OnClickListener() {
 
-					@Override
 					public void onClick(View v) {
 						if (place != null) {
 							finishWithPlace(place);
@@ -73,7 +70,6 @@ public class BrowsePlaceActivity extends MapActivity {
 		final PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.setOnTapListener(new OnTapListener() {
 
-			@Override
 			public void onTap(Place p) {
 				setPlace(p);
 			}

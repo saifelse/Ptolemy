@@ -46,7 +46,6 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 		this.activity = activity;
 		this.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				activity.changeType(BookmarkType.LECTURE, false);

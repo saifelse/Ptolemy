@@ -160,12 +160,10 @@ abstract public class Place implements Parcelable {
 		return places;
 	}
 
-	@Override
 	public int describeContents() {
 		return 0;
 	}
 
-	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(getPlaceType().name());
 		dest.writeInt(id);

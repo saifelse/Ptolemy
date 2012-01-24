@@ -72,7 +72,6 @@ public class PtolemyMapActivity extends MapActivity {
 		compassButton.setImageResource(R.drawable.ic_menu_compass);
 		compassButton.setContentDescription(getString(R.string.centre));
 		compassButton.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				mapView.getController().animateTo(LocationSetter.getPoint());
 			}
@@ -83,7 +82,6 @@ public class PtolemyMapActivity extends MapActivity {
 		searchButton.setImageResource(R.drawable.ic_menu_search);
 		searchButton.setContentDescription(getString(R.string.search));
 		searchButton.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				onSearchRequested();
 			}
@@ -94,7 +92,6 @@ public class PtolemyMapActivity extends MapActivity {
 		bookmarksButton.setImageResource(R.drawable.ic_menu_bookmark);
 		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
 		bookmarksButton.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(v.getContext(),
 						BookmarksActivity.class));
@@ -143,7 +140,6 @@ public class PtolemyMapActivity extends MapActivity {
 			builder.setNeutralButton("OK",
 					new DialogInterface.OnClickListener() {
 
-						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 							onSearchRequested();
