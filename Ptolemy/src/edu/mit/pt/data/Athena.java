@@ -4,8 +4,8 @@ import android.os.Parcel;
 import edu.mit.pt.R;
 
 public class Athena extends Place {
-	public Athena(long id, String name, int latE6, int lonE6) {
-		super(id, name, latE6, lonE6);
+	public Athena(long id, String name, int latE6, int lonE6, int floor) {
+		super(id, name, latE6, lonE6, floor);
 	}
 
 	public Athena(Parcel in) {

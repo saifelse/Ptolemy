@@ -5,8 +5,8 @@ import edu.mit.pt.R;
 
 public class Classroom extends Place {
 
-	public Classroom(long id, String name, int latE6, int lonE6) {
-		super(id, name, latE6, lonE6);
+	public Classroom(long id, String name, int latE6, int lonE6, int floor) {
+		super(id, name, latE6, lonE6, floor);
 	}
 
 	public Classroom(Parcel in) {

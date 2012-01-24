@@ -14,6 +14,7 @@ public class PlacesTable {
 	public static final String COLUMN_LAT = "lat";
 	public static final String COLUMN_LON = "lon";
 	public static final String COLUMN_TYPE = "type";
+	public static final String COLUMN_FLOOR = "floor";
 
 	static HashMap<String, String> buildColumnMap() {
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -34,6 +35,7 @@ public class PlacesTable {
 			+ " integer primary key autoincrement, " + COLUMN_NAME
 			+ " TEXT not null, " + COLUMN_LAT + " REAL, " + COLUMN_LON
 			+ " REAL, " + COLUMN_TYPE + " TEXT);";
+	
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(PLACES_TABLE_CREATE);
