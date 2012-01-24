@@ -3,6 +3,7 @@ package edu.mit.pt.bookmarks;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.maps.PtolemyMapActivity;
 
 public class BookmarksActivity extends ListActivity {
 
@@ -50,7 +52,16 @@ public class BookmarksActivity extends ListActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
+				Bookmark b = (Bookmark) parent.getAdapter().getItem(position);
+				Intent intent = new Intent(that, PtolemyMapActivity.class);
+				Uri.Builder builder = Uri
+						.parse("content://edu.mit.pt.data.placescontentprovider/")
+						.buildUpon().path(Long.toString(b.getId()));
+				intent.setData(builder.build());
+				intent.setAction(Intent.ACTION_SEARCH);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				finish();
 			}
 		});
 

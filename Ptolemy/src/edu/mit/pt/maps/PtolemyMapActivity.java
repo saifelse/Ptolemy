@@ -100,16 +100,18 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		View metaView = findViewById(R.id.meta_view);
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
 				.getName());
+		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
 		metaView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
-	void showClassroom(final Place p) {
+	void showClassroom(final Place place) {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
-		places.add(new PlacesOverlayItem(p, p.getName(), p.getName(), p
-				.getMarker(getResources())));
+		places.add(new PlacesOverlayItem(place, place.getName(), place
+				.getName(), place.getMarker(getResources())));
 		mapView.getPlacesOverlay().setExtras(places);
-		mapView.getController().animateTo(p.getPoint());
+		mapView.getController().animateTo(place.getPoint());
+		setPlace(place);
 	}
 
 	/*
