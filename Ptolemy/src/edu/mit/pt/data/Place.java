@@ -59,7 +59,7 @@ abstract public class Place implements Parcelable {
 
 	abstract public int getMarkerId();
 
-	public static Place getPlace(Context context, int id) {
+	public static Place getPlace(Context context, long id) {
 		// TODO: implement this.
 		return new Classroom(id, "10-250", 42361113, -71092261);
 	}
@@ -76,10 +76,12 @@ abstract public class Place implements Parcelable {
 				PlacesTable.COLUMN_TYPE }, PlacesTable.COLUMN_NAME + "=?",
 				new String[] { room }, null, null, null);
 		if (c.getCount() == 0) {
+			c.close();
+			db.close();
 			return null;
 		}
 		c.moveToFirst();
-		int id = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_ID));
+		long id = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_ID));
 		String name = c.getString(c.getColumnIndex(PlacesTable.COLUMN_NAME));
 		int latE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LAT));
 		int lonE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LON));
@@ -142,7 +144,7 @@ abstract public class Place implements Parcelable {
 				PlacesTable.COLUMN_TYPE }, null, null, null, null, null);
 		List<Place> places = new ArrayList<Place>();
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			int id = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_ID));
+			long id = c.getLong(c.getColumnIndex(PlacesTable.COLUMN_ID));
 			String name = c
 					.getString(c.getColumnIndex(PlacesTable.COLUMN_NAME));
 			int latE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LAT));
@@ -158,7 +160,7 @@ abstract public class Place implements Parcelable {
 				GenderEnum gender;
 				Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME,
 						new String[] { ToiletMetaTable.COLUMN_TYPE },
-						"PLACE_ID=?", new String[] { Integer.toString(id) },
+						"PLACE_ID=?", new String[] { Long.toString(id) },
 						null, null, null);
 				if (tc.getCount() == 1) {
 					tc.moveToFirst();
@@ -189,7 +191,17 @@ abstract public class Place implements Parcelable {
 		return 0;
 	}
 
+	protected Place(Parcel in) {
+		id = in.readLong();
+		Log.v(Config.TAG, "ID IS " + id);
+		latE6 = in.readInt();
+		lonE6 = in.readInt();
+		name = in.readString();
+		Log.v(Config.TAG, "PLACE NAME IS " + name);
+	}
+
 	public void writeToParcel(Parcel dest, int flags) {
+		Log.v(Config.TAG, "PLACE WRITETO");
 		dest.writeString(getPlaceType().name());
 		dest.writeLong(id);
 		dest.writeInt(latE6);
@@ -222,12 +234,4 @@ abstract public class Place implements Parcelable {
 			return new Place[size];
 		}
 	};
-
-	protected Place(Parcel in) {
-		in.readString(); // Skip over type.
-		id = in.readLong();
-		latE6 = in.readInt();
-		lonE6 = in.readInt();
-		name = in.readString();
-	}
 }
