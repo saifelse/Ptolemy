@@ -1,5 +1,6 @@
 package edu.mit.pt.widgets;
 
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,9 +9,15 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+/* FIXME: Case where min = max needs to be handled.
+ * TODO: Add min-1 and max-1 on the seekbar, but make them unselectable.
+ * 
+ * TODO: Add listener support.
+ */
 public class FloorSeekBar extends View {
 	private int trackPad = 5;
 
@@ -27,21 +34,25 @@ public class FloorSeekBar extends View {
 	private int floor;
 	private int unsnappedY;
 	private TextPaint mTxt;
+	private TextPaint selTxt;
 	private float textHeight;
 	private Paint scrollTrackPaint;
 	private Paint scrollThumbPaint;
 
+	private boolean firstDraw;
+	
 	public FloorSeekBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		initText();
 		// Get attributes and store them.
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.FloorSeekBar);
 		setMin(a.getInteger(R.styleable.FloorSeekBar_minFloor, 0));
 		setMax(a.getInteger(R.styleable.FloorSeekBar_maxFloor, 0));
 		setFloor(a.getInteger(R.styleable.FloorSeekBar_floor, 0));
-
-		initText();
-
+		
+		firstDraw = true;
+		Log.v(Config.TAG+"_seek", "Floor: "+this.floor);
 		a.recycle();
 	}
 
@@ -49,6 +60,11 @@ public class FloorSeekBar extends View {
 		mTxt = new TextPaint();
 		mTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
 		mTxt.setColor(0xFFFF0000);
+		
+		selTxt = new TextPaint();
+		selTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
+		selTxt.setColor(0xFF000000);
+		
 		textHeight = -mTxt.ascent();
 
 		scrollTrackPaint = new Paint();
@@ -56,7 +72,7 @@ public class FloorSeekBar extends View {
 
 		scrollThumbPaint = new Paint();
 		scrollThumbPaint.setColor(0xFF999999);
-
+		invalidate();
 	}
 
 	private void setUnsnappedY(int y) {
@@ -69,6 +85,9 @@ public class FloorSeekBar extends View {
 	}
 
 	private int getYFromFloor(int floor) {
+		int returnVal = (int) (getTrackBottom() - (floor - min) * getSpacing());
+		Log.v(Config.TAG+"_seek", "getYFromFloor("+floor+")="+returnVal);
+		Log.v(Config.TAG+"_seek", "with: this.getHeight()="+getHeight());
 		return (int) (getTrackBottom() - (floor - min) * getSpacing());
 	}
 
@@ -87,16 +106,29 @@ public class FloorSeekBar extends View {
 	@Override
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-
+		
+		
+		if(firstDraw){
+			firstDraw = false;
+			setUnsnappedY(getYFromFloor(floor));
+		}
+		
+		
+		int targetFloor = getFloorFromY(unsnappedY);
+		
 		int centerXLine = this.getWidth() / 2;
 		float textHeight = -mTxt.ascent();
 
 		// Add numerical labels above and below.
-		canvas.drawText(Integer.toString(max), getPaddingLeft(),
-				getPaddingTop() + textHeight, mTxt);
-		canvas.drawText(Integer.toString(min), getPaddingLeft(),
-				this.getHeight() - getPaddingBottom(), mTxt);
-
+		
+		if(targetFloor != min){
+		canvas.drawText(Integer.toString(min),
+				centerXLine + thumbWidth / 2, getYFromFloor(min) + textHeight / 2, mTxt);
+		}
+		if(targetFloor != max){
+			canvas.drawText(Integer.toString(max),
+					centerXLine + thumbWidth / 2, getYFromFloor(max) + textHeight / 2, mTxt);
+		}
 		// Scroll
 
 		// Draw scroll track
@@ -109,16 +141,14 @@ public class FloorSeekBar extends View {
 			int centerLine = getYFromFloor(i);
 			canvas.drawRect(new Rect(centerXLine - tickWidth / 2, centerLine
 					- tickHeight / 2, centerXLine + tickWidth / 2, centerLine
-					+ tickHeight / 2), scrollTrackPaint);
-			// canvas.drawBitmap(i == floor ? dot : arrow, getPaddingLeft(),
-			// trackBottom-(i-min)*spacing, new Paint());
+					+ tickHeight / 2), i == floor ? selTxt : scrollTrackPaint);
 		}
 		// Draw scroll thumb.
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY
 				- thumbHeight / 2, centerXLine + thumbWidth / 2, unsnappedY
 				+ thumbHeight / 2), scrollThumbPaint);
 		canvas.drawText(Integer.toString(getFloorFromY(unsnappedY)),
-				centerXLine + thumbWidth / 2, unsnappedY + textHeight / 2, mTxt);
+				centerXLine + thumbWidth / 2, unsnappedY + textHeight / 2, selTxt);
 
 	}
 
@@ -185,7 +215,7 @@ public class FloorSeekBar extends View {
 
 	public void setMin(int min) {
 		this.min = min;
-		requestLayout();
+		setFloor(floor); //refresh to within bounds
 		invalidate();
 	}
 
@@ -195,7 +225,7 @@ public class FloorSeekBar extends View {
 
 	public void setMax(int max) {
 		this.max = max;
-		requestLayout();
+		setFloor(floor); //refresh to within bounds
 		invalidate();
 	}
 
@@ -205,6 +235,8 @@ public class FloorSeekBar extends View {
 
 	public void setFloor(int floor) {
 		this.floor = Math.max(min, Math.min(max, floor));
+		Log.v(Config.TAG+"_seek", "floor is set to: "+(this.floor));
+		Log.v(Config.TAG+"_seek", "Y is set to: "+getYFromFloor(this.floor));
 		setUnsnappedY(getYFromFloor(this.floor));
 		invalidate();
 	}

@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    			xmlns:pt= "http://schemas.android.com/apk/res/edu.mit.pt"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:pt="http://schemas.android.com/apk/res/edu.mit.pt"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<!--  
+    
     <com.google.android.maps.MapView
         android:id="@+id/stdMapView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_width = "fill_parent"
-        android:layout_height = "fill_parent"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent"
         android:apiKey="@string/map_key"
         android:clickable="true" >
+    </com.google.android.maps.MapView>
 
-    </com.google.android.maps.MapView> -->
-    
     <edu.mit.pt.widgets.FloorSeekBar
         android:id="@+id/FloorTest"
-        android:layout_marginLeft="40dp"
-        android:layout_width="30dp"
+        android:layout_width="50dp"
         android:layout_height="200dp"
-        pt:minFloor="3"
-        pt:maxFloor="10"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         pt:floor="4"
-        />
+        pt:maxFloor="10"
+        pt:minFloor="3" />
 
-</LinearLayout>
+</RelativeLayout>
