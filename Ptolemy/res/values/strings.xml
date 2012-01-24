@@ -13,7 +13,7 @@
     <string name="form_password">Password</string>
     <string name="login_button">Prepopulate!</string>
     <string name="instructions"> This is the test page for our app. Click the buttons in succession to see the implemented functionality... NOTE: wait for notification before proceeding!. The core of the app is in \"View the Map.\"; don\'t forget to click the buttons in the action bar!
-        Most of the current functionality is in bookmarks.
+       \nMost of the current functionality is in bookmarks.
         </string>
 
     <!-- AddClassActivity -->
