@@ -61,8 +61,7 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 					}
 				});
 
-		final PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
-		mapView.setOnTapListener(new OnTapListener() {
+		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
 
 			public void onTap(Place p) {
 				setPlace(p);

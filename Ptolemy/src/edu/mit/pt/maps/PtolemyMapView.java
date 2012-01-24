@@ -64,7 +64,7 @@ public class PtolemyMapView extends MapView {
 		getController().setZoom(21);
 
 		setRowsCols();
-		getController().setCenter(new GeoPoint(42361440, -71091789));
+		getController().setCenter(new GeoPoint(42359101,-71090890));
 
 		tm = new PtolemyTileManager(ctx);
 
@@ -82,10 +82,6 @@ public class PtolemyMapView extends MapView {
 			placesOverlay.addOverlayItem(item);
 		}
 		overlays.add(placesOverlay);
-	}
-
-	public void setOnTapListener(OnTapListener listener) {
-		placesOverlay.setOnTapListener(listener);
 	}
 
 	@Override

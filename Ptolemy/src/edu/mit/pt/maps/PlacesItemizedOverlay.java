@@ -16,7 +16,7 @@ import edu.mit.pt.data.Place;
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	OnTapListener tapListener = null;
-
+	
 	private List<PlacesOverlayItem> overlayItems = Collections
 			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
@@ -42,7 +42,6 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected OverlayItem createItem(int i) {
-		Log.v(Config.TAG, "I AM CREATING AN ITEM.");
 		return getOverlayItem(i);
 	}
 	
@@ -71,6 +70,10 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			tapListener.onTap(p);
 		}
 		return true;
+	}
+	
+	static public Drawable boundCenterBottom(Drawable drawable) {
+		return ItemizedOverlay.boundCenterBottom(drawable);
 	}
 
 }

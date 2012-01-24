@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -89,6 +91,8 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 	protected Integer doInBackground(Void... params) {
 		// PlacesContentProvider pcp = new PlacesContentProvider();
 		Set<Place> rooms = getRooms();
+		List<ContentValues> valuesToInsert = new ArrayList<ContentValues>();
+		
 		for (Place p : rooms) {
 			ContentValues values = new ContentValues();
 			
@@ -105,11 +109,15 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 			values.put(PlacesTable.COLUMN_LAT, p.getLatE6());
 			values.put(PlacesTable.COLUMN_LON, p.getLonE6());
 			values.put(PlacesTable.COLUMN_TYPE, p.getPlaceType().name());
-			Uri CONTENT_URI = Uri
-					.parse("content://edu.mit.pt.data.placescontentprovider/");
+			
 
-			context.getContentResolver().insert(CONTENT_URI, values);
+			//context.getContentResolver().insert(CONTENT_URI, values);
+			valuesToInsert.add(values);
 		}
+		Uri CONTENT_URI = Uri
+				.parse("content://edu.mit.pt.data.placescontentprovider/");
+		
+		context.getContentResolver().bulkInsert(CONTENT_URI, valuesToInsert.toArray(new ContentValues[valuesToInsert.size()]));
 		return rooms.size();
 	}
 	@Override

@@ -43,5 +43,10 @@
         <item name="android:background">@drawable/blue_button_bg</item>
         <item name="android:textColor">#fff</item>
     </style>
+    
+    <style name="GreenButton" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/green_button_bg</item>
+        <item name="android:textColor">#fff</item>
+    </style>
 
 </resources>

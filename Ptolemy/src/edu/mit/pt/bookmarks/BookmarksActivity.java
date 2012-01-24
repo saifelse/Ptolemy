@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -14,10 +15,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 
 public class BookmarksActivity extends ListActivity {
-	
+
 	ArrayAdapter<Bookmark> adapter;
 	private final String ACTIVITY_TILE = "Bookmarks";
 
@@ -28,7 +30,7 @@ public class BookmarksActivity extends ListActivity {
 
 		ActionBar.setTitle(this, ACTIVITY_TILE);
 		ActionBar.setDefaultBackAction(this);
-		
+
 		final Activity that = this;
 
 		// Add nav button.
@@ -52,8 +54,7 @@ public class BookmarksActivity extends ListActivity {
 			}
 		});
 
-		adapter = new ArrayAdapter<Bookmark>(this,
-				R.layout.bookmark_list_item) {
+		adapter = new ArrayAdapter<Bookmark>(this, R.layout.bookmark_list_item) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				if (convertView == null) {
@@ -66,6 +67,7 @@ public class BookmarksActivity extends ListActivity {
 
 				TextView locationText = (TextView) convertView
 						.findViewById(R.id.location);
+				Log.v(Config.TAG, "ITEM: " + getItem(position));
 				locationText.setText(getItem(position).getPlace().getName());
 				return convertView;
 			}
@@ -73,7 +75,7 @@ public class BookmarksActivity extends ListActivity {
 
 		setListAdapter(adapter);
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();

@@ -1,6 +1,8 @@
 package edu.mit.pt.data;
 
 import android.os.Parcel;
+import android.util.Log;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 
 public class Toilet extends Place {
@@ -12,7 +14,15 @@ public class Toilet extends Place {
 
 	public Toilet(Parcel in) {
 		super(in);
+		Log.v(Config.TAG, "TOILET CONSTRUCTOR");
 		gender = GenderEnum.valueOf(in.readString());
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		Log.v(Config.TAG, "TOILET WRITETOO");
+		dest.writeString(this.gender.name());
 	}
 	
 	@Override
@@ -27,12 +37,6 @@ public class Toilet extends Place {
 			prefix = "";
 		}
 		return prefix+"Bathroom ("+name+")";
-	}
-	
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeString(this.gender.name());
 	}
 	
 	@Override

@@ -17,6 +17,8 @@ import android.widget.Toast;
 import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.classes.MITClassTable;
+import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.data.RoomLoader;
@@ -31,8 +33,6 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
-        new AP.APLoader(db).execute(this);
     }
     /*
     public void onPause(){
@@ -87,6 +87,11 @@ public class PtolemyActivity extends Activity {
 		// Load rooms.
 		RoomLoader roomLoader = new RoomLoader(this);
 		roomLoader.execute();
+		
+		Place.addPlace(this, "testbathroom", 42359101,-71090869, PlaceType.TOILET);
+		
+        //SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+		//new AP.APLoader(db).execute(this);
 		
 		
 		db.close();

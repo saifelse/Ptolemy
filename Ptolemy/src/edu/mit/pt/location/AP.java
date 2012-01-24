@@ -40,7 +40,11 @@ public class AP {
 	
 	public static Integer loadAPs(Context context, SQLiteDatabase db) {
 		// Delete all rows
-		db.delete(APTable.AP_TABLE_NAME, "", new String[] {});
+		try {
+			db.delete(APTable.AP_TABLE_NAME, "", new String[] {});
+		} catch (Exception e) {
+			
+		}
 		
 		// Refetch from file
 		int count = 0;

@@ -9,7 +9,7 @@ public class BookmarksTable {
 	public static final String BOOKMARKS_TABLE_NAME = "bookmarks";
 	static final String COLUMN_ID = BaseColumns._ID;
 	static final String COLUMN_NAME = "customName";
-	static final String COLUMN_PLACE_ID = "place";
+	static final String COLUMN_PLACE_ID = "place" + BaseColumns._ID;
 	static final String COLUMN_TYPE = "type";
 
 	public static final String BOOKMARKS_TABLE_CREATE = "CREATE TABLE "

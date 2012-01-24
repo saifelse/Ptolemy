@@ -11,10 +11,36 @@
 
     <edu.mit.pt.maps.PtolemyMapView
         android:id="@+id/mapview"
-        android:layout_below="@+id/nav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/nav"
         android:apiKey="@string/map_key"
         android:clickable="true" />
+
+    <RelativeLayout
+        android:id="@+id/meta_view"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/place_confirm_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/place_confirm_button"
+            android:background="@drawable/black_50"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/place_confirm_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/black_50"
+            android:gravity="center" />
+    </RelativeLayout>
 
 </RelativeLayout>
