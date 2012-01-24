@@ -12,12 +12,13 @@
     <string name="form_username">Username</string>
     <string name="form_password">Password</string>
     <string name="login_button">Prepopulate!</string>
-    <string name="instructions"> This is the test page for our app. Click the buttons in succession to see the implemented functionality... NOTE: wait for notification before proceeding!. The core of the app is in \"View the Map.\"; don\'t forget to click the buttons in the action bar!</string>
+    <string name="instructions"> This is the test page for our app. Click the buttons in succession to see the implemented functionality... NOTE: wait for notification before proceeding!. The core of the app is in \"View the Map.\"; don\'t forget to click the buttons in the action bar!
+        Most of the current functionality is in bookmarks.
+        </string>
 
     <!-- AddClassActivity -->
     <string name="class_title">Title:</string>
     <string name="class_title_hint">Title (hint: try \'6.570\')</string>
-    <string name="class_name">The Study of Men Who Fuck Goats While Peeing in the Shower</string>
     <string name="pick_place_hint">Pick a location</string>
     <string name="class_room_hint">Room #</string>
     <string name="room_browse_button">Browse</string>
