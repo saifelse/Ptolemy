@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="FloorSeekBar">
+		<attr name="minFloor" format="integer"/>
+		<attr name="maxFloor" format="integer"/>
+		<attr name="floor" format="integer"/>
+	</declare-styleable>
+</resources>

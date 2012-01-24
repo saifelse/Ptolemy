@@ -7,39 +7,35 @@
     <include
         android:id="@+id/menu"
         layout="@layout/menu_home" />
-
-    <Button
-        android:id="@+id/ButtonLaunchMap"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="launchPtolemyMap"
-        android:text="@string/launch_map" />
-
-    <Button
+        android:text="@string/instructions" />
+	<Button
         android:id="@+id/ButtonLaunchPrepopulate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="launchTouchstoneLogin"
         android:text="@string/launch_prepopulate" />
-
     <Button
         android:id="@+id/ButtonLaunchResetData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="resetData"
         android:text="@string/launch_resetdata" />
-    
     <Button
         android:id="@+id/ButtonLaunchLoadClasses"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="loadClasses"
         android:text="@string/launch_loadclasses" />
-
-    <TextView
-        android:id="@+id/SelectedClasses"
+            
+    <Button
+        android:id="@+id/ButtonLaunchMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/empty_list" />
+        android:onClick="launchPtolemyMap"
+        android:text="@string/launch_map" />
+    
 
 </LinearLayout>

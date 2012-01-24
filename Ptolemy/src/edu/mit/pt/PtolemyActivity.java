@@ -35,7 +35,7 @@ public class PtolemyActivity extends Activity {
 
 	public void loadClasses(View view) {
 		SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
-		new MITClass.MITClassLoader(db).execute(new Context[] { this });
+		new MITClass.MITClassLoader(db, this).execute();
 	}
 
 	public void launchTouchstoneLogin(View view) {
@@ -73,7 +73,7 @@ public class PtolemyActivity extends Activity {
 		
 		db.close();
 		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "
-				+ Arrays.toString(tables), 1000);
+				+ Arrays.toString(tables)+". Please wait several seconds while room data is downloaded...", 1000);
 		toast.show();
 	}
 
@@ -81,13 +81,17 @@ public class PtolemyActivity extends Activity {
 		switch (requestCode) {
 		case REQUEST_MOIRA:
 			if (resultCode == RESULT_OK) {
-				TextView classText = (TextView) findViewById(R.id.SelectedClasses);
-				classText.setText("");
+				
+				//TextView classText = (TextView) findViewById(R.id.SelectedClasses);
+				//classText.setText("");
+				StringBuffer classText = new StringBuffer("We found these classes: \n");
 				String[] classes = (String[]) data.getExtras().get(
 						ClassDataIntent.CLASSES);
 				for (String classname : classes) {
 					classText.append(classname + "\n");
 				}
+				Toast toast = Toast.makeText(this, classText, 1000);
+				toast.show();
 			}
 		}
 	}

@@ -22,8 +22,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
-public class RoomLoader extends AsyncTask<Void, Integer, Void> {
+public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 
 	private Context context;
 
@@ -85,7 +86,7 @@ public class RoomLoader extends AsyncTask<Void, Integer, Void> {
 	}
 
 	@Override
-	protected Void doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 		// PlacesContentProvider pcp = new PlacesContentProvider();
 		Set<Place> rooms = getRooms();
 		for (Place p : rooms) {
@@ -107,6 +108,12 @@ public class RoomLoader extends AsyncTask<Void, Integer, Void> {
 
 			context.getContentResolver().insert(CONTENT_URI, values);
 		}
-		return null;
+		return rooms.size();
+	}
+	@Override
+	protected void onPostExecute(Integer result) {
+		Toast toast = Toast.makeText(context, "Downloaded data for " + result + " rooms.", 1000);
+		toast.show();
+		//Log.v(Config.TAG, "Downloaded " + result + " classes.");
 	}
 }
