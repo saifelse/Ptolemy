@@ -32,14 +32,19 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/place_confirm_button"
             android:background="@drawable/black_50"
-            android:gravity="center" />
+            android:textColor="#FFF"
+            android:textSize="16dp"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical" />
 
         <Button
             android:id="@+id/place_confirm_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@drawable/black_50"
+            android:background="@drawable/navigate_bg"
             android:gravity="center" />
     </RelativeLayout>
 

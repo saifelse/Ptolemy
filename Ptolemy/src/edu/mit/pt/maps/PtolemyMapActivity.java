@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
@@ -29,7 +29,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		setContentView(R.layout.map_main);
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
-			
+
 			@Override
 			public void onTap(Place p) {
 				setPlace(p);
@@ -85,12 +85,14 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				bookmarksButton });
 
 	}
-	
+
 	private void setPlace(Place place) {
 		View metaView = findViewById(R.id.meta_view);
+		((TextView) findViewById(R.id.place_confirm_text)).setText(place
+				.getName());
 		metaView.setVisibility(View.VISIBLE);
 	}
-	
+
 	@Override
 	void showClassroom(final Place p) {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
