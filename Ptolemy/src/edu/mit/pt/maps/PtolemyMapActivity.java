@@ -30,7 +30,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
 
-			@Override
 			public void onTap(Place p) {
 				setPlace(p);
 			}
