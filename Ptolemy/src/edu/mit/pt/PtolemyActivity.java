@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import edu.mit.pt.location.AP;
+import edu.mit.pt.location.APTable;
 import edu.mit.pt.location.WifiDisplayActivity;
 import edu.mit.pt.location.WifiLocation;
 import android.widget.Toast;
@@ -63,7 +64,9 @@ public class PtolemyActivity extends Activity {
 		// Recreate tables.
 		String[] tables = new String[] { PlacesTable.PLACES_TABLE_NAME,
 				BookmarksTable.BOOKMARKS_TABLE_NAME,
-				MITClassTable.CLASSES_TABLE_NAME };
+				MITClassTable.CLASSES_TABLE_NAME,
+				APTable.AP_TABLE_NAME
+				};
 		for (String table : tables) {
 			db.execSQL("DROP TABLE IF EXISTS " + table);
 		}
@@ -79,6 +82,7 @@ public class PtolemyActivity extends Activity {
 		// Load rooms.
 		RoomLoader roomLoader = new RoomLoader(this);
 		roomLoader.execute();
+		
 		
 		db.close();
 		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "

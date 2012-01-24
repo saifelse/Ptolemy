@@ -5,10 +5,10 @@ import android.util.Log;
 import edu.mit.pt.data.PtolemyOpenHelper;
 
 public class APTable {
-	static final String AP_TABLE_NAME = "ap";
-	static final String COLUMN_ID = "_id";
-	static final String COLUMN_LOCATION = "customName";
-	static final String COLUMN_BSSID = "place";
+	public static final String AP_TABLE_NAME = "ap";
+	public static final String COLUMN_ID = "_id";
+	public static final String COLUMN_LOCATION = "customName";
+	public static final String COLUMN_BSSID = "place";
 
 	private static final String AP_TABLE_CREATE = "CREATE TABLE "
 			+ AP_TABLE_NAME + " (" + COLUMN_ID + " integer primary key autoincrement, " +

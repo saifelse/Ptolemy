@@ -40,16 +40,20 @@ public class FloorSeekBar extends View {
 	// With XML
 	public FloorSeekBar(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		// Get attributes
-		
+		// Get attributes and store them.
 		TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.FloorSeekBar);
-		// TODO Auto-generated constructor stub
+		setMin(a.getInteger(R.styleable.FloorSeekBar_minFloor, 0));
+		setMax(a.getInteger(R.styleable.FloorSeekBar_maxFloor, 0));
+		setFloor(a.getInteger(R.styleable.FloorSeekBar_floor, 0));
+		a.recycle();
 	}
 
 	@Override
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
+		
+
 		// TODO: draw shit.
 	}
 	@Override
