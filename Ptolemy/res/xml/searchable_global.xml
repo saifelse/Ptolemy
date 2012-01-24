@@ -3,7 +3,7 @@
     android:label="@string/app_name"
     android:hint="hint" 
     android:inputType="textNoSuggestions"
-    android:includeInGlobalSearch="false"
+    android:includeInGlobalSearch="true"
     android:searchSuggestAuthority="edu.mit.pt.data.placescontentprovider"
     android:searchSuggestIntentData="content://edu.mit.pt.data.placescontentprovider">
 </searchable>

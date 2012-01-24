@@ -4,8 +4,8 @@ import android.os.Parcel;
 import edu.mit.pt.R;
 
 public class Fountain extends Place {
-	public Fountain(long id, String name, int latE6, int lonE6) {
-		super(id, name, latE6, lonE6);
+	public Fountain(long id, String name, int latE6, int lonE6, int floor) {
+		super(id, name, latE6, lonE6, floor);
 	}
 
 	public Fountain(Parcel in) {

@@ -34,31 +34,6 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 		this.context = context;
 	}
 
-	public Set<Place> getRooms() {
-		Set<Place> roomSet = new HashSet<Place>();
-		String roomJSON = readRoomJSON();
-		try {
-			JSONObject rooms = new JSONObject(roomJSON);
-			Log.i(RoomLoader.class.getName(),
-					"Number of rooms " + rooms.length());
-
-			JSONArray roomList = rooms.names();
-			for (int i = 0; i < roomList.length(); i++) {
-				String name = roomList.getString(i);
-				JSONObject coords = rooms.getJSONObject(name);
-				int lat = coords.getInt("lat");
-				int lon = coords.getInt("lon");
-				Place room = Place.addPlace(context, name, lat, lon,
-						PlaceType.CLASSROOM);
-				roomSet.add(room);
-				Log.i(RoomLoader.class.getName(), roomList.getString(i));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return roomSet;
-	}
-
 	public String readRoomJSON() {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
@@ -109,11 +84,13 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 				JSONObject coords = rooms.getJSONObject(name);
 				int lat = coords.getInt("lat");
 				int lon = coords.getInt("lon");
+				int floor = coords.getInt("floor");
 				
 				ContentValues values = new ContentValues();
 				values.put(PlacesTable.COLUMN_NAME, name);
 				values.put(PlacesTable.COLUMN_LAT, lat);
 				values.put(PlacesTable.COLUMN_LON, lon);
+				values.put(PlacesTable.COLUMN_FLOOR, floor);
 				values.put(PlacesTable.COLUMN_TYPE, PlaceType.CLASSROOM.toString());
 			
 				valuesToInsert.add(values);

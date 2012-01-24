@@ -86,7 +86,7 @@ public class PtolemyActivity extends Activity {
 		RoomLoader roomLoader = new RoomLoader(this);
 		roomLoader.execute();
 		
-		Place.addPlace(this, "testbathroom", 42359101,-71090869, PlaceType.TOILET);
+		Place.addPlace(this, "testbathroom", 42359101,-71090869, 2, PlaceType.TOILET);
 		
         //SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
 		new AP.APLoader(db).execute(this);
