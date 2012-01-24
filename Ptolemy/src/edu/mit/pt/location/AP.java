@@ -98,7 +98,7 @@ public class AP {
 	     }
 		@Override
 	    protected void onPostExecute(Integer result) {
-	         Log.v(Config.TAG,"Downloaded " + result + " classes.");
+	         Log.v(Config.TAG,"Downloaded " + result + " APs.");
 	         db.close();
 	    }
 		

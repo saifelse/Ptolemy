@@ -94,7 +94,6 @@ public class PtolemyActivity extends Activity {
 		switch (requestCode) {
 		case REQUEST_MOIRA:
 			if (resultCode == RESULT_OK) {
-				
 				//TextView classText = (TextView) findViewById(R.id.SelectedClasses);
 				//classText.setText("");
 				StringBuffer classText = new StringBuffer("We found these classes: \n");

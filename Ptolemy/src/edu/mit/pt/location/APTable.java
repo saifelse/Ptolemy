@@ -17,7 +17,6 @@ public class APTable {
 	
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(AP_TABLE_CREATE);
-
 	}
 
 	public static void onUpgrade(SQLiteDatabase db, int oldVersion,
