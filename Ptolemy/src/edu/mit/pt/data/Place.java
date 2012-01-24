@@ -60,7 +60,7 @@ abstract public class Place implements Parcelable {
 	abstract public int getMarkerId();
 
 	public static Place getPlace(Context context, long id) {
-		SQLiteDatabase db = new PtolemyOpenHelper(context)
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(context)
 				.getReadableDatabase();
 
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
@@ -70,7 +70,7 @@ abstract public class Place implements Parcelable {
 				new String[] { Long.toString(id) }, null, null, null);
 		if (c.getCount() == 0) {
 			c.close();
-			db.close();
+			//db.close();
 			return null;
 		}
 		c.moveToFirst();
@@ -92,12 +92,12 @@ abstract public class Place implements Parcelable {
 		case TOILET:
 			output = new Toilet(id, name, latE6, lonE6, getGender(db, id));
 		}
-		db.close();
+		//db.close();
 		return output;
 	}
 
 	public static Place getClassroom(Context context, String room) {
-		SQLiteDatabase db = new PtolemyOpenHelper(context)
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(context)
 				.getWritableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
 				PlacesTable.COLUMN_ID, PlacesTable.COLUMN_NAME,
@@ -106,7 +106,7 @@ abstract public class Place implements Parcelable {
 				new String[] { room }, null, null, null);
 		if (c.getCount() == 0) {
 			c.close();
-			db.close();
+			//db.close();
 			return null;
 		}
 		c.moveToFirst();
@@ -118,7 +118,7 @@ abstract public class Place implements Parcelable {
 				.getString(c.getColumnIndex(PlacesTable.COLUMN_TYPE));
 		PlaceType type = PlaceType.valueOf(typeName);
 		c.close();
-		db.close();
+		//db.close();
 		// This only searches classrooms.
 		if (type != PlaceType.CLASSROOM) {
 			return null;
@@ -138,7 +138,7 @@ abstract public class Place implements Parcelable {
 
 	private static Place addPlaceHelper(Context context, String name,
 			int latE6, int lonE6, PlaceType type, GenderEnum gender) {
-		SQLiteDatabase db = new PtolemyOpenHelper(context)
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(context)
 				.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(PlacesTable.COLUMN_NAME, name);
@@ -146,7 +146,7 @@ abstract public class Place implements Parcelable {
 		values.put(PlacesTable.COLUMN_LON, lonE6);
 		values.put(PlacesTable.COLUMN_TYPE, type.name());
 		long id = db.insert(PlacesTable.PLACES_TABLE_NAME, null, values);
-		db.close();
+		//db.close();
 		if (id == -1) {
 			return null;
 		}
@@ -165,7 +165,7 @@ abstract public class Place implements Parcelable {
 	}
 
 	public static List<Place> getPlacesExceptClassrooms(Context context) {
-		SQLiteDatabase db = new PtolemyOpenHelper(context)
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(context)
 				.getReadableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
 				PlacesTable.COLUMN_ID, PlacesTable.COLUMN_NAME,
@@ -196,7 +196,7 @@ abstract public class Place implements Parcelable {
 			}
 			places.add(p);
 		}
-		db.close();
+		//db.close();
 		return places;
 	}
 

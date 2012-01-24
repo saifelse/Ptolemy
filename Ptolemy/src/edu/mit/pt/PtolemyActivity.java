@@ -20,6 +20,7 @@ import edu.mit.pt.classes.MITClassTable;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
+import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.data.RoomLoader;
 import edu.mit.pt.maps.PtolemyMapActivity;
@@ -43,7 +44,7 @@ public class PtolemyActivity extends Activity {
     }*/
     
     public void loadClasses(View view){
-    	SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+    	SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this).getWritableDatabase();
     	new MITClass.MITClassLoader(db, this).execute();
     }
     public void launchTouchstoneLogin(View view){
@@ -64,7 +65,7 @@ public class PtolemyActivity extends Activity {
     }
     
 	public void resetData(View view) {
-		SQLiteDatabase db = new PtolemyOpenHelper(view.getContext())
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(view.getContext())
 				.getWritableDatabase();
 		// Recreate tables.
 		String[] tables = new String[] { PlacesTable.PLACES_TABLE_NAME,

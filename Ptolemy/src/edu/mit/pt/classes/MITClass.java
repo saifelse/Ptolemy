@@ -120,7 +120,7 @@ public class MITClass {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			db.close();
+			//db.close();
 			Toast toast = Toast.makeText(context, "Downloaded " + result + " classes.", 1000);
 			toast.show();
 			//Log.v(Config.TAG, "Downloaded " + result + " classes.");

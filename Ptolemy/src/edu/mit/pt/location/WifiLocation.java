@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.data.PtolemyOpenHelper;
 
 import android.content.Context;
@@ -24,7 +25,7 @@ public class WifiLocation {
 	public String scanResults() {
 		String output = "...\n";
 		System.out.println("SCANNING WIFI");
-		SQLiteDatabase db = new PtolemyOpenHelper(this.context).getReadableDatabase();
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this.context).getReadableDatabase();
 		List<ScanResult> results = wifi.getScanResults();
 		Collections.sort(results, new Comparator() {
 
@@ -44,7 +45,7 @@ public class WifiLocation {
 			String location = AP.getAPLocation(bssid0, db);
 			output = output + location + "\n";
 		}
-		db.close();
+		//db.close();
 		wifi.startScan();
 		return output;
 	}

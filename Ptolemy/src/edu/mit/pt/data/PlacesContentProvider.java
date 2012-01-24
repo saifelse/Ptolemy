@@ -48,7 +48,7 @@ public class PlacesContentProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		db = new PtolemyOpenHelper(getContext());
+		db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(getContext());
 		return false;
 	}
 

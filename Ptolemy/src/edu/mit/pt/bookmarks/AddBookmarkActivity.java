@@ -19,6 +19,7 @@ import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.BrowsePlaceActivity;
 import edu.mit.pt.maps.PtolemyMapView;
@@ -74,7 +75,7 @@ public class AddBookmarkActivity extends MapActivity {
 
 		// Autocomplete on title.
 		TitleAutoCompleteTextView autoComplete = (TitleAutoCompleteTextView) findViewById(R.id.editBookmarkTitle);
-		db = new PtolemyOpenHelper(this).getReadableDatabase();
+		db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this).getReadableDatabase();
 		autoComplete.setup(db, this);
 	}
 
@@ -160,6 +161,6 @@ public class AddBookmarkActivity extends MapActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		db.close();
+		//db.close();
 	}
 }

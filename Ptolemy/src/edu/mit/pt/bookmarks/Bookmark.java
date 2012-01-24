@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.data.PtolemyOpenHelper;
 
 public class Bookmark {
@@ -43,7 +44,7 @@ public class Bookmark {
 	}
 
 	static public List<Bookmark> getBookmarks(Context context) {
-		SQLiteDatabase db = new PtolemyOpenHelper(context)
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(context)
 				.getReadableDatabase();
 		Cursor cursor = db.query(BookmarksTable.BOOKMARKS_TABLE_NAME,
 				new String[] { BookmarksTable.COLUMN_ID,
@@ -67,19 +68,19 @@ public class Bookmark {
 			bookmarks.add(new Bookmark(id, customName, place, type));
 		}
 		cursor.close();
-		db.close();
+		//db.close();
 		return bookmarks;
 	}
 
 	static public void addBookmark(Context context, String customName,
 			Place place, BookmarkType type) {
-		SQLiteDatabase db = new PtolemyOpenHelper(context)
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(context)
 				.getReadableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(BookmarksTable.COLUMN_NAME, customName);
 		values.put(BookmarksTable.COLUMN_TYPE, type.name());
 		values.put(BookmarksTable.COLUMN_PLACE_ID, place.getId());
 		db.insert(BookmarksTable.BOOKMARKS_TABLE_NAME, null, values);
-		db.close();
+		//db.close();
 	}
 }
