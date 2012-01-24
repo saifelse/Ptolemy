@@ -22,6 +22,7 @@ public class PlacesTable {
 				+ SearchManager.SUGGEST_COLUMN_TEXT_1);
 		map.put(COLUMN_LAT, COLUMN_LAT);
 		map.put(COLUMN_LON, COLUMN_LON);
+		map.put(COLUMN_FLOOR, COLUMN_FLOOR);
 		// Cute SQLite thing: ROWID aliases to whatever primary key you have.
 		map.put(BaseColumns._ID, "ROWID AS " + BaseColumns._ID);
 		map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "ROWID AS "
@@ -34,7 +35,8 @@ public class PlacesTable {
 			+ PLACES_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_NAME
 			+ " TEXT not null, " + COLUMN_LAT + " REAL, " + COLUMN_LON
-			+ " REAL, " + COLUMN_TYPE + " TEXT);";
+			+ " REAL, " + COLUMN_FLOOR + " integer, "+ COLUMN_TYPE + " TEXT);";
+	//TODO: change floor to not null?
 	
 
 	public static void onCreate(SQLiteDatabase db) {
