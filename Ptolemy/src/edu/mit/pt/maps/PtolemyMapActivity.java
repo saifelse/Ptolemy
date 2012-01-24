@@ -23,6 +23,17 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private PtolemyMapView mapView;
 
 	@Override
+	public void onPause(){
+		super.onPause();
+		LocationSetter.pause();
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		LocationSetter.resume();
+	}
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 

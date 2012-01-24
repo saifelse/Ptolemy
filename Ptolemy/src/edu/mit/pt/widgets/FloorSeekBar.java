@@ -175,6 +175,7 @@ public class FloorSeekBar extends View {
 		return true;
 	}
 
+	// TODO: Make sure this is correct.
 	@Override
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		setMeasuredDimension(measureWidth(widthMeasureSpec),
