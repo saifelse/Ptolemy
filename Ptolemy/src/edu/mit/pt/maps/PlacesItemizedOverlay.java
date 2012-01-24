@@ -5,12 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
-import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
