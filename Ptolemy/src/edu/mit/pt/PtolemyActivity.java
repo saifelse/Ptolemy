@@ -30,8 +30,6 @@ public class PtolemyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
-        new AP.APLoader(db).execute(this);
     }
     /*
     public void onPause(){
@@ -82,6 +80,10 @@ public class PtolemyActivity extends Activity {
 		// Load rooms.
 		RoomLoader roomLoader = new RoomLoader(this);
 		roomLoader.execute();
+		
+		
+        //SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
+		//new AP.APLoader(db).execute(this);
 		
 		
 		db.close();

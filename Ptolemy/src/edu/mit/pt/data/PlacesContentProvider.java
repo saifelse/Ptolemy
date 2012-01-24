@@ -32,6 +32,17 @@ public class PlacesContentProvider extends ContentProvider {
 		long id = database.insert(PlacesTable.PLACES_TABLE_NAME, null, values);
 		return Uri.parse("/" + id);
 	}
+	
+	@Override
+	public int bulkInsert(Uri uri, ContentValues[] values) {
+		SQLiteDatabase database = db.getWritableDatabase();
+		database.beginTransaction();
+		for (ContentValues v: values)
+			database.insert(PlacesTable.PLACES_TABLE_NAME, null, v);
+		database.setTransactionSuccessful();
+		database.endTransaction();
+		return values.length;
+	}
 
 	@Override
 	public boolean onCreate() {
