@@ -84,11 +84,13 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 				JSONObject coords = rooms.getJSONObject(name);
 				int lat = coords.getInt("lat");
 				int lon = coords.getInt("lon");
+				int floor = coords.getInt("floor");
 				
 				ContentValues values = new ContentValues();
 				values.put(PlacesTable.COLUMN_NAME, name);
 				values.put(PlacesTable.COLUMN_LAT, lat);
 				values.put(PlacesTable.COLUMN_LON, lon);
+				values.put(PlacesTable.COLUMN_FLOOR, floor);
 				values.put(PlacesTable.COLUMN_TYPE, PlaceType.CLASSROOM.toString());
 			
 				valuesToInsert.add(values);
