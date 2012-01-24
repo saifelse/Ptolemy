@@ -11,23 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/instructions" />
-	<Button
-        android:id="@+id/ButtonLaunchPrepopulate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="launchTouchstoneLogin"
-        android:text="@string/launch_prepopulate" />
-<<<<<<< HEAD
-
     <Button
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:text="@string/wifiLocalizerStart" 
         android:onClick="launchWifiDisplay"/>
-
-=======
->>>>>>> 4028e83d701eed89385ccaba2a940782377dcabd
+	<Button
+        android:id="@+id/ButtonLaunchPrepopulate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="launchTouchstoneLogin"
+        android:text="@string/launch_prepopulate" />
     <Button
         android:id="@+id/ButtonLaunchResetData"
         android:layout_width="match_parent"
