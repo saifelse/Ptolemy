@@ -68,8 +68,9 @@
                 android:paddingLeft="8dp"
                 android:text="@string/pick_place_hint"
                 android:textColor="#888"
-                android:onClick="pickPlace"
+                android:onClick="startPickPlace"
                 android:textSize="16sp" />
+            <!--  changed pickPlace to startPickPlace, is that correct? -->
 
             <ImageButton
                 android:id="@+id/buttonLogin"

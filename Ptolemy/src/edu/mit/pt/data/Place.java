@@ -18,12 +18,12 @@ import com.google.android.maps.GeoPoint;
 import edu.mit.pt.Config;
 
 abstract public class Place implements Parcelable {
-	int id;
+	long id;
 	int latE6;
 	int lonE6;
 	String name;
 
-	public Place(int id, String name, int latE6, int lonE6) {
+	public Place(long id, String name, int latE6, int lonE6) {
 		this.id = id;
 		this.name = name;
 		this.latE6 = latE6;
@@ -31,7 +31,7 @@ abstract public class Place implements Parcelable {
 	}
 
 	// TODO: is this necessary?
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -71,10 +71,10 @@ abstract public class Place implements Parcelable {
 		SQLiteDatabase db = new PtolemyOpenHelper(context)
 				.getWritableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
-				PlacesTable.COLUMN_NAME, PlacesTable.COLUMN_LAT,
-				PlacesTable.COLUMN_LON, PlacesTable.COLUMN_TYPE },
-				PlacesTable.COLUMN_NAME + "=?", new String[] { room }, null,
-				null, null);
+				PlacesTable.COLUMN_ID, PlacesTable.COLUMN_NAME,
+				PlacesTable.COLUMN_LAT, PlacesTable.COLUMN_LON,
+				PlacesTable.COLUMN_TYPE }, PlacesTable.COLUMN_NAME + "=?",
+				new String[] { room }, null, null, null);
 		if (c.getCount() == 0) {
 			return null;
 		}
@@ -95,8 +95,18 @@ abstract public class Place implements Parcelable {
 		return new Classroom(id, name, latE6, lonE6);
 	}
 
-	public static void addPlace(Context context, String name, int latE6,
+	public static Place addPlace(Context context, String name, int latE6,
 			int lonE6, PlaceType type) {
+		return addPlaceHelper(context, name, latE6, lonE6, type, null);
+	}
+
+	public static Place addBathroom(Context context, String name, int latE6,
+			int lonE6, PlaceType type, GenderEnum gender) {
+		return addPlaceHelper(context, name, latE6, lonE6, type, gender);
+	}
+
+	private static Place addPlaceHelper(Context context, String name, int latE6,
+			int lonE6, PlaceType type, GenderEnum gender) {
 		SQLiteDatabase db = new PtolemyOpenHelper(context)
 				.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -104,8 +114,23 @@ abstract public class Place implements Parcelable {
 		values.put(PlacesTable.COLUMN_LAT, latE6);
 		values.put(PlacesTable.COLUMN_LON, lonE6);
 		values.put(PlacesTable.COLUMN_TYPE, type.name());
-		db.insert(PlacesTable.PLACES_TABLE_NAME, null, values);
+		long id = db.insert(PlacesTable.PLACES_TABLE_NAME, null, values);
 		db.close();
+		if (id == -1) {
+			return null;
+		}
+		switch (type) {
+		case CLASSROOM:
+			return new Classroom(id, name, latE6, lonE6);
+		case CLUSTER:
+			return new Athena(id, name, latE6, lonE6);
+		case FOUNTAIN:
+			return new Fountain(id, name, latE6, lonE6);
+		case TOILET:
+			return new Toilet(id, name, latE6, lonE6, gender);
+		default:
+			return null;
+		}
 	}
 
 	public static List<Place> getPlacesExceptClassrooms(Context context) {
@@ -166,7 +191,7 @@ abstract public class Place implements Parcelable {
 
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(getPlaceType().name());
-		dest.writeInt(id);
+		dest.writeLong(id);
 		dest.writeInt(latE6);
 		dest.writeInt(lonE6);
 		dest.writeString(name);
@@ -199,7 +224,8 @@ abstract public class Place implements Parcelable {
 	};
 
 	protected Place(Parcel in) {
-		id = in.readInt();
+		in.readString(); // Skip over type.
+		id = in.readLong();
 		latE6 = in.readInt();
 		lonE6 = in.readInt();
 		name = in.readString();

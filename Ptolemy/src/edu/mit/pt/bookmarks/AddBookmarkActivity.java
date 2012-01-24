@@ -25,15 +25,15 @@ import edu.mit.pt.maps.PtolemyMapView;
 
 public class AddBookmarkActivity extends MapActivity {
 
+	public final static String CUSTOM_NAME = "customName";
+	public final static String PLACE = "place";
+	private final int BROWSE_REQUEST = 1;
+
 	private BookmarkType type = BookmarkType.OTHER;
 	private SQLiteDatabase db;
 	private Place place;
 	private boolean userHasEditedType = false;
 	private boolean userHasEditedPlace = false;
-
-	public final static String CUSTOM_NAME = "customName";
-	public final static String PLACE = "place";
-	private final int BROWSE_REQUEST = 1;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -42,13 +42,16 @@ public class AddBookmarkActivity extends MapActivity {
 		setContentView(R.layout.add_bookmark);
 		ActionBar.setTitle(this, "Add Bookmark");
 		ActionBar.setDefaultBackAction(this);
+		
+		// Disable add button until data is valid.
+		findViewById(R.id.addBookmarkButton).setEnabled(false);
 
 		// Configure button to show list of types to choose from.
 		Button typeButton = (Button) findViewById(R.id.typeButton);
 		final BookmarkType[] types = BookmarkType.values();
 		final ArrayAdapter<BookmarkType> adapter = new ArrayAdapter<BookmarkType>(
 				this, R.layout.bookmark_type_item, types);
-
+		
 		typeButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -84,6 +87,7 @@ public class AddBookmarkActivity extends MapActivity {
 				userHasEditedType = true;
 			}
 		}
+		checkShouldEnableButton();
 	}
 
 	void setPlace(Place place, boolean byUser) {
@@ -91,6 +95,8 @@ public class AddBookmarkActivity extends MapActivity {
 			return;
 		}
 		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		Log.v(Config.TAG, "controller is null: " + (mapView.getController() == null));
+		Log.v(Config.TAG, "place is null: " + (place == null));
 		mapView.getController().setCenter(place.getPoint());
 		
 		this.place = place;
@@ -101,9 +107,19 @@ public class AddBookmarkActivity extends MapActivity {
 		if (byUser) {
 			userHasEditedPlace = true;
 		}
+		checkShouldEnableButton();
+	}
+	
+	private void checkShouldEnableButton() {
+		String customName = ((TextView) findViewById(R.id.editBookmarkTitle)).getText().toString();
+		if (customName.length() == 0 || place == null) {
+			findViewById(R.id.addBookmarkButton).setEnabled(false);
+		} else {
+			findViewById(R.id.addBookmarkButton).setEnabled(true);
+		}
 	}
 
-	public void pickPlace(View v) {
+	public void startPickPlace(View v) {
 		Intent intent = new Intent(this, BrowsePlaceActivity.class);
 		TextView customNameView = (TextView) findViewById(R.id.editBookmarkTitle);
 		String customName = customNameView.getText().toString();

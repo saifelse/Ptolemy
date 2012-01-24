@@ -14,10 +14,13 @@ import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
-	
+
 	OnTapListener tapListener = null;
-	
-	private List<PlacesOverlayItem> pOverlayItems = Collections
+
+	private List<PlacesOverlayItem> overlayItems = Collections
+			.synchronizedList(new ArrayList<PlacesOverlayItem>());
+
+	private List<PlacesOverlayItem> extraOverlayItems = Collections
 			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
 	public PlacesItemizedOverlay(Drawable defaultMarker) {
@@ -27,31 +30,44 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	public void addOverlayItem(PlacesOverlayItem overlayItem) {
-		pOverlayItems.add(overlayItem);
+		overlayItems.add(overlayItem);
+		populate();
+	}
+	
+	public void setExtras(List<PlacesOverlayItem> items) {
+		extraOverlayItems.clear();
+		extraOverlayItems.addAll(items);
 		populate();
 	}
 
 	@Override
 	protected OverlayItem createItem(int i) {
-		// System.out.println("Size: " + size());
-		// System.out.println("i: " + i);
 		Log.v(Config.TAG, "I AM CREATING AN ITEM.");
-		return pOverlayItems.get(i);
+		return getOverlayItem(i);
+	}
+	
+	private PlacesOverlayItem getOverlayItem(int i) {
+		int overlayItemsSize = overlayItems.size();
+		if (i < overlayItemsSize) {
+			return overlayItems.get(i);
+		} else {
+			return extraOverlayItems.get(i - overlayItemsSize);
+		}
 	}
 
 	@Override
 	public int size() {
-		return pOverlayItems.size();
+		return overlayItems.size() + extraOverlayItems.size();
 	}
-	
+
 	public void setOnTapListener(OnTapListener listener) {
 		this.tapListener = listener;
 	}
-	
+
 	@Override
 	public boolean onTap(int index) {
 		if (tapListener != null) {
-			Place p = pOverlayItems.get(index).getPlace();
+			Place p = getOverlayItem(index).getPlace();
 			tapListener.onTap(p);
 		}
 		return true;

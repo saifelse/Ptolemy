@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 
@@ -83,6 +85,7 @@ public class MITClass {
 					String name = c.getString("name");
 					String resolve = c.has("resolve") ? c.getString("resolve") : "";
 					addClass(mitID, term, name, room, resolve, db);
+					count++;
 				} catch (JSONException e) {
 					Log.v(Config.TAG, "Error: Couldn't parse element " + i
 							+ " in classes.json");
@@ -97,17 +100,18 @@ public class MITClass {
 	}
 
 	public static class MITClassLoader extends
-			AsyncTask<Context, Integer, Integer> {
+			AsyncTask<Void, Integer, Integer> {
 		private SQLiteDatabase db;
-
-		public MITClassLoader(SQLiteDatabase db) {
+		private Context context;
+		public MITClassLoader(SQLiteDatabase db, Context context) {
 			super();
 			this.db = db;
+			this.context = context;
 		}
 
 		@Override
-		protected Integer doInBackground(Context... context) {
-			return MITClass.loadClasses(context[0], db);
+		protected Integer doInBackground(Void... v) {
+			return MITClass.loadClasses(context, db);
 		}
 
 		@Override
@@ -116,8 +120,10 @@ public class MITClass {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			Log.v(Config.TAG, "Downloaded " + result + " classes.");
 			db.close();
+			Toast toast = Toast.makeText(context, "Downloaded " + result + " classes.", 1000);
+			toast.show();
+			//Log.v(Config.TAG, "Downloaded " + result + " classes.");
 		}
 
 	}

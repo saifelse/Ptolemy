@@ -5,7 +5,7 @@ import edu.mit.pt.R;
 
 public class Toilet extends Place {
 	private GenderEnum gender;
-	public Toilet(int id, String name, int latE6, int lonE6, GenderEnum gender) {
+	public Toilet(long id, String name, int latE6, int lonE6, GenderEnum gender) {
 		super(id, name, latE6, lonE6);
 		this.gender = gender;
 	}

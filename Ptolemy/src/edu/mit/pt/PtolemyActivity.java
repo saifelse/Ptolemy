@@ -16,14 +16,14 @@ import android.widget.Toast;
 import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.classes.MITClassTable;
-import edu.mit.pt.data.Place;
-import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyOpenHelper;
+import edu.mit.pt.data.RoomLoader;
 import edu.mit.pt.maps.PtolemyMapActivity;
 
 public class PtolemyActivity extends Activity {
 	final static int REQUEST_MOIRA = 1;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class PtolemyActivity extends Activity {
     
     public void loadClasses(View view){
     	SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
-    	new MITClass.MITClassLoader(db).execute(new Context[]{this});
+    	new MITClass.MITClassLoader(db, this).execute();
     }
     public void launchTouchstoneLogin(View view){
     	Intent i = new Intent(this, PrepopulateActivity.class);
@@ -56,6 +56,7 @@ public class PtolemyActivity extends Activity {
     	Intent i = new Intent(this, WifiDisplayActivity.class);
     	startActivity(i);
     }
+    
 	public void resetData(View view) {
 		SQLiteDatabase db = new PtolemyOpenHelper(view.getContext())
 				.getWritableDatabase();
@@ -75,25 +76,32 @@ public class PtolemyActivity extends Activity {
 			db.execSQL(stmt);
 		}
 		
-		// Insert test data.
-		Place.addPlace(view.getContext(), "Toilet (male)", 42361130, -71092296, PlaceType.TOILET);
+		// Load rooms.
+		RoomLoader roomLoader = new RoomLoader(this);
+		roomLoader.execute();
 		
 		db.close();
 		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "
-				+ Arrays.toString(tables), 1000);
+				+ Arrays.toString(tables)+". Please wait several seconds while room data is downloaded...", 1000);
 		toast.show();
 	}
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-    	switch(requestCode){
-    	case REQUEST_MOIRA:
-    		if(resultCode == RESULT_OK){
-    			TextView classText = (TextView) findViewById(R.id.SelectedClasses);
-    			classText.setText("");
-    			String[] classes = (String[])data.getExtras().get(ClassDataIntent.CLASSES);
-    			for(String classname : classes){
-    				classText.append(classname+"\n");
-    			}
-    		}
-    	}
-    }
+
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case REQUEST_MOIRA:
+			if (resultCode == RESULT_OK) {
+				
+				//TextView classText = (TextView) findViewById(R.id.SelectedClasses);
+				//classText.setText("");
+				StringBuffer classText = new StringBuffer("We found these classes: \n");
+				String[] classes = (String[]) data.getExtras().get(
+						ClassDataIntent.CLASSES);
+				for (String classname : classes) {
+					classText.append(classname + "\n");
+				}
+				Toast toast = Toast.makeText(this, classText, 1000);
+				toast.show();
+			}
+		}
+	}
 }

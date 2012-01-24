@@ -8,8 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.util.Log;
-import edu.mit.pt.Config;
 
 public class PlacesContentProvider extends ContentProvider {
 	private PtolemyOpenHelper db;

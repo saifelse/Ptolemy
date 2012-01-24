@@ -22,9 +22,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import edu.mit.pt.maps.PlacesItemizedOverlay;
+import android.widget.Toast;
 
-public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> {
+public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 
 	private Context context;
 
@@ -46,7 +46,8 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 				JSONObject coords = rooms.getJSONObject(name);
 				int lat = coords.getInt("lat");
 				int lon = coords.getInt("lon");
-				Place room = new Classroom(0, name, lat, lon);
+				Place room = Place.addPlace(context, name, lat, lon,
+						PlaceType.CLASSROOM);
 				roomSet.add(room);
 				Log.i(RoomLoader.class.getName(), roomList.getString(i));
 			}
@@ -85,8 +86,8 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 	}
 
 	@Override
-	protected Void doInBackground(PlacesItemizedOverlay... params) {
-		PlacesContentProvider pcp = new PlacesContentProvider();
+	protected Integer doInBackground(Void... params) {
+		// PlacesContentProvider pcp = new PlacesContentProvider();
 		Set<Place> rooms = getRooms();
 		for (Place p : rooms) {
 			ContentValues values = new ContentValues();
@@ -107,9 +108,14 @@ public class RoomLoader extends AsyncTask<PlacesItemizedOverlay, Integer, Void> 
 			Uri CONTENT_URI = Uri
 					.parse("content://edu.mit.pt.data.placescontentprovider/");
 
-			context.getContentResolver().insert(CONTENT_URI,
-					values);
+			context.getContentResolver().insert(CONTENT_URI, values);
 		}
-		return null;
+		return rooms.size();
+	}
+	@Override
+	protected void onPostExecute(Integer result) {
+		Toast toast = Toast.makeText(context, "Downloaded data for " + result + " rooms.", 1000);
+		toast.show();
+		//Log.v(Config.TAG, "Downloaded " + result + " classes.");
 	}
 }

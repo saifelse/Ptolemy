@@ -265,6 +265,10 @@ public class PtolemyMapView extends MapView {
 					.computeGoogleY(SOUTH_LATITUDE_E6, zoomLevel));
 		}
 	}
+	
+	public PlacesItemizedOverlay getPlacesOverlay() {
+		return placesOverlay;
+	}
 
 	public void stop() {
 		PtolemyTileManager.StrongBitmapCache.releaseInstance();
