@@ -78,7 +78,8 @@ public class PtolemyActivity extends Activity {
 		String[] create = new String[] {
 				PlacesTable.PLACES_TABLE_CREATE,
 				BookmarksTable.BOOKMARKS_TABLE_CREATE,
-				MITClassTable.CLASSES_TABLE_CREATE
+				MITClassTable.CLASSES_TABLE_CREATE,
+				APTable.AP_TABLE_CREATE
 		};
 		for (String stmt : create) {
 			db.execSQL(stmt);
@@ -91,10 +92,10 @@ public class PtolemyActivity extends Activity {
 		Place.addPlace(this, "testbathroom", 42359101,-71090869, PlaceType.TOILET);
 		
         //SQLiteDatabase db = new PtolemyOpenHelper(this).getWritableDatabase();
-		//new AP.APLoader(db).execute(this);
+		new AP.APLoader(db).execute(this);
 		
 		
-		db.close();
+		//db.close();
 		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "
 				+ Arrays.toString(tables)+". Please wait several seconds while room data is downloaded...", 1000);
 		toast.show();

@@ -10,7 +10,7 @@ public class APTable {
 	public static final String COLUMN_LOCATION = "customName";
 	public static final String COLUMN_BSSID = "place";
 
-	private static final String AP_TABLE_CREATE = "CREATE TABLE "
+	public static final String AP_TABLE_CREATE = "CREATE TABLE "
 			+ AP_TABLE_NAME + " (" + COLUMN_ID + " integer primary key autoincrement, " +
 			COLUMN_LOCATION + " TEXT not null, " +
 			COLUMN_BSSID + " TEXT not null);";

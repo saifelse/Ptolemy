@@ -37,8 +37,10 @@ public class PlacesContentProvider extends ContentProvider {
 	public int bulkInsert(Uri uri, ContentValues[] values) {
 		SQLiteDatabase database = db.getWritableDatabase();
 		database.beginTransaction();
-		for (ContentValues v: values)
+		for (ContentValues v: values) {
+			System.out.println(v.get(PlacesTable.COLUMN_NAME));
 			database.insert(PlacesTable.PLACES_TABLE_NAME, null, v);
+		}
 		database.setTransactionSuccessful();
 		database.endTransaction();
 		return values.length;

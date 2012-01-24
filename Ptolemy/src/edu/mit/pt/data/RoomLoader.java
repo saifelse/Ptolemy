@@ -89,36 +89,47 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 
 	@Override
 	protected Integer doInBackground(Void... params) {
-		// PlacesContentProvider pcp = new PlacesContentProvider();
-		Set<Place> rooms = getRooms();
 		List<ContentValues> valuesToInsert = new ArrayList<ContentValues>();
+		int count = 0;
 		
-		for (Place p : rooms) {
-			ContentValues values = new ContentValues();
-			
-			//pcp.insert(null, )
-//			GeoPoint point = new GeoPoint((int)p.getLatE6(), (int)p.getLonE6());
-//			OverlayItem overlayItem = new OverlayItem(point, p.getName(), "");
-//			params[0].addOverlay(overlayItem);
-//			
-			if (p.getName() == null) {
-				System.out.println("ROOM IS NULL!");
-				continue;
-			}
-			values.put(PlacesTable.COLUMN_NAME, p.getName());
-			values.put(PlacesTable.COLUMN_LAT, p.getLatE6());
-			values.put(PlacesTable.COLUMN_LON, p.getLonE6());
-			values.put(PlacesTable.COLUMN_TYPE, p.getPlaceType().name());
-			
+		String roomJSON = readRoomJSON();
+		try {
+			JSONObject rooms = new JSONObject(roomJSON);
+			Log.i(RoomLoader.class.getName(),
+					"Number of rooms " + rooms.length());
 
-			//context.getContentResolver().insert(CONTENT_URI, values);
-			valuesToInsert.add(values);
+			JSONArray roomList = rooms.names();
+			for (int i = 0; i < roomList.length(); i++) {
+				String name = roomList.getString(i);
+				if (name == null) {
+					System.out.println("ROOM IS NULL!");
+					continue;
+				}
+				
+				JSONObject coords = rooms.getJSONObject(name);
+				int lat = coords.getInt("lat");
+				int lon = coords.getInt("lon");
+				
+				ContentValues values = new ContentValues();
+				values.put(PlacesTable.COLUMN_NAME, name);
+				values.put(PlacesTable.COLUMN_LAT, lat);
+				values.put(PlacesTable.COLUMN_LON, lon);
+				values.put(PlacesTable.COLUMN_TYPE, PlaceType.CLASSROOM.toString());
+			
+				valuesToInsert.add(values);
+				count++;
+				//Log.i(RoomLoader.class.getName(), roomList.getString(i));
+			}
+			
+			Uri CONTENT_URI = Uri
+					.parse("content://edu.mit.pt.data.placescontentprovider/");
+			
+			context.getContentResolver().bulkInsert(CONTENT_URI, valuesToInsert.toArray(new ContentValues[valuesToInsert.size()]));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		Uri CONTENT_URI = Uri
-				.parse("content://edu.mit.pt.data.placescontentprovider/");
-		
-		context.getContentResolver().bulkInsert(CONTENT_URI, valuesToInsert.toArray(new ContentValues[valuesToInsert.size()]));
-		return rooms.size();
+		return count;
 	}
 	@Override
 	protected void onPostExecute(Integer result) {

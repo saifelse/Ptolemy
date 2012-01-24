@@ -39,12 +39,12 @@ public class AP {
 	}
 	
 	public static Integer loadAPs(Context context, SQLiteDatabase db) {
-		// Delete all rows
-		try {
-			db.delete(APTable.AP_TABLE_NAME, "", new String[] {});
-		} catch (Exception e) {
-			
-		}
+//		// Delete all rows
+//		try {
+//			db.delete(APTable.AP_TABLE_NAME, "", new String[] {});
+//		} catch (Exception e) {
+//			
+//		}
 		
 		// Refetch from file
 		int count = 0;
@@ -68,8 +68,10 @@ public class AP {
 			db.setTransactionSuccessful();
 			db.endTransaction();
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("EXCEPTION");
 		}
+		System.out.println("Inserted " + count + " aps");
 		return count;
 		
 	}
