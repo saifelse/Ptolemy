@@ -75,5 +75,9 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	static public Drawable boundCenterBottom(Drawable drawable) {
 		return ItemizedOverlay.boundCenterBottom(drawable);
 	}
+	
+	static public Drawable boundCenter(Drawable drawable) {
+		return ItemizedOverlay.boundCenter(drawable);
+	}
 
 }
