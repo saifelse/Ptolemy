@@ -84,10 +84,6 @@ public class PtolemyMapView extends MapView {
 		overlays.add(placesOverlay);
 	}
 
-	public void setOnTapListener(OnTapListener listener) {
-		placesOverlay.setOnTapListener(listener);
-	}
-
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 

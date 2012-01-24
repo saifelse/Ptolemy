@@ -7,6 +7,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyOpenHelper;
 
@@ -60,6 +62,7 @@ public class Bookmark {
 			int placeId = cursor.getInt(placeIndex);
 			BookmarkType type = BookmarkType.valueOf(cursor
 					.getString(typeIndex));
+			Log.v(Config.TAG, "GETTING BOOKMARK WITH PLACEID: " + placeId);
 			Place place = Place.getPlace(context, placeId);
 			bookmarks.add(new Bookmark(id, customName, place, type));
 		}
@@ -75,6 +78,7 @@ public class Bookmark {
 		ContentValues values = new ContentValues();
 		values.put(BookmarksTable.COLUMN_NAME, customName);
 		values.put(BookmarksTable.COLUMN_TYPE, type.name());
+		values.put(BookmarksTable.COLUMN_PLACE_ID, place.getId());
 		db.insert(BookmarksTable.BOOKMARKS_TABLE_NAME, null, values);
 		db.close();
 	}

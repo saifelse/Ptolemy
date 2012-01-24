@@ -15,6 +15,7 @@ public class PlacesOverlayItem extends OverlayItem {
 		super(p.getPoint(), title, snippet);
 		this.place = p;
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight());
+		PlacesItemizedOverlay.boundCenterBottom(marker);
 		this.marker = marker;
 	}
 	

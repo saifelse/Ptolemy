@@ -44,5 +44,7 @@
     <string name="room_not_found">The classroom \'%1$s\' could not be found. Try again with a room number like 10–250.</string>
 
     <string name="wifiLocalizerStart">Start WIFI Localizer</string>
+    
+    <string name="empty_bookmarks">You have no bookmarks. Go add some!</string>
 
 </resources>

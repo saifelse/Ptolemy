@@ -4,21 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
-
-import com.google.android.maps.Overlay;
-
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.data.RoomLoader;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
@@ -32,14 +28,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		setContentView(R.layout.map_main);
 		mapView = (PtolemyMapView) findViewById(R.id.mapview);
-		mapView.setBuiltInZoomControls(true);
-
-		List<Overlay> mapOverlays = mapView.getOverlays();
-		// TODO: change blue arrow
-		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.arrow_up_blue);
-		placesItemizedOverlay = new PlacesItemizedOverlay(drawable);
-		mapOverlays.add(placesItemizedOverlay);
+		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
+			
+			@Override
+			public void onTap(Place p) {
+				setPlace(p);
+			}
+		});
 
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
@@ -90,7 +85,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				bookmarksButton });
 
 	}
-
+	
+	private void setPlace(Place place) {
+		View metaView = findViewById(R.id.meta_view);
+		metaView.setVisibility(View.VISIBLE);
+	}
+	
 	@Override
 	void showClassroom(final Place p) {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
@@ -98,7 +98,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				.getMarker(getResources())));
 		mapView.getPlacesOverlay().setExtras(places);
 		mapView.getController().animateTo(p.getPoint());
-		Log.v(Config.TAG, "PLACE: " + p.getName());
 	}
 
 	/*
