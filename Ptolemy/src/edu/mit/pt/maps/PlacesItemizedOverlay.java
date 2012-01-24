@@ -42,7 +42,6 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected OverlayItem createItem(int i) {
-		Log.v(Config.TAG, "I AM CREATING AN ITEM.");
 		return getOverlayItem(i);
 	}
 	
