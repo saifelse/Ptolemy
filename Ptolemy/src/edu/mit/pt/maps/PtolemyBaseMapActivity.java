@@ -34,7 +34,6 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 			Place p;
 			if (dataUri != null) {
 				int classroomId = Integer.valueOf(dataUri.getLastPathSegment());
-				Log.v(Config.TAG, "AUTOCOMPLETE ID WAS " + classroomId);
 				p = Place.getPlace(this, classroomId);
 				roomQuery = p.getName();
 			} else {

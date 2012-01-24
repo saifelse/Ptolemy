@@ -3,16 +3,10 @@ package edu.mit.pt;
 import java.util.Arrays;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
-import edu.mit.pt.location.AP;
-import edu.mit.pt.location.APTable;
-import edu.mit.pt.location.WifiDisplayActivity;
-import edu.mit.pt.location.WifiLocation;
 import android.widget.Toast;
 import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
@@ -21,8 +15,10 @@ import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
-import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.data.RoomLoader;
+import edu.mit.pt.location.AP;
+import edu.mit.pt.location.APTable;
+import edu.mit.pt.location.WifiDisplayActivity;
 import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.widgets.SeekBarTestActivity;
 
