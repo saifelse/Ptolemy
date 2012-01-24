@@ -21,6 +21,7 @@ import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.data.RoomLoader;
 import edu.mit.pt.maps.PtolemyMapActivity;
+import edu.mit.pt.widgets.SeekBarTestActivity;
 
 public class PtolemyActivity extends Activity {
 	final static int REQUEST_MOIRA = 1;
@@ -55,6 +56,10 @@ public class PtolemyActivity extends Activity {
     }
     public void launchWifiDisplay(View view){
     	Intent i = new Intent(this, WifiDisplayActivity.class);
+    	startActivity(i);
+    }
+    public void launchFloorSeek(View view){
+    	Intent i = new Intent(this, SeekBarTestActivity.class);
     	startActivity(i);
     }
     

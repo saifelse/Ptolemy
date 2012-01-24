@@ -42,6 +42,12 @@
         android:layout_height="wrap_content"
         android:onClick="launchPtolemyMap"
         android:text="@string/launch_map" />
+     <Button
+        android:id="@+id/ButtonFloorSeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/launch_floor_seek" 
+        android:onClick="launchFloorSeek"/>
     
 
 </LinearLayout>
