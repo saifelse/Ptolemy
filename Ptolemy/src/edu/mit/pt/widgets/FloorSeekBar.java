@@ -1,5 +1,9 @@
 package edu.mit.pt.widgets;
 
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.List;
+
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import android.content.Context;
@@ -19,6 +23,8 @@ import android.view.View;
  * TODO: Add listener support.
  */
 public class FloorSeekBar extends View {
+	private List<OnFloorSelectListener> listeners;
+	
 	private int trackPad = 5;
 
 	private int trackWidth = 4;
@@ -43,6 +49,8 @@ public class FloorSeekBar extends View {
 	
 	public FloorSeekBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		listeners = new ArrayList<OnFloorSelectListener>();
+		
 		initText();
 		// Get attributes and store them.
 		TypedArray a = context.obtainStyledAttributes(attrs,
@@ -52,7 +60,6 @@ public class FloorSeekBar extends View {
 		setFloor(a.getInteger(R.styleable.FloorSeekBar_floor, 0));
 		
 		firstDraw = true;
-		Log.v(Config.TAG+"_seek", "Floor: "+this.floor);
 		a.recycle();
 	}
 
@@ -85,9 +92,6 @@ public class FloorSeekBar extends View {
 	}
 
 	private int getYFromFloor(int floor) {
-		int returnVal = (int) (getTrackBottom() - (floor - min) * getSpacing());
-		Log.v(Config.TAG+"_seek", "getYFromFloor("+floor+")="+returnVal);
-		Log.v(Config.TAG+"_seek", "with: this.getHeight()="+getHeight());
 		return (int) (getTrackBottom() - (floor - min) * getSpacing());
 	}
 
@@ -234,11 +238,46 @@ public class FloorSeekBar extends View {
 	}
 
 	public void setFloor(int floor) {
+		int oldFloor = this.floor;
 		this.floor = Math.max(min, Math.min(max, floor));
-		Log.v(Config.TAG+"_seek", "floor is set to: "+(this.floor));
-		Log.v(Config.TAG+"_seek", "Y is set to: "+getYFromFloor(this.floor));
+		if(oldFloor != this.floor){
+			fireFloorListeners();
+		}
 		setUnsnappedY(getYFromFloor(this.floor));
 		invalidate();
 	}
-
+	
+	public void addFloorListener(OnFloorSelectListener l){
+		listeners.add(l);
+	}
+	public void removeFloorListener(OnFloorSelectListener l){
+		listeners.remove(l);
+	}
+	private void fireFloorListeners(){
+		FloorSeekEvent event = new FloorSeekEvent(this, floor);
+		for(OnFloorSelectListener l : listeners){
+			l.onFloorSelect(event);
+		}
+	}
+	public	class FloorSeekEvent extends EventObject {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private int floor;
+		public FloorSeekEvent(Object source, int floor){
+			super(source);
+			this.floor = floor;
+		}
+		public int getFloor(){
+			return floor;
+		}
+	}
+	public interface OnFloorSelectListener 
+	{
+	    public void onFloorSelect( FloorSeekEvent event );
+	}
 }
+
+
+

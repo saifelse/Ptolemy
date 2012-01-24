@@ -77,7 +77,6 @@ abstract public class Place implements Parcelable {
 				new String[] { Long.toString(id) }, null, null, null);
 		if (c.getCount() == 0) {
 			c.close();
-			// db.close();
 			return null;
 		}
 		c.moveToFirst();
@@ -87,22 +86,21 @@ abstract public class Place implements Parcelable {
 		int floor = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_FLOOR));
 		String typeName = c
 				.getString(c.getColumnIndex(PlacesTable.COLUMN_TYPE));
+		Log.v(Config.TAG, "TYPENAME IS " + typeName);
 		PlaceType type = PlaceType.valueOf(typeName);
 		c.close();
-		Place output = null;
 		switch (type) {
 		case CLASSROOM:
-			output = new Classroom(id, name, latE6, lonE6, floor);
+			return new Classroom(id, name, latE6, lonE6, floor);
 		case CLUSTER:
-			output = new Athena(id, name, latE6, lonE6, floor);
+			return new Athena(id, name, latE6, lonE6, floor);
 		case FOUNTAIN:
-			output = new Fountain(id, name, latE6, lonE6, floor);
+			return new Fountain(id, name, latE6, lonE6, floor);
 		case TOILET:
-			output = new Toilet(id, name, latE6, lonE6, floor,
-					getGender(db, id));
+			return new Toilet(id, name, latE6, lonE6, floor, getGender(db, id));
+		default:
+			return null;
 		}
-		// db.close();
-		return output;
 	}
 
 	public static Place getClassroom(Context context, String room) {
