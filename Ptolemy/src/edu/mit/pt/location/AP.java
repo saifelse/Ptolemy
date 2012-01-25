@@ -33,7 +33,7 @@ public class AP {
 		System.out.println(cursor.getCount() + " ssids found");
 		if (cursor.getCount() == 0)
 			return "";
-		int locationIndex = cursor.getColumnIndex(APTable.COLUMN_LOCATION);
+		int locationIndex = cursor.getColumnIndex(APTable.COLUMN_BSSID);
 		cursor.moveToFirst();
 		return cursor.getString(locationIndex);
 	}
@@ -50,19 +50,24 @@ public class AP {
 		int count = 0;
 
 		try {
-			InputStream is = context.getResources().openRawResource(R.raw.aps);
+			InputStream is = context.getResources().openRawResource(R.raw.apslist);
 			Reader isr = (Reader)new InputStreamReader(is, "UTF-8");
 			BufferedReader reader = new BufferedReader(isr);
-			reader.readLine(); //first line
+			reader.readLine(); //first line is the header
 			String line = null;
 			db.beginTransaction();
 			while ((line = reader.readLine()) != null) {
 				String[] splitLine = line.split(",");
-				if (splitLine.length != 2)
+				if (splitLine.length != 5)
 					continue;
-				String location = splitLine[0].trim();
-				String bssid = splitLine[1].trim();
-				if (addAP(location, bssid, db))
+				String bssid = splitLine[0].trim();
+				String building = splitLine[1].trim();
+				int floor = Integer.parseInt(splitLine[2].trim());
+				double lat = Double.parseDouble(splitLine[3].trim());
+				double lon = Double.parseDouble(splitLine[4].trim());
+				int latE6 = (int)(lat*1e6);
+				int lonE6 = (int)(lon*1e6);
+				if (addAP(bssid, latE6, lonE6, floor, db))
 					count++;
 			}
 			db.setTransactionSuccessful();
@@ -76,10 +81,12 @@ public class AP {
 		
 	}
 	
-	private static boolean addAP(String location, String bssid, SQLiteDatabase db) {
-		ContentValues cv = new ContentValues();;
-		cv.put(APTable.COLUMN_LOCATION, location);
+	private static boolean addAP(String bssid, int latE6, int lonE6, int floor, SQLiteDatabase db) {
+		ContentValues cv = new ContentValues();
 		cv.put(APTable.COLUMN_BSSID, bssid);
+		cv.put(APTable.COLUMN_LAT, latE6);
+		cv.put(APTable.COLUMN_LON, lonE6);
+		cv.put(APTable.COLUMN_FLOOR, floor);
 		try {
 			db.insertOrThrow(APTable.AP_TABLE_NAME, null, cv);
 			return true;
