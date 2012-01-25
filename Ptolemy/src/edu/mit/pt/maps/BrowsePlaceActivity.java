@@ -76,6 +76,8 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 			Place prevPlace = (Place) prevObject;
 			mapView.getController().setCenter(prevPlace.getPoint());
 		}
+		
+		onSearchRequested();
 	}
 
 	void setPlace(Place p) {

@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
@@ -63,6 +65,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	public boolean onTap(int index) {
+		Log.v(Config.TAG, "TAPPED");
 		if (tapListener != null) {
 			Place p = getOverlayItem(index).getPlace();
 			tapListener.onTap(p);

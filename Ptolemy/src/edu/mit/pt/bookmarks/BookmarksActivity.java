@@ -72,7 +72,7 @@ public class BookmarksActivity extends ListActivity {
 				startActivity(intent);
 			}
 		});
-
+		
 		ActionBar.setButtons(this, new View[] { addButton, syncButton });
 
 		ListView lv = getListView();

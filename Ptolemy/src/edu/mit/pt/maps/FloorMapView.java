@@ -76,6 +76,7 @@ public class FloorMapView extends RelativeLayout {
 			}
 
 		});
+		
 		Drawable defaultMarker = getResources().getDrawable(
 				R.drawable.green_point);
 		// Places
@@ -117,15 +118,14 @@ public class FloorMapView extends RelativeLayout {
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		Log.v(Config.TAG, "FloorMapView onTouchEvent detected.");
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
 			updateMinMax();
-			return true;
-		default:
-			return false;
 		}
+		return false;
 	}
 	public void updateMinMax(){
 		int maxFloor = 0;

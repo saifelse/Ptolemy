@@ -3,13 +3,9 @@ package edu.mit.pt.maps;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -22,9 +18,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.Config;
-import edu.mit.pt.R;
-import edu.mit.pt.data.Place;
-import edu.mit.pt.widgets.FloorSeekBar;
 
 public class PtolemyMapView extends MapView {
 	Context ctx;
@@ -77,6 +70,7 @@ public class PtolemyMapView extends MapView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
+		Log.v(Config.TAG, "PtolemyMapView onTouchEvent detected.");
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -86,9 +80,7 @@ public class PtolemyMapView extends MapView {
 			pinchZoom = (ev.getPointerCount() > 1);
 			break;
 		case MotionEvent.ACTION_UP:
-			// FIXME: i shouldn't have to call this manually.
-			((View) getParent()).onTouchEvent(ev);
-			return false;
+//			((View) getParent()).onTouchEvent(ev);
 		}
 		return super.onTouchEvent(ev);
 	}

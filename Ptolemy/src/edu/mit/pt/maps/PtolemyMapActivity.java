@@ -112,7 +112,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		if (focusedPlace == null) {
 			return;
 		}
-		Log.v(Config.TAG, "MOVING!");
 		mapView.getController().animateTo(focusedPlace.getPoint());
 	}
 
