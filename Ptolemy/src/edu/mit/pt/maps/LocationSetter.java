@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager.WifiLock;
 import android.os.Handler;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import com.skyhookwireless.wps.WPSReturnCode;
 import com.skyhookwireless.wps.XPS;
 
 import edu.mit.pt.Config;
+import edu.mit.pt.location.WifiLocation;
 
 public class LocationSetter {
 	// Available data
@@ -50,8 +52,10 @@ public class LocationSetter {
 	public static double getAltitude(){
 		return altitude;
 	}
-	public static GeoPoint getPoint(){
-		return new GeoPoint((int)(latitude*1e6),(int)(longitude*1e6));
+	public static GeoPoint getPoint(Context context){
+		WifiLocation wifiLocation = new WifiLocation(context);
+		return wifiLocation.getLocation();
+		//return new GeoPoint((int)(latitude*1e6),(int)(longitude*1e6));
 	}
 	public static void init(Context context, String username, String realm, XPSOverlay o){
 		overlay = o;

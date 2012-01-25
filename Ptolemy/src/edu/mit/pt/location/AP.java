@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import com.google.android.maps.GeoPoint;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,7 +21,7 @@ import edu.mit.pt.data.PlacesTable;
 
 public class AP {
 
-	public static String getAPLocation(String bssid, SQLiteDatabase database) {
+	public static GeoPoint getAPLocation(String bssid, SQLiteDatabase database) {
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		
 		queryBuilder.setTables(APTable.AP_TABLE_NAME);
@@ -32,10 +34,13 @@ public class AP {
 				
 		System.out.println(cursor.getCount() + " ssids found");
 		if (cursor.getCount() == 0)
-			return "";
-		int locationIndex = cursor.getColumnIndex(APTable.COLUMN_BSSID);
+			return null;
+		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
+		int lonIndex = cursor.getColumnIndex(APTable.COLUMN_LON);
 		cursor.moveToFirst();
-		return cursor.getString(locationIndex);
+		int lat = cursor.getInt(latIndex);
+		int lon = cursor.getInt(lonIndex);
+		return new GeoPoint(lat, lon);
 	}
 	
 	public static Integer loadAPs(Context context, SQLiteDatabase db) {
