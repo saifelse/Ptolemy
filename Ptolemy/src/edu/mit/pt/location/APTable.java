@@ -9,7 +9,7 @@ public class APTable {
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_LAT = "lat";
 	public static final String COLUMN_LON = "lon";
-	public static final String COLUMN_FLOOR = "lon";
+	public static final String COLUMN_FLOOR = "floor";
 	public static final String COLUMN_BSSID = "bssid";
 
 	public static final String AP_TABLE_CREATE = "CREATE TABLE "
