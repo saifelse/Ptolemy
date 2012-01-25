@@ -14,9 +14,9 @@ public class WifiDisplayActivity extends Activity {
 	}
 	
 	public void updateWifiData(View view) {
-		WifiLocation wifi = new WifiLocation(this);
+		//WifiLocation wifi = new WifiLocation(this);
 		EditText e = (EditText) findViewById(R.id.editText1);
-		e.setText(wifi.scanResults());
+		//e.setText(wifi.scanResults());
 	}
 	
 	@Override

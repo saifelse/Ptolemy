@@ -53,7 +53,7 @@ public class LocationSetter {
 		return altitude;
 	}
 	public static GeoPoint getPoint(Context context){
-		WifiLocation wifiLocation = new WifiLocation(context);
+		WifiLocation wifiLocation = WifiLocation.getInstance(context);
 		return wifiLocation.getLocation();
 		//return new GeoPoint((int)(latitude*1e6),(int)(longitude*1e6));
 	}
@@ -64,11 +64,11 @@ public class LocationSetter {
 		initBearing(context);
 	}
 	public static void pause(){
-		pauseLocation();
+		//pauseLocation();
 		pauseBearing();
 	}
 	public static void resume(){
-		resumeLocation();
+		//resumeLocation();
 		resumeBearing();
 	}
 	public static void stop(){
@@ -190,6 +190,11 @@ public class LocationSetter {
 		sman.registerListener(compassListener, accelerometerSensor,
 				SensorManager.SENSOR_DELAY_FASTEST);
 	}
+	
+	public static void setLocation(GeoPoint p) {
+		overlay.setLocation(p);
+	}
+	
 	protected static void handleLocation(double lat, double lng, double alt){
 		latitude = lat;
 		longitude = lng;
