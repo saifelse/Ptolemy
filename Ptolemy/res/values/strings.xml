@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, PtolemyActivity!</string>
-    <string name="launch_prepopulate">Step 1. (optional) Load from Moira</string>
-    <string name="launch_resetdata">Step 2. Reset database (adds rooms)</string>
-    <string name="launch_loadclasses">Step 3. Load class data</string>
-    <string name="launch_map">Step 4. View the Map</string>
-    <string name="wifiLocalizerStart">Start WIFI Localizer</string>
-    <string name="launch_floor_seek">Play with the Floor Seek!</string>
-   
     <string name="app_name">Ptolemy</string>
     <string name="touchstone_login">Log into your Kerberos account to import classes you are registered for this semester:</string>
     <string name="form_username">Username</string>
@@ -51,6 +43,6 @@
     <string name="edit_bookmark">Edit Bookmark</string>
     <string name="delete_bookmark">Delete Bookmark</string>
     <string name="navigate">navigate</string>
-    <string name="loading">loading</string>
+    <string name="loading">Loading Ptolemy...</string>
 
 </resources>

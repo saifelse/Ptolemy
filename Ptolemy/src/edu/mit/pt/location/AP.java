@@ -5,19 +5,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import com.google.android.maps.GeoPoint;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.os.AsyncTask;
 import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
+
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
-import edu.mit.pt.data.PlacesTable;
 
 public class AP {
 
@@ -99,26 +98,5 @@ public class AP {
 			Log.v(Config.TAG, "Couldn't insert. " + e.getMessage());
 		}
 		return false;
-	}
-
-	public static class APLoader extends AsyncTask<Context, Integer, Integer>{
-		private SQLiteDatabase db;
-		public APLoader(SQLiteDatabase db){
-			super();
-			this.db = db;
-		}
-		@Override
-		protected Integer doInBackground(Context... context) {
-			return AP.loadAPs(context[0], db);
-		}
-		@Override
-	     protected void onProgressUpdate(Integer... progress) {
-	     }
-		@Override
-	    protected void onPostExecute(Integer result) {
-	         Log.v(Config.TAG,"Downloaded " + result + " APs.");
-	         //db.close();
-	    }
-		
 	}
 }
