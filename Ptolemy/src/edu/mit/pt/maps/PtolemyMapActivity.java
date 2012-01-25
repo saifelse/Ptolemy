@@ -15,30 +15,35 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
+import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
 	private PtolemyMapView mapView;
+	private FloorMapView floorMapView;
 
 	@Override
-	public void onPause(){
+	public void onPause() {
 		super.onPause();
 		LocationSetter.pause();
 	}
-	
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		LocationSetter.resume();
 	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.map_main);
-		mapView = (PtolemyMapView) findViewById(R.id.mapview);
+		floorMapView = (FloorMapView) findViewById(R.id.floormapview);
+		mapView = (PtolemyMapView) floorMapView.getMapView();
 		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
 
 			public void onTap(Place p) {
@@ -114,11 +119,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		setPlace(place);
 	}
 
-	/*
-	 * @Override public void onPause(){ LocationSetter.pause(); }
-	 * 
-	 * @Override public void onResume(){ LocationSetter.resume(); }
-	 */
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -132,7 +132,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		// PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		LocationSetter.stop();
 		mapView.stop();
 	}

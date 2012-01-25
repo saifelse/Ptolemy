@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:pt="http://schemas.android.com/apk/res/edu.mit.pt"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,15 +10,18 @@
         android:id="@+id/nav"
         layout="@layout/menu_home" />
 
-    <edu.mit.pt.maps.PtolemyMapView
-        android:id="@+id/mapview"
+    <edu.mit.pt.maps.FloorMapView
+        android:id="@+id/floormapview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/nav"
         android:apiKey="@string/map_key"
-        android:clickable="true" />
-
+        android:clickable="true" 
+        pt:floor="4"
+        pt:maxFloor="10"
+        pt:minFloor="3" />
+   
     <RelativeLayout
         android:id="@+id/meta_view"
         android:layout_width="match_parent"

@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -12,6 +13,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.maps.GeoPoint;
@@ -21,9 +23,9 @@ import com.google.android.maps.Overlay;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.widgets.FloorSeekBar;
 
 public class PtolemyMapView extends MapView {
-
 	Context ctx;
 	private final int SUPPORTED_ZOOM_LEVEL = 19;
 	private final int IMAGE_TILE_SIZE = 512;
@@ -57,6 +59,7 @@ public class PtolemyMapView extends MapView {
 		setup();
 	}
 
+
 	private void setup() {
 		List<Overlay> overlays = getOverlays();
 		overlays.add(new TileOverlay());
@@ -64,7 +67,7 @@ public class PtolemyMapView extends MapView {
 		getController().setZoom(21);
 
 		setRowsCols();
-		getController().setCenter(new GeoPoint(42359101,-71090890));
+		getController().setCenter(new GeoPoint(42359101, -71090890));
 
 		tm = new PtolemyTileManager(ctx);
 
@@ -261,7 +264,7 @@ public class PtolemyMapView extends MapView {
 					.computeGoogleY(SOUTH_LATITUDE_E6, zoomLevel));
 		}
 	}
-	
+
 	public PlacesItemizedOverlay getPlacesOverlay() {
 		return placesOverlay;
 	}
