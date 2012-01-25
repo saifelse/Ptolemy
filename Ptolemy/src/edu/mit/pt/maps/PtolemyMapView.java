@@ -8,6 +8,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -39,7 +40,6 @@ public class PtolemyMapView extends MapView {
 	private int pNumColumns = 3;
 	private boolean pinchZoom = false;
 	private PtolemyTileManager tm;
-	private PlacesItemizedOverlay placesOverlay;
 
 	public PtolemyMapView(Context context, String key) {
 		super(context, key);
@@ -59,8 +59,8 @@ public class PtolemyMapView extends MapView {
 		setup();
 	}
 
-
 	private void setup() {
+
 		List<Overlay> overlays = getOverlays();
 		overlays.add(new TileOverlay());
 
@@ -72,24 +72,11 @@ public class PtolemyMapView extends MapView {
 		tm = new PtolemyTileManager(ctx);
 
 		// Load places.
-		List<Place> places = Place.getPlacesExceptClassrooms(ctx);
-		Log.v(Config.TAG, "Setting up PtolemyMapView with " + places.size()
-				+ " places.");
-		Drawable defaultMarker = getResources().getDrawable(
-				R.drawable.green_point);
-		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
-		Resources resources = getContext().getResources();
-		for (Place p : places) {
-			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
-					p.getName(), p.getMarker(resources));
-			placesOverlay.addOverlayItem(item);
-		}
-		overlays.add(placesOverlay);
+
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -98,8 +85,11 @@ public class PtolemyMapView extends MapView {
 		case MotionEvent.ACTION_MOVE:
 			pinchZoom = (ev.getPointerCount() > 1);
 			break;
+		case MotionEvent.ACTION_UP:
+			// FIXME: i shouldn't have to call this manually.
+			((View) getParent()).onTouchEvent(ev);
+			return false;
 		}
-
 		return super.onTouchEvent(ev);
 	}
 
@@ -263,10 +253,6 @@ public class PtolemyMapView extends MapView {
 			pSouthY[zoomLevel] = (int) Math.ceil(GoogleTileCalculator
 					.computeGoogleY(SOUTH_LATITUDE_E6, zoomLevel));
 		}
-	}
-
-	public PlacesItemizedOverlay getPlacesOverlay() {
-		return placesOverlay;
 	}
 
 	public void stop() {

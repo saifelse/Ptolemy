@@ -21,13 +21,14 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 	private final String ACTIVITY_TITLE = "Pick a location";
 	private Place place;
 	private PtolemyMapView mapView;
-
+	private FloorMapView floorMapView;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_browse);
-		mapView = (PtolemyMapView) findViewById(R.id.mapview);
-
+		floorMapView = (FloorMapView) findViewById(R.id.browsemapview);
+		mapView = (PtolemyMapView) floorMapView.getMapView();
+		
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 		ActionBar.setDefaultBackAction(this);
 
@@ -61,7 +62,7 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 					}
 				});
 
-		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
+		floorMapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
 
 			public void onTap(Place p) {
 				setPlace(p);
@@ -103,8 +104,9 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
 		places.add(new PlacesOverlayItem(p, p.getName(), p.getName(), p
 				.getMarker(getResources())));
-		mapView.getPlacesOverlay().setExtras(places);
 		mapView.getController().animateTo(p.getPoint());
+		floorMapView.setFloor(p.getFloor());
+		floorMapView.getPlacesOverlay().setExtras(places);
 		setPlace(p);
 	}
 

@@ -70,6 +70,10 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		return true;
 	}
 	
+	public void clear(){
+		overlayItems.clear();
+		extraOverlayItems.clear();
+	}
 	static public Drawable boundCenterBottom(Drawable drawable) {
 		return ItemizedOverlay.boundCenterBottom(drawable);
 	}

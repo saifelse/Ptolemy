@@ -43,8 +43,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		setContentView(R.layout.map_main);
 		floorMapView = (FloorMapView) findViewById(R.id.floormapview);
 		mapView = (PtolemyMapView) floorMapView.getMapView();
-		mapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
-
+		floorMapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
 			public void onTap(Place p) {
 				setPlace(p);
 			}
@@ -122,8 +121,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
 		places.add(new PlacesOverlayItem(place, place.getName(), place
 				.getName(), place.getMarker(getResources())));
-		mapView.getPlacesOverlay().setExtras(places);
 		mapView.getController().animateTo(place.getPoint());
+		floorMapView.updateMinMax();
+		floorMapView.setFloor(place.getFloor());
+		floorMapView.getPlacesOverlay().setExtras(places);
 		setPlace(place);
 	}
 
