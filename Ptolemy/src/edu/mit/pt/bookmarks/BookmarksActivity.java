@@ -2,29 +2,32 @@ package edu.mit.pt.bookmarks;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.BaseColumns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.ResourceCursorAdapter;
+import android.widget.TextView;
 import edu.mit.pt.ActionBar;
-import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.PtolemyMapActivity;
 
 public class BookmarksActivity extends ListActivity {
 
-	SimpleCursorAdapter adapter;
+	ResourceCursorAdapter adapter;
 	private final String ACTIVITY_TILE = "Bookmarks";
 
 	@Override
@@ -54,11 +57,14 @@ public class BookmarksActivity extends ListActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Bookmark b = (Bookmark) parent.getAdapter().getItem(position);
+				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+				long placeId = cursor.getLong(cursor
+						.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
+								+ BaseColumns._ID));
 				Intent intent = new Intent(that, PtolemyMapActivity.class);
 				Uri.Builder builder = Uri
 						.parse("content://edu.mit.pt.data.placescontentprovider/")
-						.buildUpon().path(Long.toString(b.getId()));
+						.buildUpon().path(Long.toString(placeId));
 				intent.setData(builder.build());
 				intent.setAction(Intent.ACTION_SEARCH);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -69,42 +75,31 @@ public class BookmarksActivity extends ListActivity {
 
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this).getReadableDatabase();
-		Cursor cur = db
-				.rawQuery(
-						String.format(
-								"SELECT %1$s, %2$s FROM %3$s, %4$s WHERE %3$s.%5$s = %4$s.%6$s",
-								BookmarksTable.COLUMN_NAME,
-								PlacesTable.COLUMN_NAME,
-								BookmarksTable.BOOKMARKS_TABLE_NAME,
-								PlacesTable.PLACES_TABLE_NAME,
-								BookmarksTable.COLUMN_PLACE_ID,
-								PlacesTable.COLUMN_ID), null);
-		Log.v(Config.TAG, "NAME: " + cur.getString(cur.getColumnIndex(BookmarksTable.COLUMN_NAME)));
-		Log.v(Config.TAG, "PLACE: " + cur.getString(cur.getColumnIndex(PlacesTable.COLUMN_NAME)));
-//		adapter = new SimpleCursorAdapter(this, R.layout.bookmark_list_item,
-//				cur, new String[] { BookmarksTable.COLUMN_NAME,
-//						PlacesTable.COLUMN_NAME }, new int[] { R.id.name,
-//						R.id.location });
+		// Select bookmarks_table.id as _ID and places_table.id as
+		// places_table._ID
+		Cursor cur = db.rawQuery("SELECT "
+				+ BookmarksTable.BOOKMARKS_TABLE_NAME + "."
+				+ BookmarksTable.COLUMN_ID + " AS " + BaseColumns._ID + ", "
+				+ BookmarksTable.COLUMN_NAME + ","
+				+ BookmarksTable.BOOKMARKS_TABLE_NAME + "."
+				+ BookmarksTable.COLUMN_TYPE + " AS "
+				+ BookmarksTable.COLUMN_TYPE + ", " + PlacesTable.COLUMN_NAME
+				+ ", " + PlacesTable.PLACES_TABLE_NAME + "."
+				+ PlacesTable.COLUMN_ID + " AS "
+				+ PlacesTable.PLACES_TABLE_NAME + BaseColumns._ID + " FROM "
+				+ BookmarksTable.BOOKMARKS_TABLE_NAME + ", "
+				+ PlacesTable.PLACES_TABLE_NAME + " WHERE "
+				+ BookmarksTable.BOOKMARKS_TABLE_NAME + "."
+				+ BookmarksTable.COLUMN_PLACE_ID + "="
+				+ PlacesTable.PLACES_TABLE_NAME + "." + PlacesTable.COLUMN_ID,
+				null);
 
-//		adapter = new ArrayAdapter<Bookmark>(this, R.layout.bookmark_list_item) {
-//
-//			@Override
-//			public View getView(int position, View convertView, ViewGroup parent) {
-//				if (convertView == null) {
-//					convertView = getLayoutInflater().inflate(
-//							R.layout.bookmark_list_item, null);
-//				}
-//				TextView nameText = (TextView) convertView
-//						.findViewById(R.id.name);
-//				nameText.setText(getItem(position).getCustomName());
-//
-//				TextView locationText = (TextView) convertView
-//						.findViewById(R.id.location);
-//				Log.v(Config.TAG, "ITEM: " + getItem(position));
-//				locationText.setText(getItem(position).getPlace().getName());
-//				return convertView;
-//			}
-//		};
+		adapter = new BookmarksListItemAdapter(this,
+				R.layout.bookmark_list_item, cur, true);
+
+		// new String[] { BookmarksTable.COLUMN_NAME,
+		// PlacesTable.COLUMN_NAME, BaseColumns._ID }, new int[] {
+		// R.id.name, R.id.location, R.id.idtext });
 
 		setListAdapter(adapter);
 	}
@@ -112,10 +107,47 @@ public class BookmarksActivity extends ListActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		// adapter.clear();
-		// for (Bookmark b : Bookmark.getBookmarks(this)) {
-		// adapter.add(b);
-		// }
+		adapter.getCursor().requery();
+	}
+
+	private class BookmarksListItemAdapter extends ResourceCursorAdapter {
+		public BookmarksListItemAdapter(Context context, int layout, Cursor c,
+				boolean autoRequery) {
+			super(context, layout, c, autoRequery);
+		}
+
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			String bookmarkName = cursor.getString(cursor
+					.getColumnIndex(BookmarksTable.COLUMN_NAME));
+			String locationName = cursor.getString(cursor
+					.getColumnIndex(PlacesTable.COLUMN_NAME));
+			String typeName = cursor.getString(cursor
+					.getColumnIndex(BookmarksTable.COLUMN_TYPE));
+			BookmarkType type = BookmarkType.valueOf(typeName);
+			((TextView) view.findViewById(R.id.name)).setText(bookmarkName);
+			((TextView) view.findViewById(R.id.location)).setText(locationName);
+			switch (type) {
+			case LECTURE:
+				((VerticalTextView) view.findViewById(R.id.label)).setText(type
+						.getShortName());
+				view.findViewById(R.id.label_wrapper).setBackgroundColor(
+						Color.parseColor("#b6db49"));
+				break;
+			case RECITATION:
+				((VerticalTextView) view.findViewById(R.id.label)).setText(type
+						.getShortName());
+				view.findViewById(R.id.label_wrapper).setBackgroundColor(
+						Color.parseColor("#6dcaec"));
+				break;
+			case OFFICE_HOURS:
+				((VerticalTextView) view.findViewById(R.id.label)).setText(type
+						.getShortName());
+				break;
+			case OTHER:
+				break;
+			}
+		}
 	}
 
 }

@@ -22,30 +22,39 @@
         android:id="@+id/meta_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone" >
+        android:layout_alignParentBottom="true" >
+
+        <ImageButton
+            android:id="@+id/place_confirm_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_menu_navigate"
+            android:contentDescription="@string/navigate"
+            android:background="@drawable/navigate_bg" />
 
         <TextView
             android:id="@+id/place_confirm_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/place_confirm_button"
+            android:layout_toLeftOf="@+id/bookmark_edit_button"
+            android:layout_toRightOf="@+id/place_confirm_button"
             android:background="@drawable/black_50"
-            android:textColor="#FFF"
-            android:textSize="16dp"
+            android:ellipsize="end"
             android:paddingLeft="8dp"
             android:singleLine="true"
-            android:ellipsize="end"
-            android:gravity="center_vertical" />
+            android:textColor="#FFF"
+            android:gravity="center_vertical"
+            android:textSize="16dp" />
 
-        <Button
-            android:id="@+id/place_confirm_button"
+        <ImageButton
+            android:id="@+id/bookmark_edit_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@drawable/navigate_bg"
-            android:gravity="center" />
+            android:src="@drawable/ic_menu_edit"
+            android:contentDescription="@string/edit"
+            android:background="@drawable/bookmark_edit_bg" />
     </RelativeLayout>
 
 </RelativeLayout>
