@@ -46,23 +46,39 @@ public class FloorSeekBar extends View {
 	private Paint scrollThumbPaint;
 
 	private boolean firstDraw;
+	private Context context;
 	
+	public FloorSeekBar(Context context, AttributeSet attrs, int defStyle){
+		super(context, attrs, defStyle);
+		this.context = context;
+		setup();
+		loadAttributes(attrs);
+	}
 	public FloorSeekBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		listeners = new ArrayList<OnFloorSelectListener>();
-		
+		this.context = context;
+		setup();
+		loadAttributes(attrs);
+	}
+	public FloorSeekBar(Context context){
+		super(context);
+		this.context = context;
+		setup();
+	}
+	private void setup(){
+		listeners = new ArrayList<OnFloorSelectListener>();		
+		firstDraw = true;
 		initText();
+	}
+	private void loadAttributes(AttributeSet attrs){
 		// Get attributes and store them.
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.FloorSeekBar);
 		setMin(a.getInteger(R.styleable.FloorSeekBar_minFloor, 0));
 		setMax(a.getInteger(R.styleable.FloorSeekBar_maxFloor, 0));
 		setFloor(a.getInteger(R.styleable.FloorSeekBar_floor, 0));
-		
-		firstDraw = true;
 		a.recycle();
 	}
-
 	private void initText() {
 		mTxt = new TextPaint();
 		mTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
