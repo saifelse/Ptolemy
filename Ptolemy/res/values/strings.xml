@@ -33,6 +33,7 @@
     <string name="back">back</string>
     <string name="centre">centre</string>
     <string name="add_bookmark">Add Bookmark</string>
+    <string name="save_bookmark">Save Bookmark</string>
     <string name="bookmark_type_prompt">Pick the bookmark type:</string>
 
     <string-array name="bookmark_types">

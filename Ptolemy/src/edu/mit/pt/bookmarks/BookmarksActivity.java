@@ -36,6 +36,7 @@ public class BookmarksActivity extends ListActivity {
 
 	ResourceCursorAdapter adapter;
 	private final String ACTIVITY_TILE = "Bookmarks";
+	static final String BOOKMARK_ID = "bookmarkId";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +130,10 @@ public class BookmarksActivity extends ListActivity {
 				.getMenuInfo();
 		switch (item.getItemId()) {
 		case R.id.edit_bookmark:
+			Log.v(Config.TAG, "EDITING BOOKMARK: " + info.id);
+			Intent intent = new Intent(this, EditBookmarkActivity.class);
+			intent.putExtra(BOOKMARK_ID, info.id);
+			startActivity(intent);
 			return true;
 		case R.id.delete_bookmark:
 			Log.v(Config.TAG, "DELETING BOOKMARK: " + info.id);
