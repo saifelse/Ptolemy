@@ -51,7 +51,6 @@ public class FloorMapView extends RelativeLayout {
 		// Register listeners
 		seekBar.addFloorListener(new OnFloorSelectListener() {
 
-			@Override
 			public void onFloorSelect(FloorSeekEvent event) {
 				Log.v(Config.TAG, "New floor!!!! " + event.getFloor());
 			}
