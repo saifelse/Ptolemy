@@ -72,7 +72,7 @@ public class FloorMapView extends RelativeLayout {
 		seekBar.addFloorListener(new OnFloorSelectListener() {
 
 			public void onFloorSelect(FloorSeekEvent event) {
-				setFloor(event.getFloor());
+				updateToFloor(event.getFloor());
 			}
 
 		});
@@ -86,12 +86,12 @@ public class FloorMapView extends RelativeLayout {
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
 		
 		updateMinMax();
-		setFloor(0);
+		//setFloor(0);
+		
 	}
-
-	public void setFloor(int floor) {
+	private void updateToFloor(int floor){
 		this.floor = floor;
-		seekBar.setFloor(floor);
+		//seekBar.setFloor(floor);
 		List<Overlay> overlays = mapView.getOverlays();
 		Resources resources = getContext().getResources();
 
@@ -114,12 +114,16 @@ public class FloorMapView extends RelativeLayout {
 		Log.v(Config.TAG, "Adding "+count+" places on floor "+floor);
 		overlays.add(placesOverlay);
 		mapView.invalidate();
-		
+	}
+	public void setFloor(int floor) {
+		updateToFloor(floor);
+		seekBar.setFloor(floor);
+		seekBar.snapY();
 	}
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		Log.v(Config.TAG, "FloorMapView onTouchEvent detected.");
+		//Log.v(Config.TAG, "FloorMapView onTouchEvent detected.");
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.

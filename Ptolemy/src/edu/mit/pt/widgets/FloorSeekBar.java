@@ -100,13 +100,13 @@ public class FloorSeekBar extends View {
 
 	private void setUnsnappedY(int y) {
 		unsnappedY = Math.max(getTrackTop(), Math.min(getTrackBottom(), y));
+		setFloor(getFloorFromY(unsnappedY)); // live update floor.
 		invalidate();
 	}
 
 	private int getFloorFromY(float y) {
 		return min - Math.round((y - getTrackBottom()) / getSpacing());
 	}
-
 	private int getYFromFloor(int floor) {
 		return (int) (getTrackBottom() - (floor - min) * getSpacing());
 	}
@@ -127,12 +127,11 @@ public class FloorSeekBar extends View {
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		
-		
+		// Initialize unsnappedY on first draw.
 		if(firstDraw){
 			firstDraw = false;
 			setUnsnappedY(getYFromFloor(floor));
 		}
-		
 		
 		int targetFloor = getFloorFromY(unsnappedY);
 		
@@ -175,20 +174,15 @@ public class FloorSeekBar extends View {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getActionMasked()) {
-		case MotionEvent.ACTION_DOWN:
-			break;
-		case MotionEvent.ACTION_CANCEL:
-			break;
 		case MotionEvent.ACTION_UP:
-			setFloor(getFloorFromY(unsnappedY));
+			snapY();
 			break;
 		case MotionEvent.ACTION_MOVE:
 			setUnsnappedY((int) event.getY());
+			setFloor(getFloorFromY(unsnappedY));
 			break;
-		default:
-			return false;
 		}
-		return true;
+		return super.onTouchEvent(event);
 	}
 
 	// TODO: Make sure this is correct.
@@ -237,6 +231,7 @@ public class FloorSeekBar extends View {
 	public void setMin(int min) {
 		this.min = min;
 		setFloor(floor); //refresh to within bounds
+		snapY();
 		invalidate();
 	}
 
@@ -247,6 +242,7 @@ public class FloorSeekBar extends View {
 	public void setMax(int max) {
 		this.max = max;
 		setFloor(floor); //refresh to within bounds
+		snapY();
 		invalidate();
 	}
 
@@ -255,14 +251,21 @@ public class FloorSeekBar extends View {
 	}
 
 	public void setFloor(int floor) {
+		Log.v(Config.TAG, "Set floor: "+floor);
+		
 		int oldFloor = this.floor;
 		this.floor = Math.max(min, Math.min(max, floor));
 		if(oldFloor != this.floor){
 			fireFloorListeners();
 		}
-		setUnsnappedY(getYFromFloor(this.floor));
 		invalidate();
 	}
+	
+	public void snapY(){
+		unsnappedY = getYFromFloor(floor);
+		invalidate();
+	}
+	
 	
 	public void addFloorListener(OnFloorSelectListener l){
 		listeners.add(l);

@@ -55,7 +55,7 @@ public class PtolemyMapView extends MapView {
 	private void setup() {
 
 		List<Overlay> overlays = getOverlays();
-		overlays.add(new TileOverlay());
+		//overlays.add(new TileOverlay());
 
 		getController().setZoom(21);
 
@@ -70,7 +70,7 @@ public class PtolemyMapView extends MapView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		Log.v(Config.TAG, "PtolemyMapView onTouchEvent detected.");
+		//Log.v(Config.TAG, "PtolemyMapView onTouchEvent detected.");
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
