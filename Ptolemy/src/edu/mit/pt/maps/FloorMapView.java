@@ -123,7 +123,6 @@ public class FloorMapView extends RelativeLayout {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		//Log.v(Config.TAG, "FloorMapView onTouchEvent detected.");
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.

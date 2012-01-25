@@ -51,5 +51,6 @@
     <string name="edit_bookmark">Edit Bookmark</string>
     <string name="delete_bookmark">Delete Bookmark</string>
     <string name="navigate">navigate</string>
+    <string name="loading">loading</string>
 
 </resources>
