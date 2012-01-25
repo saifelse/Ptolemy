@@ -15,8 +15,6 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
-import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;

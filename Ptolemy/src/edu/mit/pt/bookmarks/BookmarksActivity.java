@@ -10,15 +10,22 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.data.PlacesTable;
@@ -73,6 +80,8 @@ public class BookmarksActivity extends ListActivity {
 			}
 		});
 
+		registerForContextMenu(lv);
+
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this).getReadableDatabase();
 		// Select bookmarks_table.id as _ID and places_table.id as
@@ -97,10 +106,6 @@ public class BookmarksActivity extends ListActivity {
 		adapter = new BookmarksListItemAdapter(this,
 				R.layout.bookmark_list_item, cur, true);
 
-		// new String[] { BookmarksTable.COLUMN_NAME,
-		// PlacesTable.COLUMN_NAME, BaseColumns._ID }, new int[] {
-		// R.id.name, R.id.location, R.id.idtext });
-
 		setListAdapter(adapter);
 	}
 
@@ -110,6 +115,31 @@ public class BookmarksActivity extends ListActivity {
 		adapter.getCursor().requery();
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.edit_bookmark_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		switch (item.getItemId()) {
+		case R.id.edit_bookmark:
+			return true;
+		case R.id.delete_bookmark:
+			Log.v(Config.TAG, "DELETING BOOKMARK: " + info.id);
+			Bookmark.deleteBookmark(this, info.id);
+			adapter.getCursor().requery();
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+	
 	private class BookmarksListItemAdapter extends ResourceCursorAdapter {
 		public BookmarksListItemAdapter(Context context, int layout, Cursor c,
 				boolean autoRequery) {

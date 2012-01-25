@@ -46,4 +46,12 @@ public class Bookmark {
 		values.put(BookmarksTable.COLUMN_PLACE_ID, place.getId());
 		db.insert(BookmarksTable.BOOKMARKS_TABLE_NAME, null, values);
 	}
+
+	static public void deleteBookmark(Context context, long id) {
+
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		db.delete(BookmarksTable.BOOKMARKS_TABLE_NAME, BookmarksTable.COLUMN_ID
+				+ "=?", new String[] { Long.toString(id) });
+	}
 }

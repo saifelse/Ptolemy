@@ -20,7 +20,6 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
-import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.BrowsePlaceActivity;
 import edu.mit.pt.maps.PtolemyMapView;
 
