@@ -17,7 +17,6 @@ public class SeekBarTestActivity extends MapActivity {
 		setContentView(R.layout.seekbar_test);
 		FloorSeekBar seeker = (FloorSeekBar) findViewById(R.id.FloorTest);
 		seeker.addFloorListener(new OnFloorSelectListener(){
-			@Override
 			public void onFloorSelect(FloorSeekEvent event) {
 				Log.v(Config.TAG, "New floor is: "+event.getFloor());
 			}
