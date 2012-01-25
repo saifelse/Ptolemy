@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 
 public class Bookmark {

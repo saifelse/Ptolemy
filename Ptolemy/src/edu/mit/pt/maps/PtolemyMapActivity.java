@@ -22,6 +22,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final String ACTIVITY_TITLE = "Ptolemy";
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
+	private Place focusedPlace;
 
 	@Override
 	public void onPause() {
@@ -100,11 +101,20 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	}
 
 	private void setPlace(Place place) {
+		focusedPlace = place;
 		View metaView = findViewById(R.id.meta_view);
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
 				.getName());
 		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
 		metaView.setVisibility(View.VISIBLE);
+	}
+
+	public void moveToFocusedPlace(View v) {
+		if (focusedPlace == null) {
+			return;
+		}
+		Log.v(Config.TAG, "MOVING!");
+		mapView.getController().animateTo(focusedPlace.getPoint());
 	}
 
 	@Override

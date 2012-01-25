@@ -26,6 +26,7 @@ import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
+import edu.mit.pt.PrepopulateActivity;
 import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.data.PlacesTable;
@@ -37,6 +38,7 @@ public class BookmarksActivity extends ListActivity {
 	ResourceCursorAdapter adapter;
 	private final String ACTIVITY_TILE = "Bookmarks";
 	static final String BOOKMARK_ID = "bookmarkId";
+	static final int REQUEST_BOOKMARKS = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,18 @@ public class BookmarksActivity extends ListActivity {
 
 		final Activity that = this;
 
-		// Add nav button.
+		// Add nav buttons.
+		ImageButton syncButton = (ImageButton) getLayoutInflater().inflate(
+				R.layout.menu_nav_button, null);
+		syncButton.setImageResource(R.drawable.ic_menu_find_holo_dark);
+		syncButton.setContentDescription(getString(R.string.sync_bookmark));
+		syncButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(that, PrepopulateActivity.class);
+				startActivityForResult(intent, REQUEST_BOOKMARKS);
+			}
+		});
+
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
 				R.layout.menu_nav_button, null);
 		addButton.setImageResource(R.drawable.ic_menu_bookmark_add);
@@ -59,7 +72,8 @@ public class BookmarksActivity extends ListActivity {
 				startActivity(intent);
 			}
 		});
-		ActionBar.setButton(this, addButton);
+
+		ActionBar.setButtons(this, new View[] { addButton, syncButton });
 
 		ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -145,6 +159,18 @@ public class BookmarksActivity extends ListActivity {
 		}
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case REQUEST_BOOKMARKS:
+			if (resultCode != RESULT_OK) {
+				return;
+			}
+			long[] mitClassIds = data.getLongArrayExtra(PrepopulateActivity.CLASSES);
+			// TODO need to create bookmarks based on classes.
+		}
+	}
+
 	private class BookmarksListItemAdapter extends ResourceCursorAdapter {
 		public BookmarksListItemAdapter(Context context, int layout, Cursor c,
 				boolean autoRequery) {

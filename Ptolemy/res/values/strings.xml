@@ -10,11 +10,10 @@
     <string name="launch_floor_seek">Play with the Floor Seek!</string>
    
     <string name="app_name">Ptolemy</string>
-    <string name="hello_map">Hello MapActivity!</string>
     <string name="touchstone_login">Log into your Kerberos account to import classes you are registered for this semester:</string>
     <string name="form_username">Username</string>
     <string name="form_password">Password</string>
-    <string name="login_button">Prepopulate!</string>
+    <string name="login_button">Import Classes</string>
     <string name="instructions"> This is the test page for our app. Click the buttons in succession to see the implemented functionality... NOTE: wait for notification before proceeding!. The core of the app is in \"View the Map.\"; don\'t forget to click the buttons in the action bar!
        \nMost of the current functionality is in bookmarks.
         </string>
@@ -33,6 +32,7 @@
     <string name="back">back</string>
     <string name="centre">centre</string>
     <string name="add_bookmark">Add Bookmark</string>
+    <string name="sync_bookmark">Sync Bookmarks</string>
     <string name="save_bookmark">Save Bookmark</string>
     <string name="bookmark_type_prompt">Pick the bookmark type:</string>
 

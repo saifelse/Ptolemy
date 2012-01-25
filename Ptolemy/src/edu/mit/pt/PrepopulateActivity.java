@@ -1,65 +1,97 @@
 package edu.mit.pt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import edu.mit.pt.classes.MITClass;
 
 /**
  * 
- * TODO: Make it look pretty. (add a cancel button)
  * TODO: Make it choose the term.
  * FIXME: fix naming conventions for ids to underscores.
  * FIXME: can't auth again after already auth'ing
  */
 public class PrepopulateActivity extends Activity {
 	private static String term = "fa11";
+	private final int MOIRA_ERROR = 0;
+	public final static String CLASSES = "classes";
+
+	private ProgressDialog dialog;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.touchstone_login);
+		setContentView(R.layout.prepopulate);
+
+		ActionBar.setDefaultBackAction(this);
+		ActionBar.setTitle(this, "Import Classes");
 	}
 
 	public void loginTouchstone(View view) {
 		// Fields
-		ProgressBar moiraProgressBar = (ProgressBar) findViewById(R.id.moiraProgressBar);
-		TextView statusField = (TextView) findViewById(R.id.PrepopulateStatus);
 		EditText usernameField = (EditText) findViewById(R.id.EditUserName);
 		EditText passwordField = (EditText) findViewById(R.id.EditPassword);
-		Button loginButton = (Button) findViewById(R.id.ButtonLogin);
 
 		// Get data
 		String username = usernameField.getText().toString();
 		String password = passwordField.getText().toString();
 
-		// Disable fields
-		usernameField.setEnabled(false);
-		passwordField.setEnabled(false);
-		loginButton.setEnabled(false);
-
-		// Show progress bar
-		moiraProgressBar.setVisibility(ProgressBar.VISIBLE);
+		dialog = ProgressDialog.show(this, "", "Connecting. Please wait...",
+				true);
 
 		// Attempt login.
-		statusField.setText("Logging in as " + username
-				+ "@athena.dialup.mit.edu");
-		new MoiraTask().execute(username, password, term);
+		new MoiraTask(this).execute(username, password, term);
 	}
-	
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		switch (id) {
+		case MOIRA_ERROR:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setNeutralButton("OK",
+					new DialogInterface.OnClickListener() {
+
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+							onSearchRequested();
+						}
+					})
+					.setTitle("Hm...")
+					.setMessage(
+							"An error occurred trying to connect. Please try again!");
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
+	}
+
 	private class MoiraTask extends AsyncTask<String, Integer, List<String>> {
+		Activity activity;
+		
+		public MoiraTask(Activity activity) {
+			this.activity = activity;
+		}
+		
 		@Override
 		protected List<String> doInBackground(String... credential) {
 			String username = credential[0];
 			String password = credential[1];
-			String term = credential[2]; 
+			String term = credential[2];
 			try {
 				List<String> result = Moira
 						.getClasses(username, password, term);
@@ -76,23 +108,25 @@ public class PrepopulateActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(List<String> classes) {
-			// Get UI components
-			ProgressBar moiraProgressBar = (ProgressBar) findViewById(R.id.moiraProgressBar);
-			TextView statusField = (TextView) findViewById(R.id.PrepopulateStatus);
-			EditText usernameField = (EditText) findViewById(R.id.EditUserName);
-			EditText passwordField = (EditText) findViewById(R.id.EditPassword);
-			Button loginButton = (Button) findViewById(R.id.ButtonLogin);
-
 			// Hide progress bar
-			moiraProgressBar.setVisibility(ProgressBar.INVISIBLE);
+			dialog.dismiss();
 			if (classes == null) {
 				// Show content based on error.
-				statusField.setText("An error arose. Try logging in again.");
-				usernameField.setEnabled(true);
-				passwordField.setEnabled(true);
-				loginButton.setEnabled(true);
+				showDialog(MOIRA_ERROR);
 			} else {
-				setResult(RESULT_OK, new ClassDataIntent(classes));
+				List<Long> mitClasses = new ArrayList<Long>();
+				for (String dirtyClassName : classes) {
+					String className = dirtyClassName.split("-")[1];
+					long classId = MITClass.lookupName(activity, className);
+					Log.v(Config.TAG, "Looking up class: " + className);
+					if (classId != -1) {
+						Log.v(Config.TAG, "Matched class: " + classId);
+						mitClasses.add(classId);
+					}
+				}
+				Intent intent = new Intent();
+				intent.putExtra(CLASSES, mitClasses.toArray(new Long[0]));
+				setResult(RESULT_OK, intent);
 				finish();
 			}
 		}

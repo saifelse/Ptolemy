@@ -19,7 +19,7 @@ public class MITClassTable {
 	public static final String CLASSES_TABLE_CREATE = "CREATE TABLE "
 			+ CLASSES_TABLE_NAME + " (" + COLUMN_ID
 			+ " integer primary key autoincrement, " 
-			+ COLUMN_MITID + " TEXT not null, "
+			+ COLUMN_MITID + " TEXT not null collate nocase, "
 			+ COLUMN_RESOLVE + " TEXT not null, "
 			+ COLUMN_TERM + " TEXT not null, "
 			+ COLUMN_NAME + " TEXT not null, "

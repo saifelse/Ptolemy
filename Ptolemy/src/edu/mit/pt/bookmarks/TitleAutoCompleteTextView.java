@@ -55,6 +55,7 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 				Cursor c = (Cursor) parent.getItemAtPosition(position);
 				String room = c.getString(c
 						.getColumnIndex(MITClassTable.COLUMN_ROOM));
+				Log.v(Config.TAG, "Looked up room for class: " + room);
 				Place place = Place.getClassroom(activity, room);
 				if (place != null) {
 					activity.setPlace(place, false);
@@ -62,7 +63,7 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 							.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(getWindowToken(), 0);
 				} else {
-					Log.wtf(Config.TAG, "Place should not be null!");
+					Log.e(Config.TAG, "Place should not be null!");
 				}
 			}
 		});

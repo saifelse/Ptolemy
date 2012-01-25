@@ -50,7 +50,9 @@
             android:paddingLeft="8dp"
             android:singleLine="true"
             android:textColor="#FFF"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:clickable="true"
+            android:onClick="moveToFocusedPlace" />
     </RelativeLayout>
 
 </RelativeLayout>

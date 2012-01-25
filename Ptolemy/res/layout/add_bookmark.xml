@@ -32,7 +32,8 @@
                 android:hint="@string/class_title_hint"
                 android:singleLine="true"
                 android:textSize="16sp"
-                android:textColor="#111" />
+                android:textColor="#111"
+                android:imeOptions="actionDone" />
 
             <Button
                 android:id="@+id/typeButton"

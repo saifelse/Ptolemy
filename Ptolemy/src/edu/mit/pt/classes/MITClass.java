@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,12 +14,14 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 
 public class MITClass {
 	private static void addClass(String id, String term, String name,
@@ -83,7 +84,8 @@ public class MITClass {
 					String term = c.getString("term");
 					String room = c.getString("room");
 					String name = c.getString("name");
-					String resolve = c.has("resolve") ? c.getString("resolve") : "";
+					String resolve = c.has("resolve") ? c.getString("resolve")
+							: "";
 					addClass(mitID, term, name, room, resolve, db);
 					count++;
 				} catch (JSONException e) {
@@ -103,6 +105,7 @@ public class MITClass {
 			AsyncTask<Void, Integer, Integer> {
 		private SQLiteDatabase db;
 		private Context context;
+
 		public MITClassLoader(SQLiteDatabase db, Context context) {
 			super();
 			this.db = db;
@@ -120,11 +123,27 @@ public class MITClass {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			//db.close();
-			Toast toast = Toast.makeText(context, "Downloaded " + result + " classes.", 1000);
+			// db.close();
+			Toast toast = Toast.makeText(context, "Downloaded " + result
+					+ " classes.", 1000);
 			toast.show();
-			//Log.v(Config.TAG, "Downloaded " + result + " classes.");
+			// Log.v(Config.TAG, "Downloaded " + result + " classes.");
 		}
 
 	}
+
+	public static long lookupName(Context context, String name) {
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		Cursor c = db.query(MITClassTable.CLASSES_TABLE_NAME,
+				new String[] { MITClassTable.COLUMN_ID },
+				MITClassTable.COLUMN_MITID + "=?", new String[] { name }, null,
+				null, null);
+		if (c.getCount() == 0) {
+			return -1;
+		}
+		c.moveToFirst();
+		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
+	}
+
 }

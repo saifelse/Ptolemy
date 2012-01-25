@@ -23,8 +23,6 @@ import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.widgets.SeekBarTestActivity;
 
 public class PtolemyActivity extends Activity {
-	final static int REQUEST_MOIRA = 1;
-	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +43,7 @@ public class PtolemyActivity extends Activity {
     }
     public void launchTouchstoneLogin(View view){
     	Intent i = new Intent(this, PrepopulateActivity.class);
-    	startActivityForResult(i, REQUEST_MOIRA);
+    	startActivity(i);
     }
     public void launchPtolemyMap(View view){
     	Intent i = new Intent(this, PtolemyMapActivity.class);
@@ -96,23 +94,5 @@ public class PtolemyActivity extends Activity {
 		Toast toast = Toast.makeText(view.getContext(), "Reset tables: "
 				+ Arrays.toString(tables)+". Please wait several seconds while room data is downloaded...", 1000);
 		toast.show();
-	}
-
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case REQUEST_MOIRA:
-			if (resultCode == RESULT_OK) {
-				//TextView classText = (TextView) findViewById(R.id.SelectedClasses);
-				//classText.setText("");
-				StringBuffer classText = new StringBuffer("We found these classes: \n");
-				String[] classes = (String[]) data.getExtras().get(
-						ClassDataIntent.CLASSES);
-				for (String classname : classes) {
-					classText.append(classname + "\n");
-				}
-				Toast toast = Toast.makeText(this, classText, 1000);
-				toast.show();
-			}
-		}
 	}
 }
