@@ -20,7 +20,6 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
-import edu.mit.pt.data.PtolemyOpenHelper;
 import edu.mit.pt.maps.BrowsePlaceActivity;
 import edu.mit.pt.maps.PtolemyMapView;
 
@@ -30,9 +29,9 @@ public class AddBookmarkActivity extends MapActivity {
 	public final static String PLACE = "place";
 	private final int BROWSE_REQUEST = 1;
 
-	private BookmarkType type = BookmarkType.OTHER;
+	protected BookmarkType type = BookmarkType.OTHER;
 	private SQLiteDatabase db;
-	private Place place;
+	protected Place place;
 	private boolean userHasEditedType = false;
 	private boolean userHasEditedPlace = false;
 
@@ -41,9 +40,9 @@ public class AddBookmarkActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_bookmark);
-		ActionBar.setTitle(this, "Add Bookmark");
+		ActionBar.setTitle(this, getNavTitle());
 		ActionBar.setDefaultBackAction(this);
-		
+
 		// Disable add button until data is valid.
 		findViewById(R.id.addBookmarkButton).setEnabled(false);
 
@@ -52,7 +51,7 @@ public class AddBookmarkActivity extends MapActivity {
 		final BookmarkType[] types = BookmarkType.values();
 		final ArrayAdapter<BookmarkType> adapter = new ArrayAdapter<BookmarkType>(
 				this, R.layout.bookmark_type_item, types);
-		
+
 		typeButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -75,8 +74,19 @@ public class AddBookmarkActivity extends MapActivity {
 
 		// Autocomplete on title.
 		TitleAutoCompleteTextView autoComplete = (TitleAutoCompleteTextView) findViewById(R.id.editBookmarkTitle);
-		db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this).getReadableDatabase();
+		db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this)
+				.getReadableDatabase();
 		autoComplete.setup(db, this);
+		
+		completeSetup();
+	}
+
+	protected String getNavTitle() {
+		return "Add Bookmark";
+	}
+	
+	protected void completeSetup() {
+		return;
 	}
 
 	void changeType(BookmarkType newType, boolean byUser) {
@@ -96,10 +106,11 @@ public class AddBookmarkActivity extends MapActivity {
 			return;
 		}
 		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
-		Log.v(Config.TAG, "controller is null: " + (mapView.getController() == null));
+		Log.v(Config.TAG, "controller is null: "
+				+ (mapView.getController() == null));
 		Log.v(Config.TAG, "place is null: " + (place == null));
 		mapView.getController().setCenter(place.getPoint());
-		
+
 		this.place = place;
 		Button placeButton = (Button) findViewById(R.id.pickedPlace);
 		Log.v(Config.TAG, "Setting placeButton to have text " + place.getName());
@@ -110,9 +121,10 @@ public class AddBookmarkActivity extends MapActivity {
 		}
 		checkShouldEnableButton();
 	}
-	
+
 	private void checkShouldEnableButton() {
-		String customName = ((TextView) findViewById(R.id.editBookmarkTitle)).getText().toString();
+		String customName = ((TextView) findViewById(R.id.editBookmarkTitle))
+				.getText().toString();
 		if (customName.length() == 0 || place == null) {
 			findViewById(R.id.addBookmarkButton).setEnabled(false);
 		} else {
@@ -161,6 +173,6 @@ public class AddBookmarkActivity extends MapActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		//db.close();
+		// db.close();
 	}
 }

@@ -17,48 +17,40 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/nav"
         android:apiKey="@string/map_key"
-        android:clickable="true" 
+        android:clickable="true"
         pt:floor="4"
         pt:maxFloor="10"
         pt:minFloor="3" />
-   
+
     <RelativeLayout
         android:id="@+id/meta_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" >
 
         <ImageButton
             android:id="@+id/place_confirm_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_menu_navigate"
+            android:background="@drawable/navigate_bg"
             android:contentDescription="@string/navigate"
-            android:background="@drawable/navigate_bg" />
+            android:src="@drawable/ic_menu_navigate" />
 
         <TextView
             android:id="@+id/place_confirm_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/bookmark_edit_button"
+            android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/place_confirm_button"
             android:background="@drawable/black_50"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:singleLine="true"
             android:textColor="#FFF"
-            android:gravity="center_vertical"
             android:textSize="16dp" />
-
-        <ImageButton
-            android:id="@+id/bookmark_edit_button"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_menu_edit"
-            android:contentDescription="@string/edit"
-            android:background="@drawable/bookmark_edit_bg" />
     </RelativeLayout>
 
 </RelativeLayout>

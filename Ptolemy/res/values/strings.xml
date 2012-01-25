@@ -33,6 +33,7 @@
     <string name="back">back</string>
     <string name="centre">centre</string>
     <string name="add_bookmark">Add Bookmark</string>
+    <string name="save_bookmark">Save Bookmark</string>
     <string name="bookmark_type_prompt">Pick the bookmark type:</string>
 
     <string-array name="bookmark_types">
@@ -47,7 +48,8 @@
     <string name="room_not_found">The classroom \'%1$s\' could not be found. Try again with a room number like 10–250.</string>
 
     <string name="empty_bookmarks">You have no bookmarks. Go add some!</string>
-    <string name="edit">edit</string>
+    <string name="edit_bookmark">Edit Bookmark</string>
+    <string name="delete_bookmark">Delete Bookmark</string>
     <string name="navigate">navigate</string>
 
 </resources>
