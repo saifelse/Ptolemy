@@ -2,11 +2,13 @@ package edu.mit.pt.maps;
 
 import java.util.List;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.location.PlaceManager;
 import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
@@ -31,7 +33,7 @@ public class FloorMapView extends RelativeLayout {
 	private Context context;
 	// Places
 	private int floor;
-	private List<Place> places;
+	private PlaceManager placeManager;
 	private PlacesItemizedOverlay placesOverlay;
 
 	public FloorMapView(Context context, AttributeSet attrs, int defStyle) {
@@ -70,28 +72,27 @@ public class FloorMapView extends RelativeLayout {
 
 		// Register listeners
 		seekBar.addFloorListener(new OnFloorSelectListener() {
-
 			public void onFloorSelect(FloorSeekEvent event) {
 				updateToFloor(event.getFloor());
 			}
 
 		});
-		
+
 		Drawable defaultMarker = getResources().getDrawable(
 				R.drawable.green_point);
 		// Places
-		places = Place.getPlacesExceptClassrooms(context);
-		Log.v(Config.TAG, "Setting up FloorMapView with " + places.size()
-				+ " places.");
+		placeManager = new PlaceManager(context);
+		// places = Place.getPlaces(context);
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
-		
+
 		updateMinMax();
-		//setFloor(0);
-		
+		// setFloor(0);
+
 	}
-	private void updateToFloor(int floor){
+
+	private void updateToFloor(int floor) {
 		this.floor = floor;
-		//seekBar.setFloor(floor);
+		// seekBar.setFloor(floor);
 		List<Overlay> overlays = mapView.getOverlays();
 		Resources resources = getContext().getResources();
 
@@ -101,29 +102,41 @@ public class FloorMapView extends RelativeLayout {
 		// Add places that are on the specified floor
 		placesOverlay.clear();
 		
-		int count =0;
+		Log.v(Config.TAG, "Looking up visible places");
+		List<Place> places = getVisiblePlaces();
 		for (Place p : places) {
-			Log.v(Config.TAG, p.getName()+" "+p.getFloor());
-			if (p.getFloor() == this.floor) {
-				PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
-						p.getName(), p.getMarker(resources));
-				count++;
-				placesOverlay.addOverlayItem(item);
-			}
+			Log.v(Config.TAG, p.getName() + " " + p.getFloor());
+			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
+					p.getName(), p.getMarker(resources));
+			placesOverlay.addOverlayItem(item);
 		}
-		Log.v(Config.TAG, "Adding "+count+" places on floor "+floor);
+		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
 		overlays.add(placesOverlay);
 		mapView.invalidate();
 	}
+
 	public void setFloor(int floor) {
 		updateToFloor(floor);
 		seekBar.setFloor(floor);
 		seekBar.snapY();
 	}
 
+	private List<Place> getVisiblePlaces() {
+		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
+		return placeManager.getPlaces(topLeft.getLatitudeE6(),
+				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
+				mapView.getLongitudeSpan(), this.floor);
+	}
+
+	private List<Place> getPlaces() {
+		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
+		return placeManager.getPlaces(topLeft.getLatitudeE6(),
+				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
+				mapView.getLongitudeSpan());
+	}
+
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		//Log.v(Config.TAG, "FloorMapView onTouchEvent detected.");
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
@@ -131,21 +144,19 @@ public class FloorMapView extends RelativeLayout {
 		}
 		return false;
 	}
-	public void updateMinMax(){
+
+	public void updateMinMax() {
 		int maxFloor = 0;
 		int minFloor = 0;
-		Point pt = new Point();
-		for (Place p : places) {
-			mapView.getProjection().toPixels(p.getPoint(), pt);
-			if (0 <= pt.x && pt.x <= getWidth() && 0 <= pt.y
-					&& pt.y <= getHeight()) {
-				maxFloor = Math.max(maxFloor, p.getFloor());
-				minFloor = Math.min(minFloor, p.getFloor());
-			}
+
+		for (Place p : getPlaces()) {
+			maxFloor = Math.max(maxFloor, p.getFloor());
+			minFloor = Math.min(minFloor, p.getFloor());
 		}
 		seekBar.setMin(minFloor);
 		seekBar.setMax(maxFloor);
 	}
+
 	public PtolemyMapView getMapView() {
 		return mapView;
 	}

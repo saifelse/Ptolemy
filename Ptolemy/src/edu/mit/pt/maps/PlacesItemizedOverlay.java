@@ -26,18 +26,19 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public PlacesItemizedOverlay(Drawable defaultMarker) {
 		super(boundCenterBottom(defaultMarker));
 		// This needs to be here to fix bug with index out of bounds exception.
+		// http://code.google.com/p/android/issues/detail?id=2035
 		populate();
 	}
 
 	public void addOverlayItem(PlacesOverlayItem overlayItem) {
 		overlayItems.add(overlayItem);
-		populate();
+		update();
 	}
 	
 	public void setExtras(List<PlacesOverlayItem> items) {
 		extraOverlayItems.clear();
 		extraOverlayItems.addAll(items);
-		populate();
+		update();
 	}
 
 	@Override
@@ -53,7 +54,14 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			return extraOverlayItems.get(i - overlayItemsSize);
 		}
 	}
-
+	/**
+	 * Call this method after any changes are made, to avoid bug:
+	 * http://groups.google.com/group/android-developers/browse_thread/thread/38b11314e34714c3
+	 */
+	private void update(){
+		setLastFocusedIndex(-1);
+		populate();
+	}
 	@Override
 	public int size() {
 		return overlayItems.size() + extraOverlayItems.size();
@@ -76,6 +84,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	public void clear(){
 		overlayItems.clear();
 		extraOverlayItems.clear();
+		update();
 	}
 	static public Drawable boundCenterBottom(Drawable drawable) {
 		return ItemizedOverlay.boundCenterBottom(drawable);
@@ -84,5 +93,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	static public Drawable boundCenter(Drawable drawable) {
 		return ItemizedOverlay.boundCenter(drawable);
 	}
+	
+	
 
 }

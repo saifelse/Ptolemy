@@ -251,7 +251,6 @@ public class FloorSeekBar extends View {
 	}
 
 	public void setFloor(int floor) {
-		Log.v(Config.TAG, "Set floor: "+floor);
 		
 		int oldFloor = this.floor;
 		this.floor = Math.max(min, Math.min(max, floor));
