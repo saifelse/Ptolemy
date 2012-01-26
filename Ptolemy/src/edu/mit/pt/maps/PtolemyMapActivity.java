@@ -3,6 +3,9 @@ package edu.mit.pt.maps;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.maps.GeoPoint;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,9 +70,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				R.layout.menu_nav_button, null);
 		compassButton.setImageResource(R.drawable.ic_menu_compass);
 		compassButton.setContentDescription(getString(R.string.centre));
+		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				mapView.getController().animateTo(LocationSetter.getPoint());
+				GeoPoint gp = LocationSetter.getPoint(c);
+				if (gp != null)
+					mapView.getController().animateTo(gp);
 			}
 		});
 

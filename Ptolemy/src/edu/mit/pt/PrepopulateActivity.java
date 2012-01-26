@@ -117,7 +117,7 @@ public class PrepopulateActivity extends Activity {
 				List<Long> mitClasses = new ArrayList<Long>();
 				for (String dirtyClassName : classes) {
 					String className = dirtyClassName.split("-")[1];
-					long classId = MITClass.lookupName(activity, className);
+					long classId = MITClass.getIdIfValidRoom(activity, className);
 					Log.v(Config.TAG, "Looking up class: " + className);
 					if (classId != -1) {
 						Log.v(Config.TAG, "Matched class: " + classId);

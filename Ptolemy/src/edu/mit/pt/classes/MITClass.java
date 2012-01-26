@@ -16,11 +16,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 
 public class MITClass {
@@ -34,7 +33,7 @@ public class MITClass {
 		cv.put(MITClassTable.COLUMN_RESOLVE, resolve);
 		db.insertOrThrow(MITClassTable.CLASSES_TABLE_NAME, null, cv);
 	}
-
+	
 	private static String readJSON(Context context, int resource)
 			throws IOException {
 		InputStream is = context.getResources().openRawResource(resource);
@@ -53,7 +52,7 @@ public class MITClass {
 		return writer.toString();
 	}
 
-	protected static int loadClasses(Context context, SQLiteDatabase db) {
+	public static int loadClasses(Context context, SQLiteDatabase db) {
 		// Delete all rows
 		db.delete(MITClassTable.CLASSES_TABLE_NAME, "", new String[] {});
 
@@ -101,48 +100,22 @@ public class MITClass {
 		return count;
 	}
 
-	public static class MITClassLoader extends
-			AsyncTask<Void, Integer, Integer> {
-		private SQLiteDatabase db;
-		private Context context;
-
-		public MITClassLoader(SQLiteDatabase db, Context context) {
-			super();
-			this.db = db;
-			this.context = context;
-		}
-
-		@Override
-		protected Integer doInBackground(Void... v) {
-			return MITClass.loadClasses(context, db);
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-		}
-
-		@Override
-		protected void onPostExecute(Integer result) {
-			// db.close();
-			Toast toast = Toast.makeText(context, "Downloaded " + result
-					+ " classes.", 1000);
-			toast.show();
-			// Log.v(Config.TAG, "Downloaded " + result + " classes.");
-		}
-
-	}
-
-	public static long lookupName(Context context, String name) {
+	public static long getIdIfValidRoom(Context context, String name) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
 		Cursor c = db.query(MITClassTable.CLASSES_TABLE_NAME,
-				new String[] { MITClassTable.COLUMN_ID },
+				new String[] { MITClassTable.COLUMN_ID, MITClassTable.COLUMN_ROOM },
 				MITClassTable.COLUMN_MITID + "=?", new String[] { name }, null,
 				null, null);
 		if (c.getCount() == 0) {
 			return -1;
 		}
 		c.moveToFirst();
+		String roomName = c.getString(c.getColumnIndex(MITClassTable.COLUMN_ROOM));
+		Place room = Place.getClassroom(context, roomName);
+		if (room == null) {
+			return -1;
+		}
 		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
 	}
 

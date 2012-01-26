@@ -7,17 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-
-import edu.mit.pt.Config;
 
 public class PtolemyMapView extends MapView {
 	Context ctx;
@@ -70,7 +66,6 @@ public class PtolemyMapView extends MapView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		//Log.v(Config.TAG, "PtolemyMapView onTouchEvent detected.");
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:

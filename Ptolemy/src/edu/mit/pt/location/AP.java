@@ -11,15 +11,16 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.os.AsyncTask;
 import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
+
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
-import edu.mit.pt.data.PlacesTable;
 
 public class AP {
 
-	public static String getAPLocation(String bssid, SQLiteDatabase database) {
+	public static GeoPoint getAPLocation(String bssid, SQLiteDatabase database) {
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		
 		queryBuilder.setTables(APTable.AP_TABLE_NAME);
@@ -32,10 +33,13 @@ public class AP {
 				
 		System.out.println(cursor.getCount() + " ssids found");
 		if (cursor.getCount() == 0)
-			return "";
-		int locationIndex = cursor.getColumnIndex(APTable.COLUMN_BSSID);
+			return null;
+		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
+		int lonIndex = cursor.getColumnIndex(APTable.COLUMN_LON);
 		cursor.moveToFirst();
-		return cursor.getString(locationIndex);
+		int lat = cursor.getInt(latIndex);
+		int lon = cursor.getInt(lonIndex);
+		return new GeoPoint(lat, lon);
 	}
 	
 	public static Integer loadAPs(Context context, SQLiteDatabase db) {
@@ -94,26 +98,5 @@ public class AP {
 			Log.v(Config.TAG, "Couldn't insert. " + e.getMessage());
 		}
 		return false;
-	}
-
-	public static class APLoader extends AsyncTask<Context, Integer, Integer>{
-		private SQLiteDatabase db;
-		public APLoader(SQLiteDatabase db){
-			super();
-			this.db = db;
-		}
-		@Override
-		protected Integer doInBackground(Context... context) {
-			return AP.loadAPs(context[0], db);
-		}
-		@Override
-	     protected void onProgressUpdate(Integer... progress) {
-	     }
-		@Override
-	    protected void onPostExecute(Integer result) {
-	         Log.v(Config.TAG,"Downloaded " + result + " APs.");
-	         //db.close();
-	    }
-		
 	}
 }

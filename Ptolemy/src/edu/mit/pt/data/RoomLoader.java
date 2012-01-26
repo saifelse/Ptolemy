@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,11 +20,9 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
+public class RoomLoader {
 
 	private Context context;
 
@@ -61,9 +57,8 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 		}
 		return builder.toString();
 	}
-
-	@Override
-	protected Integer doInBackground(Void... params) {
+	
+	public int loadRooms() {
 		List<ContentValues> valuesToInsert = new ArrayList<ContentValues>();
 		int count = 0;
 		
@@ -107,11 +102,5 @@ public class RoomLoader extends AsyncTask<Void, Integer, Integer> {
 			e.printStackTrace();
 		}
 		return count;
-	}
-	@Override
-	protected void onPostExecute(Integer result) {
-		Toast toast = Toast.makeText(context, "Downloaded data for " + result + " rooms.", 1000);
-		toast.show();
-		//Log.v(Config.TAG, "Downloaded " + result + " classes.");
 	}
 }
