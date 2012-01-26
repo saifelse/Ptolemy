@@ -17,11 +17,12 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/nav"
         android:apiKey="@string/map_key"
-        android:clickable="true"
-        pt:floor="4"
+        android:clickable="true" />
+	<!-- 
+	    pt:floor="4"
         pt:maxFloor="10"
-        pt:minFloor="3" />
-
+        pt:minFloor="3" 
+	 -->
     <RelativeLayout
         android:id="@+id/meta_view"
         android:layout_width="match_parent"

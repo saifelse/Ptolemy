@@ -317,9 +317,6 @@ abstract public class Place implements Parcelable {
 			}
 			places.add(p);
 		}
-		// Log.v(Config.TAG, "Downloaded a tile: "+places.size());
-		Log.v(Config.TAG, "lat" + latMin + "-" + latMax + ", lon" + lonMin
-				+ "," + lonMax);
 		return places;
 	}
 

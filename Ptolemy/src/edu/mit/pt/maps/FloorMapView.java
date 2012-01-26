@@ -87,6 +87,10 @@ public class FloorMapView extends RelativeLayout {
 		// places = Place.getPlaces(context);
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
 
+		Log.v(Config.TAG,"FIRST TIME?");
+		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		Log.v(Config.TAG, topLeft+" : "+bottomRight);
 		updateMinMax();
 		// setFloor(0);
 
@@ -115,6 +119,7 @@ public class FloorMapView extends RelativeLayout {
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
 		overlays.add(placesOverlay);
+		
 		mapView.invalidate();
 	}
 
@@ -160,7 +165,8 @@ public class FloorMapView extends RelativeLayout {
 	public void updateMinMax() {
 		int maxFloor = 0;
 		int minFloor = 0;
-
+		
+		Log.v(Config.TAG, "LatSpan: "+mapView.getLatitudeSpan()+", LonSpan: "+mapView.getLongitudeSpan());
 		for (Place p : getPlaces()) {
 			maxFloor = Math.max(maxFloor, p.getFloor());
 			minFloor = Math.min(minFloor, p.getFloor());
