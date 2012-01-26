@@ -19,7 +19,6 @@ public class PtolemyOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		PlacesTable.onCreate(db);
-		ToiletMetaTable.onCreate(db);
 		BookmarksTable.onCreate(db);
 		MITClassTable.onCreate(db);
 		APTable.onCreate(db);
@@ -28,7 +27,6 @@ public class PtolemyOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		PlacesTable.onUpgrade(db, oldVersion, newVersion);
-		ToiletMetaTable.onUpgrade(db, oldVersion, newVersion);
 		BookmarksTable.onUpgrade(db, oldVersion, newVersion);
 		MITClassTable.onUpgrade(db, oldVersion, newVersion);
 		APTable.onUpgrade(db, oldVersion, newVersion);

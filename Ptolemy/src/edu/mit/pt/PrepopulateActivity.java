@@ -116,18 +116,19 @@ public class PrepopulateActivity extends Activity {
 				// Show content based on error.
 				showDialog(MOIRA_ERROR);
 			} else {
-				List<Long> mitClasses = new ArrayList<Long>();
-				for (String dirtyClassName : classes) {
+				long[] mitClasses = new long[classes.size()];
+				for (int i = 0; i < classes.size(); i++) {
+					String dirtyClassName = classes.get(i);
 					String className = dirtyClassName.split("-")[1];
 					long classId = MITClass.getIdIfValidRoom(activity, className);
 					Log.v(Config.TAG, "Looking up class: " + className);
 					if (classId != -1) {
 						Log.v(Config.TAG, "Matched class: " + classId);
-						mitClasses.add(classId);
+						mitClasses[i] = classId;
 					}
 				}
 				Intent intent = new Intent();
-				intent.putExtra(CLASSES, mitClasses.toArray(new Long[0]));
+				intent.putExtra(CLASSES, mitClasses);
 				setResult(RESULT_OK, intent);
 				finish();
 			}

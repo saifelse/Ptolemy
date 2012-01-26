@@ -16,9 +16,15 @@ public class Fountain extends Place {
 	public PlaceType getPlaceType() {
 		return PlaceType.FOUNTAIN;
 	}
-	//TODO: Custom icon for fountain
+
+	// TODO: Custom icon for fountain
 	@Override
 	public int getMarkerId() {
+		return R.drawable.green_point;
+	}
+
+	@Override
+	public int getMarkerSelId() {
 		return R.drawable.green_point;
 	}
 

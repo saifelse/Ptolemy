@@ -20,7 +20,12 @@ public class Classroom extends Place {
 
 	@Override
 	public int getMarkerId() {
-		return R.drawable.green_point;
+		return R.drawable.icon_classroom;
+	}
+
+	@Override
+	public int getMarkerSelId() {
+		return R.drawable.icon_classroom_sel;
 	}
 
 }

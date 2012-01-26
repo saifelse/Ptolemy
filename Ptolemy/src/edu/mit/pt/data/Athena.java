@@ -21,5 +21,9 @@ public class Athena extends Place {
 	public int getMarkerId() {
 		return R.drawable.green_point;
 	}
+	@Override
+	public int getMarkerSelId() {
+		return R.drawable.green_point;
+	}
 
 }

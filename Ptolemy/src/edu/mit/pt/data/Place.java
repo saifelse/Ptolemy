@@ -14,6 +14,8 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
+import com.google.android.maps.OverlayItem;
 
 import edu.mit.pt.Config;
 
@@ -59,11 +61,16 @@ abstract public class Place implements Parcelable {
 
 	abstract public PlaceType getPlaceType();
 
-	public Drawable getMarker(Resources resources) {
-		return resources.getDrawable(getMarkerId());
+	public Drawable getMarker(Resources resources, boolean isSel) {
+		if (isSel) {
+			return resources.getDrawable(getMarkerSelId());
+		} else {
+			return resources.getDrawable(getMarkerId());
+		}
 	}
 
 	abstract public int getMarkerId();
+	abstract public int getMarkerSelId();
 
 	public static Place getPlace(Context context, long id) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
@@ -96,8 +103,10 @@ abstract public class Place implements Parcelable {
 			return new Athena(id, name, latE6, lonE6, floor);
 		case FOUNTAIN:
 			return new Fountain(id, name, latE6, lonE6, floor);
-		case TOILET:
-			return new Toilet(id, name, latE6, lonE6, floor, getGender(db, id));
+		case MTOILET:
+			return new MaleToilet(id, name, latE6, lonE6, floor);
+		case FTOILET:
+			return new MaleToilet(id, name, latE6, lonE6, floor);
 		default:
 			return null;
 		}
@@ -137,16 +146,7 @@ abstract public class Place implements Parcelable {
 
 	public static Place addPlace(Context context, String name, int latE6,
 			int lonE6, int floor, PlaceType type) {
-		return addPlaceHelper(context, name, latE6, lonE6, floor, type, null);
-	}
-
-	public static Place addBathroom(Context context, String name, int latE6,
-			int lonE6, int floor, PlaceType type, GenderEnum gender) {
-		return addPlaceHelper(context, name, latE6, lonE6, floor, type, gender);
-	}
-
-	private static Place addPlaceHelper(Context context, String name,
-			int latE6, int lonE6, int floor, PlaceType type, GenderEnum gender) {
+		Log.v(Config.TAG, "MAKING: " + type.name());
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -167,8 +167,10 @@ abstract public class Place implements Parcelable {
 			return new Athena(id, name, latE6, lonE6, floor);
 		case FOUNTAIN:
 			return new Fountain(id, name, latE6, lonE6, floor);
-		case TOILET:
-			return new Toilet(id, name, latE6, lonE6, floor, gender);
+		case MTOILET:
+			return new MaleToilet(id, name, latE6, lonE6, floor);
+		case FTOILET:
+			return new FemaleToilet(id, name, latE6, lonE6, floor);
 		default:
 			return null;
 		}
@@ -196,8 +198,11 @@ abstract public class Place implements Parcelable {
 			PlaceType type = PlaceType.valueOf(typeName);
 			Place p;
 			switch (type) {
-			case TOILET:
-				p = new Toilet(id, name, latE6, lonE6, floor, getGender(db, id));
+			case MTOILET:
+				p = new MaleToilet(id, name, latE6, lonE6, floor);
+				break;
+			case FTOILET:
+				p = new FemaleToilet(id, name, latE6, lonE6, floor);
 				break;
 			case FOUNTAIN:
 				p = new Fountain(id, name, latE6, lonE6, floor);
@@ -237,8 +242,11 @@ abstract public class Place implements Parcelable {
 			PlaceType type = PlaceType.valueOf(typeName);
 			Place p;
 			switch (type) {
-			case TOILET:
-				p = new Toilet(id, name, latE6, lonE6, floor, getGender(db, id));
+			case MTOILET:
+				p = new MaleToilet(id, name, latE6, lonE6, floor);
+				break;
+			case FTOILET:
+				p = new FemaleToilet(id, name, latE6, lonE6, floor);
 				break;
 			case FOUNTAIN:
 				p = new Fountain(id, name, latE6, lonE6, floor);
@@ -289,8 +297,11 @@ abstract public class Place implements Parcelable {
 			PlaceType type = PlaceType.valueOf(typeName);
 			Place p;
 			switch (type) {
-			case TOILET:
-				p = new Toilet(id, name, latE6, lonE6, floor, getGender(db, id));
+			case MTOILET:
+				p = new MaleToilet(id, name, latE6, lonE6, floor);
+				break;
+			case FTOILET:
+				p = new FemaleToilet(id, name, latE6, lonE6, floor);
 				break;
 			case FOUNTAIN:
 				p = new Fountain(id, name, latE6, lonE6, floor);
@@ -306,27 +317,10 @@ abstract public class Place implements Parcelable {
 			}
 			places.add(p);
 		}
-		//Log.v(Config.TAG, "Downloaded a tile: "+places.size());
-		Log.v(Config.TAG, "lat"+latMin+"-"+latMax+", lon"+lonMin+","+lonMax);
+		// Log.v(Config.TAG, "Downloaded a tile: "+places.size());
+		Log.v(Config.TAG, "lat" + latMin + "-" + latMax + ", lon" + lonMin
+				+ "," + lonMax);
 		return places;
-	}
-
-	static private GenderEnum getGender(SQLiteDatabase db, long toiletId) {
-		GenderEnum gender;
-		Cursor tc = db.query(ToiletMetaTable.TOILET_TABLE_NAME,
-				new String[] { ToiletMetaTable.COLUMN_TYPE }, "PLACE_ID=?",
-				new String[] { Long.toString(toiletId) }, null, null, null);
-		if (tc.getCount() == 1) {
-			tc.moveToFirst();
-			gender = GenderEnum.valueOf(tc.getString(tc
-					.getColumnIndex(ToiletMetaTable.COLUMN_TYPE)));
-		} else {
-			Log.wtf(Config.TAG, tc.getCount() + " entries found for Toilet id "
-					+ toiletId + ". Expected 1 entry. Defaulting to BOTH.");
-			gender = GenderEnum.BOTH;
-		}
-		tc.close();
-		return gender;
 	}
 
 	public int describeContents() {
@@ -361,8 +355,10 @@ abstract public class Place implements Parcelable {
 			switch (type) {
 			case CLASSROOM:
 				return new Classroom(in);
-			case TOILET:
-				return new Toilet(in);
+			case MTOILET:
+				return new MaleToilet(in);
+			case FTOILET:
+				return new FemaleToilet(in);
 			case CLUSTER:
 				return new Athena(in);
 			case FOUNTAIN:

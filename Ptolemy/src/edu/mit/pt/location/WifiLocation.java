@@ -48,7 +48,6 @@ public class WifiLocation {
 	}
 	
 	public void update() {
-		System.out.println("WOOOOO");
 		LocationSetter.setLocation(getLocation());
 	}
 
