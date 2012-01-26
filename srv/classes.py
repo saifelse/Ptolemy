@@ -12,7 +12,7 @@ def parse(term):
     f = urllib2.urlopen("http://coursews.mit.edu/coursews/?term=%s" % (term))
     items = json.load(f)['items']
     classes = {x['id']:x['label'] for x in items if x['type'] == 'Class'}
-    items = [{'id':x['section-of'],'term':term,'name':classes[x['section-of']],'timeAndPlace':timeAndPlace(x['timeAndPlace'])} for x in items if x['type'] == 'LectureSession']
+    items = [{'id':x['section-of'],'name':classes[x['section-of']],'timeAndPlace':timeAndPlace(x['timeAndPlace'])} for x in items if x['type'] == 'LectureSession']
     return items
     
 def timeAndPlace(locRoom):
@@ -22,7 +22,7 @@ def timeAndPlace(locRoom):
     place = parts[-1]
     return {"time": time, "place": place}
 
-def getJSON(term="2012SP"):
+def getJSON(term="2012FA"):
     # Get data
     data = parse(term)
     # Format data
@@ -41,10 +41,10 @@ def getJSON(term="2012SP"):
     # Resolve conflicts.
     for mitID in classMap:
         classesRes.extend(resolveConflicts(classMap[mitID]))
-    return {'classes':classesRes}
+    return {'classes':classesRes, 'term':term}
 
 def resolveConflicts(classes):
-    # resolve by specificying 'room'
+    # resolve by specifying 'room'
     resolution = []
     rooms = set()
     # FIX ME
@@ -62,7 +62,7 @@ def resolveConflicts(classes):
     return resolution
 
 def formatClass(x):
-     return  {'id':x['id'],'term':x['term'],'name':x['name'],\
+     return  {'id':x['id'],'name':x['name'],\
               'time':x['timeAndPlace']['time'],'room':x['timeAndPlace']['place']}
 
 def validPlace(place):

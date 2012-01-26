@@ -7,17 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-
-import edu.mit.pt.Config;
 
 public class PtolemyMapView extends MapView {
 	Context ctx;
@@ -52,17 +48,26 @@ public class PtolemyMapView extends MapView {
 		setup();
 	}
 
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		// Bad hack - mapView shows white bar at bottom when used previously in
+		// an activity where mapView is at a smaller dimension. (i.e.
+		// AddBookmarkActivity). Zooming in and out fixes this.
+		getController().zoomOut();
+		getController().zoomIn();
+	}
+
 	private void setup() {
 
-		List<Overlay> overlays = getOverlays();
-		//overlays.add(new TileOverlay());
+//		List<Overlay> overlays = getOverlays();
+		// overlays.add(new TileOverlay());
 
 		getController().setZoom(21);
 
 		setRowsCols();
 		getController().setCenter(new GeoPoint(42359101, -71090890));
 
-		tm = new PtolemyTileManager(ctx);
+//		tm = new PtolemyTileManager(ctx);
 
 		// Load places.
 
@@ -70,7 +75,6 @@ public class PtolemyMapView extends MapView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		//Log.v(Config.TAG, "PtolemyMapView onTouchEvent detected.");
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
@@ -80,7 +84,7 @@ public class PtolemyMapView extends MapView {
 			pinchZoom = (ev.getPointerCount() > 1);
 			break;
 		case MotionEvent.ACTION_UP:
-//			((View) getParent()).onTouchEvent(ev);
+			// ((View) getParent()).onTouchEvent(ev);
 		}
 		return super.onTouchEvent(ev);
 	}
