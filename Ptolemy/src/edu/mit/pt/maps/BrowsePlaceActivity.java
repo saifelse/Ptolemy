@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -22,13 +23,14 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 	private Place place;
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_browse);
 		floorMapView = (FloorMapView) findViewById(R.id.browsemapview);
 		mapView = (PtolemyMapView) floorMapView.getMapView();
-		
+
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 		ActionBar.setDefaultBackAction(this);
 
@@ -76,7 +78,7 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 			Place prevPlace = (Place) prevObject;
 			mapView.getController().setCenter(prevPlace.getPoint());
 		}
-		
+
 		onSearchRequested();
 	}
 
@@ -100,12 +102,12 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 		return false;
 	}
 
-
 	@Override
 	void showClassroom(final Place p) {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
+		Resources res = getResources();
 		places.add(new PlacesOverlayItem(p, p.getName(), p.getName(), p
-				.getMarker(getResources())));
+				.getMarker(res, false), p.getMarker(res, true)));
 		mapView.getController().animateTo(p.getPoint());
 		floorMapView.setFloor(p.getFloor());
 		floorMapView.getPlacesOverlay().setExtras(places);

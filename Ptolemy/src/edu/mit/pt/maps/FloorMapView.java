@@ -102,13 +102,14 @@ public class FloorMapView extends RelativeLayout {
 
 		// Add places that are on the specified floor
 		placesOverlay.clear();
-		
+
 		Log.v(Config.TAG, "Looking up visible places");
 		List<Place> places = getVisiblePlaces();
 		for (Place p : places) {
 			Log.v(Config.TAG, p.getName() + " " + p.getFloor());
 			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
-					p.getName(), p.getMarker(resources));
+					p.getName(), p.getMarker(resources, false), p.getMarker(
+							resources, true));
 			placesOverlay.addOverlayItem(item);
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
@@ -123,7 +124,8 @@ public class FloorMapView extends RelativeLayout {
 	}
 
 	private List<Place> getVisiblePlaces() {
-		if(mapView.getZoomLevel() < 20) return new ArrayList<Place>();
+		if (mapView.getZoomLevel() < 20)
+			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 		return placeManager.getPlaces(topLeft.getLatitudeE6(),
 				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
@@ -131,7 +133,8 @@ public class FloorMapView extends RelativeLayout {
 	}
 
 	private List<Place> getPlaces() {
-		if(mapView.getZoomLevel() < 20) return new ArrayList<Place>();
+		if (mapView.getZoomLevel() < 20)
+			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 		return placeManager.getPlaces(topLeft.getLatitudeE6(),
 				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
@@ -143,14 +146,14 @@ public class FloorMapView extends RelativeLayout {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
-			Log.v(Config.TAG, "Zoom: "+mapView.getZoomLevel());
-			if(mapView.getZoomLevel() < 20)
+			Log.v(Config.TAG, "Zoom: " + mapView.getZoomLevel());
+			if (mapView.getZoomLevel() < 20)
 				seekBar.setVisibility(INVISIBLE);
 			else
 				seekBar.setVisibility(VISIBLE);
-			
+
 			updateMinMax();
-			
+
 		}
 		return false;
 	}

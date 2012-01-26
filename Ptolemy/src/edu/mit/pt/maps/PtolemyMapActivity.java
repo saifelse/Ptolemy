@@ -3,16 +3,18 @@ package edu.mit.pt.maps;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.maps.GeoPoint;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.android.maps.GeoPoint;
+
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
@@ -124,8 +126,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	void showClassroom(final Place place) {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
+		Resources res = getResources();
 		places.add(new PlacesOverlayItem(place, place.getName(), place
-				.getName(), place.getMarker(getResources())));
+				.getName(), place.getMarker(res, false), place.getMarker(res,
+				true)));
 		// FIXME: _All_ animations need to call updateMinMax after finishing
 		// animation.
 		mapView.getController().animateTo(place.getPoint());

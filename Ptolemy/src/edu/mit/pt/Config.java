@@ -116,8 +116,10 @@ public class Config {
 			publishProgress(new ProgressUpdate("Ptolemizing classes...", 20));
 
 			// TODO: remove debug code.
-			Place.addPlace(activity, "testbathroom", 42359101, -71090869, 2,
-					PlaceType.TOILET);
+			Place.addPlace(activity, "male", 42359101, -71090869, 1,
+					PlaceType.MTOILET);
+			Place.addPlace(activity, "female", 42359110, -71090890, 1,
+					PlaceType.FTOILET);
 
 			String rawTerm = MITClass.loadClasses(activity, db);
 			String term = standardizeTerm(rawTerm);
