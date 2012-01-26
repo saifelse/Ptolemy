@@ -22,6 +22,7 @@ import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 
+// TODO: Fix updateMinMax behaviour.
 public class FloorMapView extends RelativeLayout {
 	public final static int MAP_VIEW_ID = 0;
 	public final static int SEEK_BAR_ID = 1;
