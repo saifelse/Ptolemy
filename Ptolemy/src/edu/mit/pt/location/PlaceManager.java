@@ -1,26 +1,19 @@
 package edu.mit.pt.location;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.android.maps.GeoPoint;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
-import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.data.PlacesTable;
-import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
+
 
 public class PlaceManager {
-	public static int LAT_TILE_SPAN = 800;
-	public static int LON_TILE_SPAN = 800;
-	public static int CACHE_SIZE = 20;
+	public static int LAT_TILE_SPAN = 400;
+	public static int LON_TILE_SPAN = 400;
+	public static int CACHE_SIZE = 15;
 	private Context context;
 	private Map<String, List<Place>> cachedTiles;
 
@@ -38,19 +31,14 @@ public class PlaceManager {
 			}
 		};
 	}
-
-	public List<Place> getPlaces(int top, int left, int latSpan, int lonSpan,
+	public List<Place> getPlaces(GeoPoint topLeft, GeoPoint bottomRight,
 			int floor) {
-		if(latSpan == 0) return new ArrayList<Place>();
-		// Determine relevant tiles
-
-		int tileYMin = latToTileY(top - latSpan);
-		int tileYMax = latToTileY(top);
-		int tileXMin = lonToTileX(left);
-		int tileXMax = lonToTileX(left + lonSpan);
-
-		Log.v(Config.TAG, "y: "+tileYMin+"-"+tileYMax+", x: "+tileXMin+","+tileXMax);
 		
+		int tileYMax = latToTileY(topLeft.getLatitudeE6());
+		int tileYMin = latToTileY(bottomRight.getLatitudeE6());
+		int tileXMin = lonToTileX(topLeft.getLongitudeE6());
+		int tileXMax = lonToTileX(bottomRight.getLongitudeE6());
+
 		List<Place> result = new ArrayList<Place>();
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
@@ -59,17 +47,15 @@ public class PlaceManager {
 		}
 		return result;
 	}
-	public List<Place> getPlaces(int top, int left, int latSpan, int lonSpan) {
-		if(latSpan == 0) return new ArrayList<Place>();
+	
+	
+	public List<Place> getPlaces(GeoPoint topLeft, GeoPoint bottomRight) {
 		
-		Log.v(Config.TAG, "Span: "+latSpan+", "+lonSpan);
-		// Determine relevant tiles
-
-		int tileYMin = latToTileY(top - latSpan);
-		int tileYMax = latToTileY(top);
-		int tileXMin = lonToTileX(left);
-		int tileXMax = lonToTileX(left + lonSpan);
-
+		int tileYMax = latToTileY(topLeft.getLatitudeE6());
+		int tileYMin = latToTileY(bottomRight.getLatitudeE6());
+		int tileXMin = lonToTileX(topLeft.getLongitudeE6());
+		int tileXMax = lonToTileX(bottomRight.getLongitudeE6());
+		
 		List<Place> result = new ArrayList<Place>();
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
@@ -100,11 +86,11 @@ public class PlaceManager {
 	}
 
 	public static int latToTileY(int lat) {
-		return lat / LAT_TILE_SPAN;
+		return (int)Math.floor((double)lat / LAT_TILE_SPAN);
 	}
 
 	public static int lonToTileX(int lon) {
-		return lon / LON_TILE_SPAN;
+		return (int)Math.floor((double)lon / LON_TILE_SPAN);
 	}
 
 	public static int tileYToLat(int y) {
