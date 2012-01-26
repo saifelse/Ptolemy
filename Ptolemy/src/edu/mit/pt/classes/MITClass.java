@@ -127,8 +127,10 @@ public class MITClass {
 		}
 		c.moveToFirst();
 		String roomName = c.getString(c.getColumnIndex(MITClassTable.COLUMN_ROOM));
+		Log.v(Config.TAG, "Search for " + name + " found a room: " + roomName);
 		Place room = Place.getClassroom(context, roomName);
 		if (room == null) {
+			Log.v(Config.TAG, "Couldn't find " + roomName);
 			return -1;
 		}
 		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
