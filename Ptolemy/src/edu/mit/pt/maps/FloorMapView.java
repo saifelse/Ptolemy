@@ -1,5 +1,6 @@
 package edu.mit.pt.maps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -121,6 +122,7 @@ public class FloorMapView extends RelativeLayout {
 	}
 
 	private List<Place> getVisiblePlaces() {
+		if(mapView.getZoomLevel() < 20) return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 		return placeManager.getPlaces(topLeft.getLatitudeE6(),
 				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
@@ -128,6 +130,7 @@ public class FloorMapView extends RelativeLayout {
 	}
 
 	private List<Place> getPlaces() {
+		if(mapView.getZoomLevel() < 20) return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 		return placeManager.getPlaces(topLeft.getLatitudeE6(),
 				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
@@ -139,7 +142,14 @@ public class FloorMapView extends RelativeLayout {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
+			Log.v(Config.TAG, "Zoom: "+mapView.getZoomLevel());
+			if(mapView.getZoomLevel() < 20)
+				seekBar.setVisibility(INVISIBLE);
+			else
+				seekBar.setVisibility(VISIBLE);
+			
 			updateMinMax();
+			
 		}
 		return false;
 	}
