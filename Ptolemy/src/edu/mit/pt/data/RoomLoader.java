@@ -80,13 +80,25 @@ public class RoomLoader {
 				int lat = coords.getInt("lat");
 				int lon = coords.getInt("lon");
 				int floor = coords.getInt("floor");
+				String type = "classroom";
+				try {
+					type = coords.getString(name);
+				} catch (Exception e) {
+					
+				}
+				
+				PlaceType ptype = PlaceType.CLASSROOM;
+				// TODO: This smells bad (josh).
+				if (type.equals("mtoilet")) {
+					ptype = PlaceType.MTOILET;
+				}
 				
 				ContentValues values = new ContentValues();
 				values.put(PlacesTable.COLUMN_NAME, name);
 				values.put(PlacesTable.COLUMN_LAT, lat);
 				values.put(PlacesTable.COLUMN_LON, lon);
 				values.put(PlacesTable.COLUMN_FLOOR, floor);
-				values.put(PlacesTable.COLUMN_TYPE, PlaceType.CLASSROOM.toString());
+				values.put(PlacesTable.COLUMN_TYPE, ptype.toString());
 			
 				valuesToInsert.add(values);
 				count++;
