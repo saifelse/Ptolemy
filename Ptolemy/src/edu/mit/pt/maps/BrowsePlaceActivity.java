@@ -5,14 +5,17 @@ import java.util.List;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;
@@ -20,9 +23,11 @@ import edu.mit.pt.data.Place;
 public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	private final String ACTIVITY_TITLE = "Pick a location";
-	private Place place;
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
+	
+	private CharSequence restoreText;
+	private Drawable restoreDrawable;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +62,8 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 				new OnClickListener() {
 
 					public void onClick(View v) {
-						if (place != null) {
-							finishWithPlace(place);
+						if (focusedPlace != null) {
+							finishWithPlace(focusedPlace);
 						}
 						finish();
 					}
@@ -79,15 +84,28 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 			mapView.getController().setCenter(prevPlace.getPoint());
 		}
 
-		onSearchRequested();
+		configureFloorMapView(floorMapView);
 	}
 
-	void setPlace(Place p) {
+	@Override
+	protected void setPlace(Place p) {
+		focusedPlace = p;
 		TextView lowerText = (TextView) findViewById(R.id.backToAddTitle);
-		lowerText.setText(Html.fromHtml("&#171; " + p.getName()));
-		lowerText.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.green_button_bg));
-		place = p;
+		CharSequence newText = null;
+		Drawable newDrawable = null;
+		if (p == null) {
+			Log.v(Config.TAG, "RESTORING!");
+			if (restoreText != null) newText = restoreText;
+			if (restoreDrawable != null) newDrawable = restoreDrawable;
+		} else {
+			newText = Html.fromHtml("&#171; " + p.getName());
+			newDrawable = getResources().getDrawable(
+					R.drawable.green_button_bg);
+			if (restoreText == null) restoreText = lowerText.getText();
+			if (restoreDrawable == null) restoreDrawable = lowerText.getBackground();
+		}
+		lowerText.setText(newText);
+		lowerText.setBackgroundDrawable(newDrawable);
 	}
 
 	void finishWithPlace(Place p) {
