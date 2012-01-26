@@ -22,7 +22,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import edu.mit.pt.Config;
 
 public class RoomLoader {
 
@@ -32,30 +31,35 @@ public class RoomLoader {
 		this.context = context;
 	}
 
-	public String readRoomJSON() throws ClientProtocolException, IOException {
+	public String readRoomJSON() {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet("http://mit.edu/~georgiou/pt/rooms.json");
-		HttpResponse response = client.execute(httpGet);
-		StatusLine statusLine = response.getStatusLine();
-		int statusCode = statusLine.getStatusCode();
-		if (statusCode == 200) {
-			HttpEntity entity = response.getEntity();
-			InputStream content = entity.getContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					content));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				builder.append(line);
+		try {
+			HttpResponse response = client.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream content = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+			} else {
+				Log.e(RoomLoader.class.toString(), "Failed to download file");
 			}
-		} else {
-			Log.e(RoomLoader.class.toString(), "Failed to download file");
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return builder.toString();
 	}
 
-	public int loadRooms() throws JSONException, ClientProtocolException,
-			IOException {
+	public int loadRooms() throws JSONException {
 		List<ContentValues> valuesToInsert = new ArrayList<ContentValues>();
 		int count = 0;
 
@@ -75,19 +79,18 @@ public class RoomLoader {
 			int lat = coords.getInt("lat");
 			int lon = coords.getInt("lon");
 			int floor = coords.getInt("floor");
-			String type;
+			String type = "classroom";
 			try {
-				type = coords.getString(name);
-			} catch (JSONException e) {
-				Log.v(Config.TAG, coords.toString());
-				e.printStackTrace();
-				continue;
+				type = coords.getString("type");
+			} catch (Exception e) {
+
 			}
 
 			PlaceType ptype = PlaceType.CLASSROOM;
-			// TODO: This smells bad (josh).
 			if (type.equals("mtoilet")) {
 				ptype = PlaceType.MTOILET;
+			} else if (type.equals("ftoilet")) {
+				ptype = PlaceType.FTOILET;
 			}
 
 			ContentValues values = new ContentValues();
