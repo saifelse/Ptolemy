@@ -44,8 +44,6 @@ def getJSON(term="2012FA"):
     return {'classes':classesRes, 'term':term}
 
 def resolveConflicts(classes):
-    if classes[0]['id'] == '6.046':
-        print classes
     # resolve by specifying 'room'
     resolution = []
     rooms = set()
@@ -73,7 +71,7 @@ def validPlace(place):
     return place in keepRooms or re.match("[\w]+-[\w]+",place)
 
 def JSONToFile(data):
-    f = open("classes.json","w")
+    f = open("../Ptolemy/res/raw/classes.json","w")
     json.dump(data, f)
     f.close()
 
