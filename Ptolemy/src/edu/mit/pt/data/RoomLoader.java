@@ -15,12 +15,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import edu.mit.pt.Config;
 
 public class RoomLoader {
 
@@ -30,89 +32,85 @@ public class RoomLoader {
 		this.context = context;
 	}
 
-	public String readRoomJSON() {
+	public String readRoomJSON() throws ClientProtocolException, IOException {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet("http://mit.edu/~georgiou/pt/rooms.json");
-		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-			} else {
-				Log.e(RoomLoader.class.toString(), "Failed to download file");
+		HttpResponse response = client.execute(httpGet);
+		StatusLine statusLine = response.getStatusLine();
+		int statusCode = statusLine.getStatusCode();
+		if (statusCode == 200) {
+			HttpEntity entity = response.getEntity();
+			InputStream content = entity.getContent();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					content));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				builder.append(line);
 			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			Log.e(RoomLoader.class.toString(), "Failed to download file");
 		}
 		return builder.toString();
 	}
-	
-	public int loadRooms() {
+
+	public int loadRooms() throws JSONException, ClientProtocolException,
+			IOException {
 		List<ContentValues> valuesToInsert = new ArrayList<ContentValues>();
 		int count = 0;
-		
-		String roomJSON = readRoomJSON();
-		try {
-			JSONObject rooms = new JSONObject(roomJSON);
-			Log.i(RoomLoader.class.getName(),
-					"Number of rooms " + rooms.length());
 
-			JSONArray roomList = rooms.names();
-			for (int i = 0; i < roomList.length(); i++) {
-				String name = roomList.getString(i);
-				if (name == null) {
-					System.out.println("ROOM IS NULL!");
-					continue;
-				}
-				
-				JSONObject coords = rooms.getJSONObject(name);
-				int lat = coords.getInt("lat");
-				int lon = coords.getInt("lon");
-				int floor = coords.getInt("floor");
-				String type = "classroom";
-				try {
-					type = coords.getString(name);
-				} catch (Exception e) {
-					
-				}
-				
-				PlaceType ptype = PlaceType.CLASSROOM;
-				// TODO: This smells bad (josh).
-				if (type.equals("mtoilet")) {
-					ptype = PlaceType.MTOILET;
-				}
-				
-				ContentValues values = new ContentValues();
-				values.put(PlacesTable.COLUMN_NAME, name);
-				values.put(PlacesTable.COLUMN_LAT, lat);
-				values.put(PlacesTable.COLUMN_LON, lon);
-				values.put(PlacesTable.COLUMN_FLOOR, floor);
-				values.put(PlacesTable.COLUMN_TYPE, ptype.toString());
-			
-				valuesToInsert.add(values);
-				count++;
-				//Log.i(RoomLoader.class.getName(), roomList.getString(i));
+		String roomJSON = readRoomJSON();
+		JSONObject rooms = new JSONObject(roomJSON);
+		Log.i(RoomLoader.class.getName(), "Number of rooms " + rooms.length());
+
+		JSONArray roomList = rooms.names();
+		for (int i = 0; i < roomList.length(); i++) {
+			String name = roomList.getString(i);
+			if (name == null) {
+				System.out.println("ROOM IS NULL!");
+				continue;
 			}
-			
-			Uri CONTENT_URI = Uri
-					.parse("content://edu.mit.pt.data.placescontentprovider/");
-			
-			context.getContentResolver().bulkInsert(CONTENT_URI, valuesToInsert.toArray(new ContentValues[valuesToInsert.size()]));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			JSONObject coords = rooms.getJSONObject(name);
+			int lat = coords.getInt("lat");
+			int lon = coords.getInt("lon");
+			int floor = coords.getInt("floor");
+			String type;
+			try {
+				type = coords.getString(name);
+			} catch (JSONException e) {
+				Log.v(Config.TAG, coords.toString());
+				e.printStackTrace();
+				continue;
+			}
+
+			PlaceType ptype = PlaceType.CLASSROOM;
+			// TODO: This smells bad (josh).
+			if (type.equals("mtoilet")) {
+				ptype = PlaceType.MTOILET;
+			}
+
+			ContentValues values = new ContentValues();
+			values.put(PlacesTable.COLUMN_NAME, name);
+			values.put(PlacesTable.COLUMN_LAT, lat);
+			values.put(PlacesTable.COLUMN_LON, lon);
+			values.put(PlacesTable.COLUMN_FLOOR, floor);
+			values.put(PlacesTable.COLUMN_TYPE, ptype.toString());
+
+			valuesToInsert.add(values);
+			count++;
+			// Log.i(RoomLoader.class.getName(), roomList.getString(i));
 		}
+
+		Uri CONTENT_URI = Uri
+				.parse("content://edu.mit.pt.data.placescontentprovider/");
+
+		context.getContentResolver()
+				.bulkInsert(
+						CONTENT_URI,
+						valuesToInsert.toArray(new ContentValues[valuesToInsert
+								.size()]));
+
 		return count;
 	}
 }

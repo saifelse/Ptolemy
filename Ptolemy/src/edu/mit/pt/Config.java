@@ -1,7 +1,10 @@
 package edu.mit.pt;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,14 +49,7 @@ public class Config {
 
 	static public boolean firstRunCheck(Activity activity) {
 		SharedPreferences settings = activity.getPreferences(0);
-		boolean needFirstRun = settings.getBoolean(FIRST_RUN, true);
-		if (needFirstRun) {
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean(FIRST_RUN, false);
-			editor.commit();
-			return true;
-		}
-		return false;
+		return settings.getBoolean(FIRST_RUN, true);
 	}
 
 	static private class ProgressUpdate {
@@ -67,7 +63,7 @@ public class Config {
 	}
 
 	static public class FirstRunTask extends
-			AsyncTask<Void, ProgressUpdate, Void> {
+			AsyncTask<Void, ProgressUpdate, Boolean> {
 
 		Activity activity;
 		boolean debug;
@@ -83,61 +79,91 @@ public class Config {
 		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 
 			SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 					.getPtolemyDBOpenHelper(activity).getWritableDatabase();
 
+			// Recreate tables.
+			String[] tables = new String[] { PlacesTable.PLACES_TABLE_NAME,
+					MITClassTable.CLASSES_TABLE_NAME, APTable.AP_TABLE_NAME };
+			for (String table : tables) {
+				db.execSQL("DROP TABLE IF EXISTS " + table);
+			}
+			String[] create = new String[] { PlacesTable.PLACES_TABLE_CREATE,
+					MITClassTable.CLASSES_TABLE_CREATE, APTable.AP_TABLE_CREATE };
+			for (String stmt : create) {
+				db.execSQL(stmt);
+			}
+
 			if (debug) {
-				// Recreate tables.
-				String[] tables = new String[] { PlacesTable.PLACES_TABLE_NAME,
-						BookmarksTable.BOOKMARKS_TABLE_NAME,
-						MITClassTable.CLASSES_TABLE_NAME, APTable.AP_TABLE_NAME };
-				for (String table : tables) {
-					db.execSQL("DROP TABLE IF EXISTS " + table);
-				}
-				String[] create = new String[] {
-						PlacesTable.PLACES_TABLE_CREATE,
-						BookmarksTable.BOOKMARKS_TABLE_CREATE,
-						MITClassTable.CLASSES_TABLE_CREATE,
-						APTable.AP_TABLE_CREATE };
-				for (String stmt : create) {
-					db.execSQL(stmt);
-				}
+				db.execSQL("DROP TABLE IF EXISTS "
+						+ BookmarksTable.BOOKMARKS_TABLE_NAME);
+				db.execSQL(BookmarksTable.BOOKMARKS_TABLE_CREATE);
 			}
 
 			publishProgress(new ProgressUpdate("Constructing rooms...", 10));
+			
+			boolean success = true;
 
-			int numRooms = new RoomLoader(activity).loadRooms();
-			Log.v(TAG, "Loaded " + numRooms + " rooms.");
-			publishProgress(new ProgressUpdate("Zapping Wifi data...", 40));
+			try {
 
-			AP.loadAPs(activity, db);
-			publishProgress(new ProgressUpdate("Ptolemizing classes...", 20));
+				int numRooms = new RoomLoader(activity).loadRooms();
+				Log.v(TAG, "Loaded " + numRooms + " rooms.");
+				publishProgress(new ProgressUpdate("Zapping Wifi data...", 40));
 
-			// TODO: remove debug code.
-			Place.addPlace(activity, "male", 42359101, -71090869, 1,
-					PlaceType.MTOILET);
-			Place.addPlace(activity, "female", 42359110, -71090890, 1,
-					PlaceType.FTOILET);
+				AP.loadAPs(activity, db);
+				publishProgress(new ProgressUpdate("Ptolemizing classes...", 20));
 
-			String rawTerm = MITClass.loadClasses(activity, db);
-			String term = standardizeTerm(rawTerm);
-			SharedPreferences settings = activity.getPreferences(0);
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putString(TERM, term);
-			editor.commit();
+				// TODO: remove debug code.
+				Place.addPlace(activity, "male", 42359101, -71090869, 2,
+						PlaceType.MTOILET);
+				Place.addPlace(activity, "female", 42359110, -71090890, 2,
+						PlaceType.FTOILET);
 
-			Log.v(TAG, "Loaded classes for " + term + ".");
-			publishProgress(new ProgressUpdate("Done!", 30));
+				String rawTerm = MITClass.loadClasses(activity, db);
+				String term = standardizeTerm(rawTerm);
+				SharedPreferences settings = activity.getPreferences(0);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString(TERM, term);
+				editor.commit();
 
-			return null;
+				Log.v(TAG, "Loaded classes for " + term + ".");
+				publishProgress(new ProgressUpdate("Done!", 30));
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				success = false;
+				activity.runOnUiThread(new Runnable() {
+					public void run() {
+						activity.showDialog(PtolemyActivity.DIALOG_ERROR_NETWORK);
+					}
+				});
+			} catch (JSONException e) {
+				e.printStackTrace();
+				success = false;
+				activity.runOnUiThread(new Runnable() {
+					public void run() {
+						activity.showDialog(PtolemyActivity.DIALOG_ERROR_JSON);
+					}
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+				success = false;
+				activity.runOnUiThread(new Runnable() {
+					public void run() {
+						activity.showDialog(PtolemyActivity.DIALOG_ERROR_OTHER);
+					}
+				});
+			}
+
+			return success;
 		}
 
 		/**
 		 * Converts 2012FA to fa12.
 		 */
-		private String standardizeTerm(String rawTerm) {
+		static private String standardizeTerm(String rawTerm) {
 			Log.v(Config.TAG, rawTerm);
 			Matcher matcher = Pattern.compile("([0-9]{4})([A-Z]{2})").matcher(
 					rawTerm);
@@ -159,7 +185,17 @@ public class Config {
 			}
 		}
 
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
+			
+			if (!result) {
+				return;
+			}
+
+			SharedPreferences settings = activity.getPreferences(0);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean(FIRST_RUN, false);
+			editor.commit();
+
 			activity.startActivity(new Intent(activity,
 					PtolemyMapActivity.class));
 			activity.finish();
