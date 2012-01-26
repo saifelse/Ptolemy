@@ -127,18 +127,16 @@ public class FloorMapView extends RelativeLayout {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		return placeManager.getPlaces(topLeft.getLatitudeE6(),
-				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
-				mapView.getLongitudeSpan(), this.floor);
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		return placeManager.getPlaces(topLeft, bottomRight, this.floor);
 	}
 
 	private List<Place> getPlaces() {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		return placeManager.getPlaces(topLeft.getLatitudeE6(),
-				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
-				mapView.getLongitudeSpan());
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		return placeManager.getPlaces(topLeft, bottomRight);
 	}
 
 	@Override

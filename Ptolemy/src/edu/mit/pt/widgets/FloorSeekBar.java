@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,7 +12,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
