@@ -82,15 +82,16 @@ public class RoomLoader {
 				int floor = coords.getInt("floor");
 				String type = "classroom";
 				try {
-					type = coords.getString(name);
+					type = coords.getString("type");
 				} catch (Exception e) {
 					
 				}
 				
 				PlaceType ptype = PlaceType.CLASSROOM;
-				// TODO: This smells bad (josh).
 				if (type.equals("mtoilet")) {
 					ptype = PlaceType.MTOILET;
+				} else if (type.equals("ftoilet")) {
+					ptype = PlaceType.FTOILET;
 				}
 				
 				ContentValues values = new ContentValues();
