@@ -106,9 +106,6 @@ public class AddBookmarkActivity extends MapActivity {
 			return;
 		}
 		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
-		Log.v(Config.TAG, "controller is null: "
-				+ (mapView.getController() == null));
-		Log.v(Config.TAG, "place is null: " + (place == null));
 		mapView.getController().setCenter(place.getPoint());
 
 		this.place = place;

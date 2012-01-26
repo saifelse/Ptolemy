@@ -145,7 +145,6 @@ public class FloorMapView extends RelativeLayout {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
-			Log.v(Config.TAG, "Zoom: " + mapView.getZoomLevel());
 			if (mapView.getZoomLevel() < 20)
 				seekBar.setVisibility(INVISIBLE);
 			else
