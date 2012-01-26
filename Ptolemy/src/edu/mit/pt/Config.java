@@ -1,5 +1,8 @@
 package edu.mit.pt;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +27,8 @@ public class Config {
 
 	static public final String TAG = "PTOLEMY";
 	static public final String FIRST_RUN = "firstRun";
+	static public final String TERM = "term";
+	static public final String DEFAULT_TERM = "fa11";
 
 	/**
 	 * Converts from DP to pixels.
@@ -31,6 +36,12 @@ public class Config {
 	static public int getPixelsFromDp(Activity a, float dp) {
 		float scale = a.getResources().getDisplayMetrics().density;
 		return (int) (dp * scale + 0.5f);
+	}
+
+	static public String getTerm(Activity activity) {
+		SharedPreferences settings = activity.getPreferences(0);
+		String term = settings.getString(TERM, DEFAULT_TERM);
+		return term;
 	}
 
 	static public boolean firstRunCheck(Activity activity) {
@@ -44,24 +55,27 @@ public class Config {
 		}
 		return false;
 	}
-	
+
 	static private class ProgressUpdate {
 		String message;
 		int increment;
+
 		public ProgressUpdate(String message, int increment) {
 			this.message = message;
 			this.increment = increment;
 		}
 	}
 
-	static public class FirstRunTask extends AsyncTask<Void, ProgressUpdate, Void> {
+	static public class FirstRunTask extends
+			AsyncTask<Void, ProgressUpdate, Void> {
 
 		Activity activity;
 		boolean debug;
 		ProgressBar bar;
 		TextView textView;
 
-		public FirstRunTask(Activity activity, ProgressBar bar, TextView textView, boolean debug) {
+		public FirstRunTask(Activity activity, ProgressBar bar,
+				TextView textView, boolean debug) {
 			this.activity = activity;
 			this.debug = debug;
 			this.bar = bar;
@@ -91,7 +105,7 @@ public class Config {
 					db.execSQL(stmt);
 				}
 			}
-			
+
 			publishProgress(new ProgressUpdate("Constructing rooms...", 10));
 
 			int numRooms = new RoomLoader(activity).loadRooms();
@@ -105,11 +119,32 @@ public class Config {
 			Place.addPlace(activity, "testbathroom", 42359101, -71090869, 2,
 					PlaceType.TOILET);
 
-			int affected = MITClass.loadClasses(activity, db);
-			Log.v(TAG, "Loaded " + affected + " classes.");
+			String rawTerm = MITClass.loadClasses(activity, db);
+			String term = standardizeTerm(rawTerm);
+			SharedPreferences settings = activity.getPreferences(0);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString(TERM, term);
+			editor.commit();
+
+			Log.v(TAG, "Loaded classes for " + term + ".");
 			publishProgress(new ProgressUpdate("Done!", 30));
 
 			return null;
+		}
+
+		/**
+		 * Converts 2012FA to fa12.
+		 */
+		private String standardizeTerm(String rawTerm) {
+			Log.v(Config.TAG, rawTerm);
+			Matcher matcher = Pattern.compile("([0-9]{4})([A-Z]{2})").matcher(
+					rawTerm);
+			if (matcher.matches()) {
+				String year = matcher.group(1);
+				String semester = matcher.group(2);
+				return year.substring(2) + semester.toLowerCase();
+			}
+			return DEFAULT_TERM;
 		}
 
 		protected void onProgressUpdate(ProgressUpdate... progress) {

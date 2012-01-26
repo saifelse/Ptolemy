@@ -52,27 +52,44 @@ public class MITClass {
 		return writer.toString();
 	}
 
-	public static int loadClasses(Context context, SQLiteDatabase db) {
+	public static String loadClasses(Context context, SQLiteDatabase db) {
 		// Delete all rows
 		db.delete(MITClassTable.CLASSES_TABLE_NAME, "", new String[] {});
 
 		// Refetch from file
-		int count = 0;
 		String json;
 
 		try {
 			json = readJSON(context, R.raw.classes);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return 0;
+			return null;
+		}
+		JSONObject obj;
+		try {
+			obj = new JSONObject(json);
+		} catch (JSONException e2) {
+			Log.v(Config.TAG,
+					"Unable to parse JSON! " + e2.getMessage());
+			return null;
 		}
 		JSONArray classes;
+		
+		String term;
 		try {
-			classes = new JSONObject(json).getJSONArray("classes");
+			term = obj.getString("term");
+		} catch (JSONException e) {
+			Log.v(Config.TAG,
+					"Expected 'term' in classes.json. " + e.getMessage());
+			return null;
+		}
+		
+		try {
+			classes = obj.getJSONArray("classes");
 		} catch (JSONException e1) {
 			Log.v(Config.TAG,
 					"Expected 'classes' in classes.json. " + e1.getMessage());
-			return 0;
+			return null;
 		}
 		db.beginTransaction();
 		try {
@@ -80,13 +97,11 @@ public class MITClass {
 				try {
 					JSONObject c = classes.getJSONObject(i);
 					String mitID = c.getString("id");
-					String term = c.getString("term");
 					String room = c.getString("room");
 					String name = c.getString("name");
 					String resolve = c.has("resolve") ? c.getString("resolve")
 							: "";
 					addClass(mitID, term, name, room, resolve, db);
-					count++;
 				} catch (JSONException e) {
 					Log.v(Config.TAG, "Error: Couldn't parse element " + i
 							+ " in classes.json");
@@ -97,7 +112,7 @@ public class MITClass {
 			// TODO: expose to UI if error occurred. quit?
 			db.endTransaction();
 		}
-		return count;
+		return term;
 	}
 
 	public static long getIdIfValidRoom(Context context, String name) {
