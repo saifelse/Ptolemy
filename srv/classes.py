@@ -22,7 +22,7 @@ def timeAndPlace(locRoom):
     place = parts[-1]
     return {"time": time, "place": place}
 
-def getJSON(term="2012SP"):
+def getJSON(term="2012FA"):
     # Get data
     data = parse(term)
     # Format data

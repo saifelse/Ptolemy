@@ -48,17 +48,26 @@ public class PtolemyMapView extends MapView {
 		setup();
 	}
 
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		// Bad hack - mapView shows white bar at bottom when used previously in
+		// an activity where mapView is at a smaller dimension. (i.e.
+		// AddBookmarkActivity). Zooming in and out fixes this.
+		getController().zoomOut();
+		getController().zoomIn();
+	}
+
 	private void setup() {
 
-		List<Overlay> overlays = getOverlays();
-		//overlays.add(new TileOverlay());
+//		List<Overlay> overlays = getOverlays();
+		// overlays.add(new TileOverlay());
 
 		getController().setZoom(21);
 
 		setRowsCols();
 		getController().setCenter(new GeoPoint(42359101, -71090890));
 
-		tm = new PtolemyTileManager(ctx);
+//		tm = new PtolemyTileManager(ctx);
 
 		// Load places.
 
@@ -75,7 +84,7 @@ public class PtolemyMapView extends MapView {
 			pinchZoom = (ev.getPointerCount() > 1);
 			break;
 		case MotionEvent.ACTION_UP:
-//			((View) getParent()).onTouchEvent(ev);
+			// ((View) getParent()).onTouchEvent(ev);
 		}
 		return super.onTouchEvent(ev);
 	}

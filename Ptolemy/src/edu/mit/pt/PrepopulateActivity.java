@@ -23,7 +23,7 @@ import edu.mit.pt.classes.MITClass;
  * FIXME: can't auth again after already auth'ing
  */
 public class PrepopulateActivity extends Activity {
-	private static String term = "fa11";
+	private String term;
 	private final int MOIRA_ERROR = 0;
 	public final static String CLASSES = "classes";
 
@@ -37,6 +37,8 @@ public class PrepopulateActivity extends Activity {
 
 		ActionBar.setDefaultBackAction(this);
 		ActionBar.setTitle(this, "Import Classes");
+		
+		term = Config.getTerm(this);
 	}
 
 	public void loginTouchstone(View view) {

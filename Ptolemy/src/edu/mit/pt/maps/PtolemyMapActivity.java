@@ -126,7 +126,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
 		places.add(new PlacesOverlayItem(place, place.getName(), place
 				.getName(), place.getMarker(getResources())));
-		//FIXME: _All_ animations need to call updateMinMax after finishing animation.
+		// FIXME: _All_ animations need to call updateMinMax after finishing
+		// animation.
 		mapView.getController().animateTo(place.getPoint());
 		floorMapView.updateMinMax();
 		floorMapView.setFloor(place.getFloor());

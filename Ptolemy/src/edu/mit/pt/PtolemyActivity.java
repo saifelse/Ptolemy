@@ -29,7 +29,7 @@ public class PtolemyActivity extends Activity {
 			ProgressBar bar = (ProgressBar) findViewById(R.id.first_launch_progress);
 			TextView messageView = (TextView) findViewById(R.id.first_launch_details);
 			bar.setVisibility(View.VISIBLE);
-			new Config.FirstRunTask(this, bar, messageView, false).execute();
+			new Config.FirstRunTask(this, bar, messageView, DEBUG).execute();
 		} else {
 			if (DEBUG) {
 				setContentView(R.layout.main);
