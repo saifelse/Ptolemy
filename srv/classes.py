@@ -44,6 +44,8 @@ def getJSON(term="2012FA"):
     return {'classes':classesRes, 'term':term}
 
 def resolveConflicts(classes):
+    if classes[0]['id'] == '6.046':
+        print classes
     # resolve by specifying 'room'
     resolution = []
     rooms = set()
@@ -58,7 +60,9 @@ def resolveConflicts(classes):
             rooms.add(classes[i]['room'])
     if len(resolution) == 1:
         del resolution[0]['resolve']
-    print "Resolve:",resolution
+    else:
+        pass
+        #print "Resolve:",resolution
     return resolution
 
 def formatClass(x):
