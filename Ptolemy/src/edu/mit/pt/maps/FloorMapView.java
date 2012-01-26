@@ -2,24 +2,23 @@ package edu.mit.pt.maps;
 
 import java.util.List;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.RelativeLayout;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.location.PlaceManager;
 import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.widget.RelativeLayout;
 
 public class FloorMapView extends RelativeLayout {
 	public final static int MAP_VIEW_ID = 0;

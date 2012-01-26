@@ -31,7 +31,7 @@ public class AP {
 		Cursor cursor = queryBuilder.query(database, null, null,
 				null, null, null, null);
 				
-		System.out.println(cursor.getCount() + " ssids found");
+		Log.v(Config.TAG, cursor.getCount() + " ssids found");
 		if (cursor.getCount() == 0)
 			return null;
 		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
@@ -78,9 +78,9 @@ public class AP {
 			db.endTransaction();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("EXCEPTION");
+			Log.v(Config.TAG, "EXCEPTION");
 		}
-		System.out.println("Inserted " + count + " aps");
+		Log.v(Config.TAG, "Inserted " + count + " aps");
 		return count;
 		
 	}
