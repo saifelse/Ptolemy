@@ -27,47 +27,42 @@ import edu.mit.pt.Config;
 import edu.mit.pt.location.WifiLocation;
 
 public class LocationSetter {
-	// Available data
-	private static double latitude;
-	private static double longitude;
-	private static double altitude;
-	private static double bearing;
+	//singleton
+	static LocationSetter locationSetter = null;
 	
-	private static XPSOverlay overlay;
+	// Available data
+	private double bearing;
+	private GeoPoint currentLocation;
+	
+	private XPSOverlay overlay;
 	
 	// Bearings
-	private static SensorManager sman;
-	private static SensorEventListener compassListener;
-	private static Sensor accelerometerSensor;
-	private static Sensor magneticFieldSensor;
+	private SensorManager sensorManager;
+	private SensorEventListener compassListener;
+	private Sensor accelerometerSensor;
+	private Sensor magneticFieldSensor;
 	
 	// Location
-	private static Handler updateLocationHandler;
-	private static boolean isStopped;
+	private Handler updateLocationHandler;
+	private boolean isStopped;
 	
 	private static LocationManager locationManager;
 	
-	public static double getLatitude(){
-		return latitude;
+	public static LocationSetter getInstance(Context context, XPSOverlay overlay) {
+		if (locationSetter == null)
+			locationSetter = new LocationSetter(context, overlay);
+		return locationSetter;
+
 	}
-	public static double getLongitude(){
-		return longitude;
-	}
-	public static double getAltitude(){
-		return altitude;
-	}
-	public static GeoPoint getPoint(Context context){
-		WifiLocation wifiLocation = WifiLocation.getInstance(context);
-		return wifiLocation.getLocation();
-		//return new GeoPoint((int)(latitude*1e6),(int)(longitude*1e6));
-	}
-	public static void init(Context context, String username, String realm, XPSOverlay o){
-		overlay = o;
+	
+	private LocationSetter(Context context, XPSOverlay overlay) {
+		this.overlay = overlay;
 		updateLocationHandler = new Handler();
-		initLocation(context, username, realm);
+		isStopped = true;
 		initBearing(context);
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		String locationProvider = LocationManager.GPS_PROVIDER;
+		currentLocation = null;
 		LocationListener locationListener = new LocationListener() {
 
 			public void onLocationChanged(Location location) {
@@ -94,35 +89,39 @@ public class LocationSetter {
 		};
 		locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
 	}
-	public static void pause(){
-		//pauseLocation();
+	
+	public GeoPoint getPoint(Context context){
+		WifiLocation wifiLocation = WifiLocation.getInstance(context);
+		GeoPoint point = wifiLocation.getLocation();
+		setLocation(point);
+		return currentLocation;
+	}
+	
+	public void pause(){
+		isStopped = true;
+		pauseLocation();
 		pauseBearing();
 	}
-	public static void resume(){
-		//resumeLocation();
+	public void resume(){
+		isStopped = false;
+		resumeLocation();
 		resumeBearing();
 	}
-	public static void stop(){
+	public void stop(){
 		pause();
 	}
-
-	private static void initLocation(Context context, String username,
-			String realm) {
+	
+	private void pauseLocation() {
 		
-		isStopped = true;
+	}
+	private void resumeLocation() {
+		
 	}
 	
-	private static void pauseLocation() {
-		isStopped = true;
-	}
-	private static void resumeLocation() {
-	
-	}
-	
-	private static void initBearing(Context context){
-		sman = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-		accelerometerSensor = sman.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		magneticFieldSensor = sman.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+	private void initBearing(Context context){
+		sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+		accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		magneticFieldSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		compassListener = new SensorEventListener() {
 			private float[] accData;
 			private float[] magData;
@@ -154,33 +153,37 @@ public class LocationSetter {
 	}
 	
 	
-	private static void pauseBearing() {
+	private void pauseBearing() {
 		// Unregister listeners
-		sman.unregisterListener(compassListener, magneticFieldSensor);
-		sman.unregisterListener(compassListener, accelerometerSensor);
+		sensorManager.unregisterListener(compassListener, magneticFieldSensor);
+		sensorManager.unregisterListener(compassListener, accelerometerSensor);
 	}
 	
-	private static void resumeBearing(){
+	private void resumeBearing(){
 		// Register listeners
-		sman.registerListener(compassListener, magneticFieldSensor,
-				SensorManager.SENSOR_DELAY_FASTEST);
-		sman.registerListener(compassListener, accelerometerSensor,
-				SensorManager.SENSOR_DELAY_FASTEST);
+		sensorManager.registerListener(compassListener, magneticFieldSensor,
+				SensorManager.SENSOR_DELAY_UI);
+		sensorManager.registerListener(compassListener, accelerometerSensor,
+				SensorManager.SENSOR_DELAY_UI);
 	}
 	
-	public static void setLocation(GeoPoint p) {
-		overlay.setLocation(p);
+	private GeoPoint exponentialWeightedMovingAverage(GeoPoint avg, GeoPoint newPoint, double factor) {
+		int newLatitude = (int) (avg.getLatitudeE6() * factor + newPoint.getLatitudeE6() * (1-factor));
+		int newLongitude = (int) (avg.getLongitudeE6() * factor + newPoint.getLongitudeE6() * (1-factor));
+		return new GeoPoint(newLatitude, newLongitude);
 	}
 	
-	protected static void handleLocation(double lat, double lng, double alt){
-		latitude = lat;
-		longitude = lng;
-		altitude = alt;
-		
-		GeoPoint p = new GeoPoint((int)(lat*1e6),(int)(lng*1e6));
-		overlay.setLocation(p);
+	public void setLocation(GeoPoint p) {
+		if (currentLocation == null) {
+			currentLocation = p;
+		} else {
+			currentLocation = exponentialWeightedMovingAverage(currentLocation, p, 0.9);
+		}
+		overlay.setLocation(currentLocation);
 	}
-	protected static void handleBearing(double bng){
+	
+	protected void handleBearing(double bng){
+		//System.out.println(bng);
 		bearing = bng;
 		overlay.setBearing(bearing);
 	}
