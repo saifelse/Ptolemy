@@ -138,12 +138,21 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 	@Override
 	void showClassroom(final Place place) {
+		/*
 		// FIXME: _All_ animations need to call updateMinMax after finishing
 		// animation.
-		mapView.getController().animateTo(place.getPoint());
-		floorMapView.updateMinMax();
-		floorMapView.setFloor(place.getFloor());
-		floorMapView.getPlacesOverlay().setFocusedTitle(place.getName());
+		mapView.getController().animateTo(place.getPoint(), new Runnable(){
+
+		@Override
+		public void run() {
+			Log.v(Config.TAG, "We updating after move!");
+			floorMapView.updateMinMax();
+			floorMapView.setFloor(place.getFloor());
+			floorMapView.getPlacesOverlay().setFocusedTitle(place.getName());
+		}
+		});
+		*/
+		floorMapView.showPlace(place);
 		setPlace(place);
 	}
 

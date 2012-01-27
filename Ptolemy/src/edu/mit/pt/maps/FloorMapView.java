@@ -77,9 +77,9 @@ public class FloorMapView extends RelativeLayout {
 	@Override
 	public void onWindowFocusChanged(boolean hasWindowFocus){
 		if(hasWindowFocus){
-			resumeUpdate();
+			//resumeUpdate();
 		}else{
-			pauseUpdate();
+			//pauseUpdate();
 		}
 	}
 	// Periodically check if scrolling has taken place, if so, update.
@@ -183,7 +183,17 @@ public class FloorMapView extends RelativeLayout {
 		seekBar.setFloor(floor);
 		seekBar.snapY();
 	}
-
+	void showPlace(final Place place) {
+		mapView.getController().animateTo(place.getPoint(), new Runnable(){
+		@Override
+		public void run() {
+			Log.v(Config.TAG, "We updating after move!");
+			updateMinMax();
+			setFloor(place.getFloor());
+			getPlacesOverlay().setFocusedTitle(place.getName());
+		}
+		});
+	}
 	private List<Place> getVisiblePlaces() {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
@@ -227,6 +237,7 @@ public class FloorMapView extends RelativeLayout {
 		}
 		seekBar.setMin(minFloor);
 		seekBar.setMax(maxFloor);
+		updateToFloor(floor);
 	}
 
 	public PtolemyMapView getMapView() {

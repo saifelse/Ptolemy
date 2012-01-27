@@ -114,10 +114,14 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	@Override
 	void showClassroom(final Place p) {
+		floorMapView.showPlace(p);
+		setPlace(p);
+		/*
 		mapView.getController().animateTo(p.getPoint());
 		floorMapView.setFloor(p.getFloor());
 		floorMapView.getPlacesOverlay().setFocusedTitle(p.getName());
 		setPlace(p);
+		*/
 	}
 
 }
