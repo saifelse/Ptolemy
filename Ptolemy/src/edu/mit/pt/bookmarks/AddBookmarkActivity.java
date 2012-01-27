@@ -3,8 +3,10 @@ package edu.mit.pt.bookmarks;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +23,8 @@ import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.BrowsePlaceActivity;
+import edu.mit.pt.maps.PlacesItemizedOverlay;
+import edu.mit.pt.maps.PlacesOverlayItem;
 import edu.mit.pt.maps.PtolemyMapView;
 
 public class AddBookmarkActivity extends MapActivity {
@@ -35,6 +39,7 @@ public class AddBookmarkActivity extends MapActivity {
 	private boolean userHasEditedType = false;
 	private boolean userHasEditedPlace = false;
 
+	private PlacesItemizedOverlay showPlaceItemizedOverlay;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,10 @@ public class AddBookmarkActivity extends MapActivity {
 				.getReadableDatabase();
 		autoComplete.setup(db, this);
 		
+		// Set up overlay
+		Drawable defaultMarker = getResources().getDrawable(
+				R.drawable.green_point);
+		showPlaceItemizedOverlay = new PlacesItemizedOverlay(defaultMarker);
 		completeSetup();
 	}
 
@@ -107,7 +116,21 @@ public class AddBookmarkActivity extends MapActivity {
 		}
 		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.getController().setCenter(place.getPoint());
+		
+		
 
+		showPlaceItemizedOverlay.clear();
+		
+		// Add current place.
+		Resources resources = getResources();
+		PlacesOverlayItem item = new PlacesOverlayItem(place, place.getName(),
+				place.getName(), place.getMarker(resources, false), place.getMarker(
+						resources, true), showPlaceItemizedOverlay);
+		
+		showPlaceItemizedOverlay.addOverlayItem(item);
+		showPlaceItemizedOverlay.setFocusedTitle(place.getName());
+		mapView.getOverlays().add(showPlaceItemizedOverlay);
+		
 		this.place = place;
 		Button placeButton = (Button) findViewById(R.id.pickedPlace);
 		Log.v(Config.TAG, "Setting placeButton to have text " + place.getName());
