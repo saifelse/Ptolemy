@@ -231,8 +231,13 @@ public class BookmarksActivity extends ListActivity {
 			case OFFICE_HOURS:
 				((VerticalTextView) view.findViewById(R.id.label)).setText(type
 						.getShortName());
+				view.findViewById(R.id.label_wrapper).setBackgroundColor(
+						Color.parseColor("#eeeeee"));
 				break;
 			case OTHER:
+				((VerticalTextView) view.findViewById(R.id.label)).setText("");
+				view.findViewById(R.id.label_wrapper).setBackgroundColor(
+						Color.parseColor("#eeeeee"));
 				break;
 
 			}
