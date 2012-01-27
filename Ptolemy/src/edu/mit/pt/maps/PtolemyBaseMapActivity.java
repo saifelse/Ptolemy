@@ -94,7 +94,6 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 		floorMapView.getPlacesOverlay().setOnFocusChangeListener(new ItemizedOverlay.OnFocusChangeListener() {
 
 			@SuppressWarnings("rawtypes")
-			@Override
 			public void onFocusChanged(ItemizedOverlay overlay,
 					OverlayItem newFocus) {
 				if (newFocus == null) {
