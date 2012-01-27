@@ -54,6 +54,16 @@
             android:textSize="16dp"
             android:clickable="true"
             android:onClick="moveToFocusedPlace" />
+        
+        <ImageButton
+            android:id="@+id/place_extra_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_menu_bookmark_add"
+            android:contentDescription="@string/add_bookmark"
+            android:onClick="handleExtraButtonClick"
+            android:src="@drawable/ic_menu_navigate" />
     </RelativeLayout>
 
 </RelativeLayout>

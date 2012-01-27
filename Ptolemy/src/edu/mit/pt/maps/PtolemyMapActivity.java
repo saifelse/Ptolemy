@@ -16,13 +16,17 @@ import com.google.android.maps.GeoPoint;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.bookmarks.AddBookmarkActivity;
+import edu.mit.pt.bookmarks.Bookmark;
 import edu.mit.pt.bookmarks.BookmarksActivity;
+import edu.mit.pt.bookmarks.EditBookmarkActivity;
 import edu.mit.pt.data.Place;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
+	public final static String PLACE_ID = "placeId";
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 
@@ -67,7 +71,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				GeoPoint gp = LocationSetter.getInstance(PtolemyMapActivity.this, null).getPoint(c);
+				GeoPoint gp = LocationSetter.getInstance(
+						PtolemyMapActivity.this, null).getPoint(c);
 				if (gp != null)
 					mapView.getController().animateTo(gp);
 			}
@@ -171,6 +176,21 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.v(Config.TAG, "Received requestCode " + requestCode);
+	}
+
+	public void handleExtraButtonClick(View v) {
+		if (focusedPlace == null) {
+			return;
+		}
+		long bookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
+		Intent intent;
+		if (bookmarkId != -1) {
+			intent = new Intent(this, EditBookmarkActivity.class);
+		} else {
+			intent = new Intent(this, AddBookmarkActivity.class);
+		}
+		intent.putExtra(PLACE_ID, bookmarkId);
+		startActivity(intent);
 	}
 
 	@Override

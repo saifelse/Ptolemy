@@ -25,6 +25,7 @@ import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.BrowsePlaceActivity;
 import edu.mit.pt.maps.PlacesItemizedOverlay;
 import edu.mit.pt.maps.PlacesOverlayItem;
+import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.maps.PtolemyMapView;
 
 public class AddBookmarkActivity extends MapActivity {
@@ -95,7 +96,13 @@ public class AddBookmarkActivity extends MapActivity {
 	}
 	
 	protected void completeSetup() {
-		return;
+		long placeId = getIntent().getLongExtra(
+				PtolemyMapActivity.PLACE_ID, -1);
+		if (placeId == -1) {
+			return;
+		}
+		place = Place.getPlace(this, placeId);
+		setPlace(place, false);
 	}
 
 	void changeType(BookmarkType newType, boolean byUser) {

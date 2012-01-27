@@ -93,4 +93,19 @@ public class Bookmark {
 				BookmarksTable.COLUMN_ID + "=?",
 				new String[] { Long.toString(id) });
 	}
+
+	static public long findInBookmarks(Context context, Place p) {
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		Cursor c = db.query(BookmarksTable.BOOKMARKS_TABLE_NAME,
+				new String[] { BookmarksTable.COLUMN_ID, BookmarksTable.COLUMN_PLACE_ID }, null, null,
+				null, null, null);
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			long placeId = c.getLong(c.getColumnIndex(BookmarksTable.COLUMN_PLACE_ID));
+			if (placeId == p.getId()) {
+				return c.getLong(c.getColumnIndex(BookmarksTable.COLUMN_ID));
+			}
+		}
+		return -1;
+	}
 }
