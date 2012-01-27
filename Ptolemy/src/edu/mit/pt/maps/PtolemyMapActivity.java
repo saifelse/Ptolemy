@@ -26,10 +26,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
-	public final static String PLACE_ID = "placeId";
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	private XPSOverlay meOverlay;
+	// Stores the bookmarkId corresponding to the focused place, if applicable.
+	private long focusedBookmarkId = -1;
 
 	@Override
 	public void onPause() {
@@ -134,6 +135,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void setPlace(Place place) {
 		focusedPlace = place;
+		
 		View metaView = findViewById(R.id.meta_view);
 		if (place == null) {
 			metaView.setVisibility(View.GONE);
@@ -142,6 +144,16 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
 				.getName());
 		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
+		
+		focusedBookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
+		
+		ImageButton extraBtn = ((ImageButton) findViewById(R.id.place_extra_button));
+		if (focusedBookmarkId == -1) {
+			extraBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_bookmark_add));
+		} else {
+			extraBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_edit));
+		}
+		
 		metaView.setVisibility(View.VISIBLE);
 	}
 
@@ -150,6 +162,21 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			return;
 		}
 		mapView.getController().animateTo(focusedPlace.getPoint());
+	}
+
+	public void handleExtraButtonClick(View v) {
+		if (focusedPlace == null) {
+			return;
+		}
+		Intent intent;
+		if (focusedBookmarkId != -1) {
+			intent = new Intent(this, EditBookmarkActivity.class);
+			intent.putExtra(BookmarksActivity.BOOKMARK_ID, focusedBookmarkId);
+		} else {
+			intent = new Intent(this, AddBookmarkActivity.class);
+			intent.putExtra(BookmarksActivity.PLACE_ID, focusedPlace.getId());
+		}
+		startActivity(intent);
 	}
 
 	@Override
@@ -177,21 +204,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.v(Config.TAG, "Received requestCode " + requestCode);
-	}
-
-	public void handleExtraButtonClick(View v) {
-		if (focusedPlace == null) {
-			return;
-		}
-		long bookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
-		Intent intent;
-		if (bookmarkId != -1) {
-			intent = new Intent(this, EditBookmarkActivity.class);
-		} else {
-			intent = new Intent(this, AddBookmarkActivity.class);
-		}
-		intent.putExtra(PLACE_ID, bookmarkId);
-		startActivity(intent);
 	}
 
 	@Override

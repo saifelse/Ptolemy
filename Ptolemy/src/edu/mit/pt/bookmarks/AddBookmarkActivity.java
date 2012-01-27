@@ -97,7 +97,7 @@ public class AddBookmarkActivity extends MapActivity {
 	
 	protected void completeSetup() {
 		long placeId = getIntent().getLongExtra(
-				PtolemyMapActivity.PLACE_ID, -1);
+				BookmarksActivity.PLACE_ID, -1);
 		if (placeId == -1) {
 			return;
 		}

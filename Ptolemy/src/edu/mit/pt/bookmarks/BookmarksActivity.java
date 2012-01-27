@@ -42,6 +42,7 @@ public class BookmarksActivity extends ListActivity {
 	ResourceCursorAdapter adapter;
 	private final String ACTIVITY_TILE = "Bookmarks";
 	public static final String BOOKMARK_ID = "bookmarkId";
+	public final static String PLACE_ID = "placeId";
 	static final int REQUEST_BOOKMARKS = 0;
 
 	@Override
