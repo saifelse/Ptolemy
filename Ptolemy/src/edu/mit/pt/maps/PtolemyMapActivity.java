@@ -29,13 +29,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		LocationSetter.pause();
+		LocationSetter.getInstance(this, null).pause();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		LocationSetter.resume();
+		LocationSetter.getInstance(this, null).resume();
 	}
 
 	@Override
@@ -58,8 +58,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		String skyhookUsername = getString(R.string.skyhook_username);
 		String skyhookRealm = getString(R.string.skyhook_realm);
 
-		LocationSetter.init(this, skyhookUsername, skyhookRealm, meOverlay);
-		LocationSetter.resume();
+		LocationSetter.getInstance(this, meOverlay).resume();
 
 		ImageButton compassButton = (ImageButton) getLayoutInflater().inflate(
 				R.layout.menu_nav_button, null);
@@ -68,7 +67,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				GeoPoint gp = LocationSetter.getPoint(c);
+				GeoPoint gp = LocationSetter.getInstance(PtolemyMapActivity.this, null).getPoint(c);
 				if (gp != null)
 					mapView.getController().animateTo(gp);
 			}
@@ -169,7 +168,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LocationSetter.stop();
+		LocationSetter.getInstance(this, null).stop();
 		mapView.stop();
 	}
 }

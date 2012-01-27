@@ -89,7 +89,6 @@ public class FloorMapView extends RelativeLayout {
 		public void run() {
 			Log.v(Config.TAG+"_f", "We moved?");
 			updateHandler.post(new Runnable(){
-				@Override
 				public void run() {
 					Log.v(Config.TAG+"_f", "Idk... let's check");
 					if(p!=null && p.equals(mapView.getProjection().fromPixels(0, 0))){
@@ -185,7 +184,6 @@ public class FloorMapView extends RelativeLayout {
 	}
 	void showPlace(final Place place) {
 		mapView.getController().animateTo(place.getPoint(), new Runnable(){
-		@Override
 		public void run() {
 			Log.v(Config.TAG, "We updating after move!");
 			updateMinMax();

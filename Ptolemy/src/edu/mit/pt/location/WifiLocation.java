@@ -50,7 +50,8 @@ public class WifiLocation {
 	}
 
 	public void update() {
-		LocationSetter.setLocation(getLocation());
+		//TODO: FIXME passing null
+		LocationSetter.getInstance(context, null).setLocation(getLocation());
 	}
 
 	private GeoPoint midGeoPoint(GeoPoint a, GeoPoint b) {
