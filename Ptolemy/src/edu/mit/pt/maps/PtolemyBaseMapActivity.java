@@ -23,12 +23,12 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 	private final int DIALOG_INVALID_ROOM = 0;
 	private String roomQuery = null;
 	protected Place focusedPlace;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
 	public void onNewIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -86,25 +86,30 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 		((AlertDialog) dialog).setMessage(String.format(
 				res.getString(R.string.room_not_found), roomQuery));
 	}
-	
+
 	/**
 	 * Sets behavior to deselect place when nothing is selected.
 	 */
 	protected void configureFloorMapView(FloorMapView floorMapView) {
-		floorMapView.getPlacesOverlay().setOnFocusChangeListener(new ItemizedOverlay.OnFocusChangeListener() {
+		floorMapView.getPlacesOverlay().setOnFocusChangeListener(
+				new ItemizedOverlay.OnFocusChangeListener() {
 
-			@SuppressWarnings("rawtypes")
-			public void onFocusChanged(ItemizedOverlay overlay,
-					OverlayItem newFocus) {
-				if (newFocus == null) {
-					setPlace(null);
-				}
-			}
-		});
+					@SuppressWarnings("rawtypes")
+					public void onFocusChanged(ItemizedOverlay overlay,
+							OverlayItem newFocus) {
+						if (newFocus == null) {
+							setPlace(null);
+							return;
+						}
+						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
+						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
+						setPlace(pItem.getPlace());
+					}
+				});
 	}
-	
+
 	abstract void setPlace(Place p);
-	
+
 	abstract void showClassroom(Place p);
 
 }

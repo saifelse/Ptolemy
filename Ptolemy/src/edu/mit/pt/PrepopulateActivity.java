@@ -1,6 +1,5 @@
 package edu.mit.pt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -120,8 +119,8 @@ public class PrepopulateActivity extends Activity {
 				for (int i = 0; i < classes.size(); i++) {
 					String dirtyClassName = classes.get(i);
 					String className = dirtyClassName.split("-")[1];
-					long classId = MITClass.getIdIfValidRoom(activity, className);
 					Log.v(Config.TAG, "Looking up class: " + className);
+					long classId = MITClass.getIdIfValidRoom(activity, className);
 					if (classId != -1) {
 						Log.v(Config.TAG, "Matched class: " + classId);
 						mitClasses[i] = classId;
