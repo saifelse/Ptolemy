@@ -29,6 +29,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	public final static String PLACE_ID = "placeId";
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
+	private XPSOverlay meOverlay;
 
 	@Override
 	public void onPause() {
@@ -55,7 +56,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		// Set up meOverlay:
 		// Show user
-		XPSOverlay meOverlay = new XPSOverlay(mapView);
+		meOverlay = new XPSOverlay(mapView);
 		mapView.getOverlays().add(meOverlay);
 
 		// Start Location data
