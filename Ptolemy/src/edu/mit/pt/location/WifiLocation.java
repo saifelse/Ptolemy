@@ -75,20 +75,21 @@ public class WifiLocation {
 	}
 
 	private double calcErrorHelper(double A, double a, double B, double b) {
-		return A * A * b * b - 2 * A * b * B * b + B * B * a * a;
+		return A * A * b * b - 2 * A * b * B * a + B * B * a * a;
 	}
 
 	private double calcError(double lat, double lon, GeoPoint a,
 			double sigMagA, GeoPoint b, double sigMagB, GeoPoint c,
 			double sigMagC) {
+		double scalefactor = 1/1.35;
 		double A = Math.sqrt((a.getLatitudeE6() - lat)
-				* (a.getLatitudeE6() - lat) + (a.getLongitudeE6() - lon)
+				* (a.getLatitudeE6() - lat) + (a.getLongitudeE6() - lon) * scalefactor * scalefactor
 				* (a.getLongitudeE6() - lon));
 		double B = Math.sqrt((b.getLatitudeE6() - lat)
-				* (b.getLatitudeE6() - lat) + (b.getLongitudeE6() - lon)
+				* (b.getLatitudeE6() - lat) + (b.getLongitudeE6() - lon) * scalefactor * scalefactor
 				* (b.getLongitudeE6() - lon));
 		double C = Math.sqrt((c.getLatitudeE6() - lat)
-				* (c.getLatitudeE6() - lat) + (c.getLongitudeE6() - lon)
+				* (c.getLatitudeE6() - lat) + (c.getLongitudeE6() - lon) * scalefactor * scalefactor
 				* (c.getLongitudeE6() - lon));
 		return calcErrorHelper(A, sigMagA, B, sigMagB)
 				+ calcErrorHelper(A, sigMagA, C, sigMagC)
