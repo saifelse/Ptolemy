@@ -95,7 +95,6 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 				new ItemizedOverlay.OnFocusChangeListener() {
 
 					@SuppressWarnings("rawtypes")
-					@Override
 					public void onFocusChanged(ItemizedOverlay overlay,
 							OverlayItem newFocus) {
 						if (newFocus == null) {
@@ -104,7 +103,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
-						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
+						//((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
 						setPlace(pItem.getPlace());
 					}
 				});

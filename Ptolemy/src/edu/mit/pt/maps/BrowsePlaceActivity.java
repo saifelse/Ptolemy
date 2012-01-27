@@ -21,6 +21,7 @@ import edu.mit.pt.data.Place;
 public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	private final String ACTIVITY_TITLE = "Pick a location";
+	
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	

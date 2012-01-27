@@ -44,7 +44,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		floorMapView = (FloorMapView) findViewById(R.id.floormapview);
 		mapView = (PtolemyMapView) floorMapView.getMapView();
 		configureFloorMapView(floorMapView);
-
+		
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
 		// Set up meOverlay:
