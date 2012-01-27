@@ -166,13 +166,16 @@ public class WifiLocation {
 			}
 		}
 		
+		if (closestAP1 == null)
+			return null;
+		
 		ScanResult closestAP2 = null;
 		String bssid2 = null;
 		GeoPoint closestAP2Location = null;
 		for (; j < results.size(); j++) {
 			String bssid = maskBSSID(results.get(j).BSSID);
 			GeoPoint location = AP.getAPLocation(bssid, db);
-			if (!bssid.equals(bssid1)) {
+			if (!bssid.equals(bssid1) && location != null) {
 				closestAP2 = results.get(j);
 				closestAP2Location = location;
 				bssid2 = bssid;
@@ -187,7 +190,7 @@ public class WifiLocation {
 		for (; j < results.size(); j++) {
 			String bssid = maskBSSID(results.get(j).BSSID);
 			GeoPoint location = AP.getAPLocation(bssid, db);
-			if (!bssid.equals(bssid1) && !bssid.equals(bssid2)) {
+			if (!bssid.equals(bssid1) && !bssid.equals(bssid2) && location != null) {
 				closestAP3 = results.get(j);
 				closestAP3Location = location;
 				bssid3 = bssid;
