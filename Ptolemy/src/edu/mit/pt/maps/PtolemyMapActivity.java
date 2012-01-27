@@ -98,7 +98,19 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
 
-		Intent intent = getIntent();
+		if (!handleIntent(getIntent())) {
+			mapView.getController().setCenter(Config.DEFAULT_POINT);
+		}
+
+	}
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleIntent(intent);
+	}
+
+	private boolean handleIntent(Intent intent) {
 		Log.v(Config.TAG, "INTENT: " + intent.getAction());
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			List<String> segments = intent.getData().getPathSegments();
@@ -107,12 +119,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				Place place = Place.getClassroom(this, room);
 				if (place != null) {
 					showClassroom(place);
-					return;
+					return true;
 				}
 			}
 		}
-		mapView.getController().setCenter(Config.DEFAULT_POINT);
-
+		return false;
 	}
 
 	@Override
@@ -139,19 +150,16 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	void showClassroom(final Place place) {
 		/*
-		// FIXME: _All_ animations need to call updateMinMax after finishing
-		// animation.
-		mapView.getController().animateTo(place.getPoint(), new Runnable(){
-
-		@Override
-		public void run() {
-			Log.v(Config.TAG, "We updating after move!");
-			floorMapView.updateMinMax();
-			floorMapView.setFloor(place.getFloor());
-			floorMapView.getPlacesOverlay().setFocusedTitle(place.getName());
-		}
-		});
-		*/
+		 * // FIXME: _All_ animations need to call updateMinMax after finishing
+		 * // animation. mapView.getController().animateTo(place.getPoint(), new
+		 * Runnable(){
+		 * 
+		 * @Override public void run() { Log.v(Config.TAG,
+		 * "We updating after move!"); floorMapView.updateMinMax();
+		 * floorMapView.setFloor(place.getFloor());
+		 * floorMapView.getPlacesOverlay().setFocusedTitle(place.getName()); }
+		 * });
+		 */
 		floorMapView.showPlace(place);
 		setPlace(place);
 	}
