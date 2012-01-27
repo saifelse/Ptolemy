@@ -62,7 +62,12 @@ public class AP {
 				continue;
 			String bssid = splitLine[0].trim();
 			String building = splitLine[1].trim();
-			int floor = Integer.parseInt(splitLine[2].trim());
+			int floor = 0;
+			try {
+				floor = Integer.parseInt(splitLine[2].trim());
+			} catch (NumberFormatException e) {
+				continue;
+			}
 			double lat = Double.parseDouble(splitLine[3].trim());
 			double lon = Double.parseDouble(splitLine[4].trim());
 			int latE6 = (int) (lat * 1e6);
