@@ -77,9 +77,9 @@ public class FloorMapView extends RelativeLayout {
 	@Override
 	public void onWindowFocusChanged(boolean hasWindowFocus){
 		if(hasWindowFocus){
-			resumeUpdate();
+			//resumeUpdate();
 		}else{
-			pauseUpdate();
+			//pauseUpdate();
 		}
 	}
 	// Periodically check if scrolling has taken place, if so, update.
@@ -237,6 +237,7 @@ public class FloorMapView extends RelativeLayout {
 		}
 		seekBar.setMin(minFloor);
 		seekBar.setMax(maxFloor);
+		updateToFloor(floor);
 	}
 
 	public PtolemyMapView getMapView() {

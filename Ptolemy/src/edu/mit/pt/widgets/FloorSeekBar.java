@@ -33,8 +33,9 @@ public class FloorSeekBar extends View {
 
 	private int min;
 	private int max;
+	private int userSetFloor;
 	private int floor;
-	private int unsnappedY;
+	private int unsnappedY;	
 	private TextPaint mTxt;
 	private TextPaint selTxt;
 	private float textHeight;
