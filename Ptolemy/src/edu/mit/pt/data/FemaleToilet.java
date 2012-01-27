@@ -14,6 +14,10 @@ public class FemaleToilet extends Place {
 
 	@Override
 	public String getName() {
+		return decorateName(name);
+	}
+	
+	static public String decorateName(String name) {
 		return "Women's Bathroom (" + name + ")";
 	}
 

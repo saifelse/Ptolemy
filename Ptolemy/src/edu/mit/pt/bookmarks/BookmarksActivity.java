@@ -29,6 +29,9 @@ import edu.mit.pt.Config;
 import edu.mit.pt.PrepopulateActivity;
 import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
+import edu.mit.pt.data.FemaleToilet;
+import edu.mit.pt.data.MaleToilet;
+import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.PtolemyMapActivity;
@@ -72,7 +75,7 @@ public class BookmarksActivity extends ListActivity {
 				startActivity(intent);
 			}
 		});
-		
+
 		ActionBar.setButtons(this, new View[] { addButton, syncButton });
 
 		ListView lv = getListView();
@@ -110,7 +113,10 @@ public class BookmarksActivity extends ListActivity {
 				+ BookmarksTable.COLUMN_TYPE + ", " + PlacesTable.COLUMN_NAME
 				+ ", " + PlacesTable.PLACES_TABLE_NAME + "."
 				+ PlacesTable.COLUMN_ID + " AS "
-				+ PlacesTable.PLACES_TABLE_NAME + BaseColumns._ID + " FROM "
+				+ PlacesTable.PLACES_TABLE_NAME + BaseColumns._ID + ", "
+				+ PlacesTable.PLACES_TABLE_NAME + "." + PlacesTable.COLUMN_TYPE
+				+ " AS " + PlacesTable.PLACES_TABLE_NAME
+				+ PlacesTable.COLUMN_TYPE + " FROM "
 				+ BookmarksTable.BOOKMARKS_TABLE_NAME + ", "
 				+ PlacesTable.PLACES_TABLE_NAME + " WHERE "
 				+ BookmarksTable.BOOKMARKS_TABLE_NAME + "."
@@ -158,7 +164,7 @@ public class BookmarksActivity extends ListActivity {
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -166,7 +172,8 @@ public class BookmarksActivity extends ListActivity {
 			if (resultCode != RESULT_OK) {
 				return;
 			}
-			long[] mitClassIds = data.getLongArrayExtra(PrepopulateActivity.CLASSES);
+			long[] mitClassIds = data
+					.getLongArrayExtra(PrepopulateActivity.CLASSES);
 			// TODO need to create bookmarks based on classes.
 		}
 	}
@@ -187,7 +194,27 @@ public class BookmarksActivity extends ListActivity {
 					.getColumnIndex(BookmarksTable.COLUMN_TYPE));
 			BookmarkType type = BookmarkType.valueOf(typeName);
 			((TextView) view.findViewById(R.id.name)).setText(bookmarkName);
+
+			String placeTypeName = cursor.getString(cursor
+					.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
+							+ PlacesTable.COLUMN_TYPE));
+			PlaceType placeType = PlaceType.valueOf(placeTypeName);
+			switch (placeType) {
+			case MTOILET:
+				locationName = MaleToilet.decorateName(locationName);
+				break;
+			case FTOILET:
+				locationName = FemaleToilet.decorateName(locationName);
+				break;
+			case ATHENA:
+				break;
+			case CLASSROOM:
+				break;
+			case FOUNTAIN:
+				break;
+			}
 			((TextView) view.findViewById(R.id.location)).setText(locationName);
+
 			switch (type) {
 			case LECTURE:
 				((VerticalTextView) view.findViewById(R.id.label)).setText(type
@@ -207,6 +234,7 @@ public class BookmarksActivity extends ListActivity {
 				break;
 			case OTHER:
 				break;
+
 			}
 		}
 	}

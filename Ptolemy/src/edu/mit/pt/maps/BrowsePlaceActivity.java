@@ -8,14 +8,12 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
-import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;
@@ -69,13 +67,6 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 					}
 				});
 
-		floorMapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
-
-			public void onTap(Place p) {
-				setPlace(p);
-			}
-		});
-
 		Object prevObject = getIntent().getParcelableExtra(
 				AddBookmarkActivity.PLACE);
 
@@ -94,7 +85,6 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 		CharSequence newText = null;
 		Drawable newDrawable = null;
 		if (p == null) {
-			Log.v(Config.TAG, "RESTORING!");
 			if (restoreText != null) newText = restoreText;
 			if (restoreDrawable != null) newDrawable = restoreDrawable;
 		} else {
@@ -122,13 +112,9 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	@Override
 	void showClassroom(final Place p) {
-		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
-		Resources res = getResources();
-		places.add(new PlacesOverlayItem(p, p.getName(), p.getName(), p
-				.getMarker(res, false), p.getMarker(res, true)));
 		mapView.getController().animateTo(p.getPoint());
 		floorMapView.setFloor(p.getFloor());
-		floorMapView.getPlacesOverlay().setExtras(places);
+		floorMapView.getPlacesOverlay().setFocusedTitle(p.getName());
 		setPlace(p);
 	}
 
