@@ -2,28 +2,20 @@ package edu.mit.pt.maps;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-
-import edu.mit.pt.Config;
-import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private List<PlacesOverlayItem> overlayItems = Collections
 			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
-	private Map<String, PlacesOverlayItem> reverseMap = new HashMap<String, PlacesOverlayItem>();
-	
 	private String focusedTitle;
 
 	public PlacesItemizedOverlay(Drawable defaultMarker) {
@@ -35,8 +27,6 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public void addOverlayItem(PlacesOverlayItem overlayItem) {
 		overlayItems.add(overlayItem);
-		Log.v(Config.TAG, "ADDING ITEM: " + overlayItem.getPlace().getName());
-		reverseMap.put(overlayItem.getPlace().getName(), overlayItem);
 		update();
 	}
 
@@ -48,16 +38,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private PlacesOverlayItem getOverlayItem(int i) {
 		return overlayItems.get(i);
 	}
-
-	public PlacesOverlayItem findOverlayItem(Place p) {
-		Log.v(Config.TAG, "FINDING ITEM: " + reverseMap.toString());
-		if (reverseMap.containsKey(p.getName())) {
-			Log.v(Config.TAG, "FOUND IT.");
-			return reverseMap.get(p.getName());
-		}
-		return null;
-	}
-
+	
 	/**
 	 * Call this method after any changes are made, to avoid bug:
 	 * http://groups.google
@@ -89,7 +70,6 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public void clear() {
 		overlayItems.clear();
-		reverseMap.clear();
 		update();
 	}
 

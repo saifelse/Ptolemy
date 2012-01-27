@@ -103,7 +103,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
-						//((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
+						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
 						setPlace(pItem.getPlace());
 					}
 				});

@@ -1,5 +1,7 @@
 package edu.mit.pt.maps;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,7 +46,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		floorMapView = (FloorMapView) findViewById(R.id.floormapview);
 		mapView = (PtolemyMapView) floorMapView.getMapView();
 		configureFloorMapView(floorMapView);
-		
+
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
 		// Set up meOverlay:
@@ -95,6 +97,21 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
+
+		Intent intent = getIntent();
+		Log.v(Config.TAG, "INTENT: " + intent.getAction());
+		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			List<String> segments = intent.getData().getPathSegments();
+			if (segments.size() == 1) {
+				String room = segments.get(0);
+				Place place = Place.getClassroom(this, room);
+				if (place != null) {
+					showClassroom(place);
+					return;
+				}
+			}
+		}
+		mapView.getController().setCenter(Config.DEFAULT_POINT);
 
 	}
 

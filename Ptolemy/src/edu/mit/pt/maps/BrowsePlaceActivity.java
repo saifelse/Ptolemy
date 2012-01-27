@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;

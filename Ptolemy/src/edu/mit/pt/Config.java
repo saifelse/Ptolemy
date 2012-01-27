@@ -14,6 +14,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.maps.GeoPoint;
+
 import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.classes.MITClassTable;
@@ -32,6 +35,8 @@ public class Config {
 	static public final String FIRST_RUN = "firstRun";
 	static public final String TERM = "term";
 	static public final String DEFAULT_TERM = "fa11";
+	static public final GeoPoint DEFAULT_POINT = new GeoPoint(42361283,
+			-71092025);
 
 	/**
 	 * Converts from DP to pixels.
@@ -103,7 +108,7 @@ public class Config {
 			}
 
 			publishProgress(new ProgressUpdate("Constructing rooms...", 10));
-			
+
 			boolean success = true;
 
 			try {
@@ -188,7 +193,7 @@ public class Config {
 		}
 
 		protected void onPostExecute(Boolean result) {
-			
+
 			if (!result) {
 				return;
 			}
