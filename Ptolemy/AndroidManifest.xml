@@ -27,8 +27,6 @@
         android:theme="@android:style/Theme.Light.NoTitleBar" >
         <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name=".widgets.SeekBarTestActivity" >
-        </activity>
         <activity
             android:name=".PtolemyActivity"
             android:label="@string/app_name" >
@@ -37,7 +35,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
->
         </activity>
         <activity android:name=".bookmarks.BookmarksActivity" >
         </activity>
@@ -64,8 +61,6 @@
         <activity android:name=".PrepopulateActivity" >
         </activity>
         <activity android:name=".bookmarks.AddBookmarkActivity" >
-        </activity>
-        <activity android:name=".location.WifiDisplayActivity" >
         </activity>
 
         <provider

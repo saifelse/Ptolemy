@@ -5,7 +5,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.wifi.WifiManager.WifiLock;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
@@ -37,11 +42,10 @@ public class LocationSetter {
 	private static Sensor magneticFieldSensor;
 	
 	// Location
-	private final static int MAX_XPS_DELAY = 10;
-	private static XPS xps;
-	private static WPSAuthentication auth;
 	private static Handler updateLocationHandler;
 	private static boolean isStopped;
+	
+	private static LocationManager locationManager;
 	
 	public static double getLatitude(){
 		return latitude;
@@ -62,6 +66,33 @@ public class LocationSetter {
 		updateLocationHandler = new Handler();
 		initLocation(context, username, realm);
 		initBearing(context);
+		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		String locationProvider = LocationManager.GPS_PROVIDER;
+		LocationListener locationListener = new LocationListener() {
+
+			public void onLocationChanged(Location location) {
+				System.out.println(location.toString());
+				
+			}
+
+			public void onProviderDisabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+		locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
 	}
 	public static void pause(){
 		//pauseLocation();
@@ -73,73 +104,19 @@ public class LocationSetter {
 	}
 	public static void stop(){
 		pause();
-		xps.abort();
 	}
 
 	private static void initLocation(Context context, String username,
 			String realm) {
 		
 		isStopped = true;
-		// Authenticate
-		auth = new WPSAuthentication(username, realm);
-		xps = new XPS(context);
-		xps.registerUser(auth, null, new RegistrationCallback() {
-			public void done() {
-				Log.v(Config.TAG + "_xps", "Done with registration.");
-			}
-
-			public WPSContinuation handleError(WPSReturnCode error) {
-				// Retry if auth failure
-				Log.v(Config.TAG + "_xps", "Auth fail, trying again.");
-				return isStopped ? WPSContinuation.WPS_STOP
-						: WPSContinuation.WPS_CONTINUE;
-			}
-
-			public void handleSuccess() {
-				Log.v(Config.TAG + "_xps", "Auth success.");
-			}
-		});
 	}
 	
 	private static void pauseLocation() {
 		isStopped = true;
 	}
 	private static void resumeLocation() {
-		Log.v(Config.TAG+"_xps","Resuming location...");
-		//if(!isStopped) return;
-		//isStopped = false;
-		Log.v(Config.TAG+"_xps","Registering callback");
-		xps.getXPSLocation(auth, MAX_XPS_DELAY, XPS.EXACT_ACCURACY,
-				new WPSPeriodicLocationCallback() {
-					public void done() {
-						Log.v(Config.TAG + "_xps", "Done with location?");
-					}
-
-					public WPSContinuation handleError(WPSReturnCode error) {
-						Log.v(Config.TAG + "_xps",
-								"Location error... trying again.");
-						
-						return WPSContinuation.WPS_CONTINUE;
-						//return isStopped ? WPSContinuation.WPS_STOP
-						//		: WPSContinuation.WPS_CONTINUE;
-					}
-
-					public WPSContinuation handleWPSPeriodicLocation(
-							final WPSLocation loc) {
-						//Log.v(Config.TAG + "_xps", loc.getLatitude()+", "+loc.getLongitude());
-						handleLocation(loc.getLatitude(),
-								loc.getLongitude(), loc.getAltitude());
-						/*
-						updateLocationHandler.post(new Runnable() {
-							public void run() {
-								handleLocation(loc.getLatitude(),
-										loc.getLongitude(), loc.getAltitude());
-							}
-						});*/
-						return WPSContinuation.WPS_CONTINUE;
-					}
-
-				});
+	
 	}
 	
 	private static void initBearing(Context context){

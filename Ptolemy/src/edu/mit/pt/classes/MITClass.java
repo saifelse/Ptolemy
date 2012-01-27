@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +25,23 @@ import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 
 public class MITClass {
+
+	String name;
+	Place place;
+
+	public MITClass(String name, Place place) {
+		this.name = name;
+		this.place = place;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Place getPlace() {
+		return place;
+	}
+
 	private static void addClass(String id, String term, String name,
 			String room, String resolve, SQLiteDatabase db) {
 		ContentValues cv = new ContentValues();
@@ -102,4 +121,31 @@ public class MITClass {
 		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
 	}
 
+	public static List<MITClass> getClasses(Context context, long[] ids) {
+		List<MITClass> classes = new ArrayList<MITClass>();
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		for (long id : ids) {
+			Cursor cursor = db.query(MITClassTable.CLASSES_TABLE_NAME,
+					new String[] { MITClassTable.COLUMN_MITID,
+							MITClassTable.COLUMN_ROOM },
+					MITClassTable.COLUMN_ID + "=?",
+					new String[] { Long.toString(id) }, null, null, null);
+			if (cursor.getCount() == 0) {
+				continue;
+			}
+			cursor.moveToFirst();
+			String name = cursor.getString(cursor
+					.getColumnIndex(MITClassTable.COLUMN_MITID));
+			String room = cursor.getString(cursor
+					.getColumnIndex(MITClassTable.COLUMN_ROOM));
+			Place place = Place.getClassroom(context, room);
+			if (place == null) {
+				continue;
+			}
+			MITClass c = new MITClass(name, place);
+			classes.add(c);
+		}
+		return classes;
+	}
 }

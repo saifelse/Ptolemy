@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -34,8 +33,10 @@ public class AP {
 				null, null);
 
 		Log.v(Config.TAG, cursor.getCount() + " ssids found");
-		if (cursor.getCount() == 0)
+		if (cursor.getCount() == 0) {
+			System.out.println("Could not find " + bssid);
 			return null;
+		}
 		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
 		int lonIndex = cursor.getColumnIndex(APTable.COLUMN_LON);
 		cursor.moveToFirst();
@@ -62,7 +63,12 @@ public class AP {
 				continue;
 			String bssid = splitLine[0].trim();
 			String building = splitLine[1].trim();
-			int floor = Integer.parseInt(splitLine[2].trim());
+			int floor = 0;
+			try {
+				floor = Integer.parseInt(splitLine[2].trim());
+			} catch (NumberFormatException e) {
+				continue;
+			}
 			double lat = Double.parseDouble(splitLine[3].trim());
 			double lon = Double.parseDouble(splitLine[4].trim());
 			int latE6 = (int) (lat * 1e6);

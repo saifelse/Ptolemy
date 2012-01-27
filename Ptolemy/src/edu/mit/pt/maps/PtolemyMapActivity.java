@@ -1,12 +1,7 @@
 package edu.mit.pt.maps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -48,15 +43,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		setContentView(R.layout.map_main);
 		floorMapView = (FloorMapView) findViewById(R.id.floormapview);
 		mapView = (PtolemyMapView) floorMapView.getMapView();
-	
-		mapView.getController().setCenter(new GeoPoint(42359101, -71090890));
+		configureFloorMapView(floorMapView);
 		
-		floorMapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
-			public void onTap(Place p) {
-				setPlace(p);
-			}
-		});
-
 		ActionBar.setTitle(this, ACTIVITY_TITLE);
 
 		// Set up meOverlay:
@@ -107,8 +95,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
-		
-		configureFloorMapView(floorMapView);
 
 	}
 
@@ -135,24 +121,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 	@Override
 	void showClassroom(final Place place) {
-		List<PlacesOverlayItem> places = new ArrayList<PlacesOverlayItem>();
-		Resources res = getResources();
-		places.add(new PlacesOverlayItem(place, place.getName(), place
-				.getName(), place.getMarker(res, false), place.getMarker(res,
-				true)));
 		// FIXME: _All_ animations need to call updateMinMax after finishing
 		// animation.
 		mapView.getController().animateTo(place.getPoint());
 		floorMapView.updateMinMax();
 		floorMapView.setFloor(place.getFloor());
-		floorMapView.getPlacesOverlay().setExtras(places);
+		floorMapView.getPlacesOverlay().setFocusedTitle(place.getName());
 		setPlace(place);
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {       
-	    super.onConfigurationChanged(newConfig);
-
 	}
 
 	@Override
