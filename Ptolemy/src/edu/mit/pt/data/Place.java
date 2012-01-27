@@ -99,7 +99,7 @@ abstract public class Place implements Parcelable {
 		switch (type) {
 		case CLASSROOM:
 			return new Classroom(id, name, latE6, lonE6, floor);
-		case CLUSTER:
+		case ATHENA:
 			return new Athena(id, name, latE6, lonE6, floor);
 		case FOUNTAIN:
 			return new Fountain(id, name, latE6, lonE6, floor);
@@ -163,7 +163,7 @@ abstract public class Place implements Parcelable {
 		switch (type) {
 		case CLASSROOM:
 			return new Classroom(id, name, latE6, lonE6, floor);
-		case CLUSTER:
+		case ATHENA:
 			return new Athena(id, name, latE6, lonE6, floor);
 		case FOUNTAIN:
 			return new Fountain(id, name, latE6, lonE6, floor);
@@ -207,7 +207,7 @@ abstract public class Place implements Parcelable {
 			case FOUNTAIN:
 				p = new Fountain(id, name, latE6, lonE6, floor);
 				break;
-			case CLUSTER:
+			case ATHENA:
 				p = new Athena(id, name, latE6, lonE6, floor);
 				break;
 			default:
@@ -251,7 +251,7 @@ abstract public class Place implements Parcelable {
 			case FOUNTAIN:
 				p = new Fountain(id, name, latE6, lonE6, floor);
 				break;
-			case CLUSTER:
+			case ATHENA:
 				p = new Athena(id, name, latE6, lonE6, floor);
 				break;
 			case CLASSROOM:
@@ -306,7 +306,7 @@ abstract public class Place implements Parcelable {
 			case FOUNTAIN:
 				p = new Fountain(id, name, latE6, lonE6, floor);
 				break;
-			case CLUSTER:
+			case ATHENA:
 				p = new Athena(id, name, latE6, lonE6, floor);
 				break;
 			case CLASSROOM:
@@ -359,7 +359,7 @@ abstract public class Place implements Parcelable {
 				return new MaleToilet(in);
 			case FTOILET:
 				return new FemaleToilet(in);
-			case CLUSTER:
+			case ATHENA:
 				return new Athena(in);
 			case FOUNTAIN:
 				return new Fountain(in);

@@ -58,7 +58,9 @@ def resolveConflicts(classes):
             rooms.add(classes[i]['room'])
     if len(resolution) == 1:
         del resolution[0]['resolve']
-    print "Resolve:",resolution
+    else:
+        pass
+        #print "Resolve:",resolution
     return resolution
 
 def formatClass(x):
@@ -69,7 +71,7 @@ def validPlace(place):
     return place in keepRooms or re.match("[\w]+-[\w]+",place)
 
 def JSONToFile(data):
-    f = open("classes.json","w")
+    f = open("../Ptolemy/res/raw/classes.json","w")
     json.dump(data, f)
     f.close()
 

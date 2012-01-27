@@ -22,6 +22,7 @@ import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 
+// TODO: Fix updateMinMax behaviour.
 public class FloorMapView extends RelativeLayout {
 	public final static int MAP_VIEW_ID = 0;
 	public final static int SEEK_BAR_ID = 1;
@@ -127,18 +128,16 @@ public class FloorMapView extends RelativeLayout {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		return placeManager.getPlaces(topLeft.getLatitudeE6(),
-				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
-				mapView.getLongitudeSpan(), this.floor);
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		return placeManager.getPlaces(topLeft, bottomRight, this.floor);
 	}
 
 	private List<Place> getPlaces() {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		return placeManager.getPlaces(topLeft.getLatitudeE6(),
-				topLeft.getLongitudeE6(), mapView.getLatitudeSpan(),
-				mapView.getLongitudeSpan());
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		return placeManager.getPlaces(topLeft, bottomRight);
 	}
 
 	@Override
@@ -146,7 +145,6 @@ public class FloorMapView extends RelativeLayout {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
-			Log.v(Config.TAG, "Zoom: " + mapView.getZoomLevel());
 			if (mapView.getZoomLevel() < 20)
 				seekBar.setVisibility(INVISIBLE);
 			else

@@ -118,8 +118,10 @@ public class Config {
 				// TODO: remove debug code.
 				Place.addPlace(activity, "male", 42359101, -71090869, 2,
 						PlaceType.MTOILET);
-				Place.addPlace(activity, "female", 42359110, -71090890, 2,
+				Place.addPlace(activity, "female", 42359110, -71090900, 2,
 						PlaceType.FTOILET);
+				Place.addPlace(activity, "athena", 42359110, -71091000, 2,
+						PlaceType.ATHENA);
 
 				String rawTerm = MITClass.loadClasses(activity, db);
 				String term = standardizeTerm(rawTerm);

@@ -27,7 +27,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final String ACTIVITY_TITLE = "Ptolemy";
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
-	private Place focusedPlace;
 
 	@Override
 	public void onPause() {
@@ -104,12 +103,19 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
+		
+		configureFloorMapView(floorMapView);
 
 	}
 
-	private void setPlace(Place place) {
+	@Override
+	protected void setPlace(Place place) {
 		focusedPlace = place;
 		View metaView = findViewById(R.id.meta_view);
+		if (place == null) {
+			metaView.setVisibility(View.GONE);
+			return;
+		}
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
 				.getName());
 		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
