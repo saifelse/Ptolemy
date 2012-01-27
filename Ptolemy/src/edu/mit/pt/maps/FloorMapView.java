@@ -77,6 +77,7 @@ public class FloorMapView extends RelativeLayout {
 	@Override
 	public void onWindowFocusChanged(boolean hasWindowFocus){
 		if(hasWindowFocus){
+			updateMinMax();
 			//resumeUpdate();
 		}else{
 			//pauseUpdate();
