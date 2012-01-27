@@ -80,7 +80,7 @@ public class FloorSeekBar extends View {
 		mTxt = new TextPaint();
 		mTxt.setAntiAlias(true);
 		mTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
-		mTxt.setColor(0xFFFF0000);
+		mTxt.setColor(0xFF666666);
 		
 		selTxt = new TextPaint();
 		selTxt.setAntiAlias(true);
