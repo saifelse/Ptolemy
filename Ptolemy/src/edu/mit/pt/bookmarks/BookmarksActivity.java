@@ -29,6 +29,7 @@ import edu.mit.pt.Config;
 import edu.mit.pt.PrepopulateActivity;
 import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
+import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.FemaleToilet;
 import edu.mit.pt.data.MaleToilet;
 import edu.mit.pt.data.PlaceType;
@@ -174,7 +175,9 @@ public class BookmarksActivity extends ListActivity {
 			}
 			long[] mitClassIds = data
 					.getLongArrayExtra(PrepopulateActivity.CLASSES);
-			// TODO need to create bookmarks based on classes.
+			for (MITClass c : MITClass.getClasses(this, mitClassIds)) {
+				Bookmark.addBookmark(this, c.getName(), c.getPlace(), BookmarkType.LECTURE);
+			}
 		}
 	}
 
