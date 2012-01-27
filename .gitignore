@@ -1,3 +1,4 @@
 /Ptolemy/bin
 /Ptolemy/gen
 .DS_Store
+/Ptolemy/hs_err_*

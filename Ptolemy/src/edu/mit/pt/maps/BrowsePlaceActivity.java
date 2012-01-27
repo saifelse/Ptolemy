@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;
@@ -21,6 +22,7 @@ import edu.mit.pt.data.Place;
 public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	private final String ACTIVITY_TITLE = "Pick a location";
+	
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	
@@ -112,10 +114,14 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
 	@Override
 	void showClassroom(final Place p) {
+		floorMapView.showPlace(p);
+		setPlace(p);
+		/*
 		mapView.getController().animateTo(p.getPoint());
 		floorMapView.setFloor(p.getFloor());
 		floorMapView.getPlacesOverlay().setFocusedTitle(p.getName());
 		setPlace(p);
+		*/
 	}
 
 }

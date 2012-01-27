@@ -2,10 +2,13 @@ package edu.mit.pt.maps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -38,6 +41,12 @@ public class FloorMapView extends RelativeLayout {
 	private PlaceManager placeManager;
 	private PlacesItemizedOverlay placesOverlay;
 
+	// Timer code
+	protected Handler updateHandler;
+	private Timer timer;
+	private TimerTask updateTask;
+	
+	
 	public FloorMapView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		this.context = context;
@@ -53,7 +62,47 @@ public class FloorMapView extends RelativeLayout {
 		seekBar = new FloorSeekBar(context, attrs);
 		setup();
 	}
-
+	
+	public void resumeUpdate(){
+		Log.v(Config.TAG+"_f", "Resuming update!");
+		updateTask.cancel();
+		updateTask = new CheckUpdateTask();
+		timer.scheduleAtFixedRate(updateTask, 1000, 1000);
+	}
+	public void pauseUpdate(){
+		Log.v(Config.TAG+"_f", "Cancelled update!");
+		updateTask.cancel();
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasWindowFocus){
+		if(hasWindowFocus){
+			//resumeUpdate();
+		}else{
+			//pauseUpdate();
+		}
+	}
+	// Periodically check if scrolling has taken place, if so, update.
+	public class CheckUpdateTask extends TimerTask {
+		private GeoPoint p;
+		@Override
+		public void run() {
+			Log.v(Config.TAG+"_f", "We moved?");
+			updateHandler.post(new Runnable(){
+				@Override
+				public void run() {
+					Log.v(Config.TAG+"_f", "Idk... let's check");
+					if(p!=null && p.equals(mapView.getProjection().fromPixels(0, 0))){
+						return;
+					}
+					Log.v(Config.TAG+"_f", "We moved!");
+					p = mapView.getProjection().fromPixels(0, 0);
+					updateMinMax();
+				}
+			});
+		}
+		
+	}
 	public void setup() {
 		// Define layout
 		mapView.setId(FloorMapView.MAP_VIEW_ID);
@@ -87,9 +136,19 @@ public class FloorMapView extends RelativeLayout {
 		// places = Place.getPlaces(context);
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
 
+		Log.v(Config.TAG+"_f","FIRST TIME?");
+		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		Log.v(Config.TAG, topLeft+" : "+bottomRight);
 		updateMinMax();
-		// setFloor(0);
-
+		
+		// Set update.
+		Log.v(Config.TAG+"_f", "Let's make a new Timer!");
+		updateHandler = new Handler();
+		timer = new Timer();
+		updateTask = new CheckUpdateTask();
+		
+		//resumeUpdate();
 	}
 
 	private void updateToFloor(int floor) {
@@ -115,6 +174,7 @@ public class FloorMapView extends RelativeLayout {
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
 		overlays.add(placesOverlay);
+		
 		mapView.invalidate();
 	}
 
@@ -123,7 +183,17 @@ public class FloorMapView extends RelativeLayout {
 		seekBar.setFloor(floor);
 		seekBar.snapY();
 	}
-
+	void showPlace(final Place place) {
+		mapView.getController().animateTo(place.getPoint(), new Runnable(){
+		@Override
+		public void run() {
+			Log.v(Config.TAG, "We updating after move!");
+			updateMinMax();
+			setFloor(place.getFloor());
+			getPlacesOverlay().setFocusedTitle(place.getName());
+		}
+		});
+	}
 	private List<Place> getVisiblePlaces() {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
@@ -159,13 +229,15 @@ public class FloorMapView extends RelativeLayout {
 	public void updateMinMax() {
 		int maxFloor = 0;
 		int minFloor = 0;
-
+		
+		Log.v(Config.TAG, "LatSpan: "+mapView.getLatitudeSpan()+", LonSpan: "+mapView.getLongitudeSpan());
 		for (Place p : getPlaces()) {
 			maxFloor = Math.max(maxFloor, p.getFloor());
 			minFloor = Math.min(minFloor, p.getFloor());
 		}
 		seekBar.setMin(minFloor);
 		seekBar.setMax(maxFloor);
+		updateToFloor(floor);
 	}
 
 	public PtolemyMapView getMapView() {

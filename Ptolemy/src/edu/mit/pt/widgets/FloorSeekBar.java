@@ -33,8 +33,9 @@ public class FloorSeekBar extends View {
 
 	private int min;
 	private int max;
+	private int userSetFloor;
 	private int floor;
-	private int unsnappedY;
+	private int unsnappedY;	
 	private TextPaint mTxt;
 	private TextPaint selTxt;
 	private float textHeight;
@@ -188,7 +189,7 @@ public class FloorSeekBar extends View {
 			break;
 		case MotionEvent.ACTION_MOVE:
 			setUnsnappedY((int) event.getY());
-			setFloor(getFloorFromY(unsnappedY));
+			setFloor(getFloorFromY(unsnappedY)); //user set
 			break;
 		}
 		return super.onTouchEvent(event);
@@ -239,7 +240,11 @@ public class FloorSeekBar extends View {
 
 	public void setMin(int min) {
 		this.min = min;
-		setFloor(floor); //refresh to within bounds
+		if(userSetFloor >= min){
+			setFloor(userSetFloor);
+		}else {
+			setFloor(floor, true); //refresh to within bounds
+		}
 		snapY();
 		invalidate();
 	}
@@ -250,7 +255,11 @@ public class FloorSeekBar extends View {
 
 	public void setMax(int max) {
 		this.max = max;
-		setFloor(floor); //refresh to within bounds
+		if(userSetFloor <= max){
+			setFloor(userSetFloor);
+		}else{
+			setFloor(floor, true); //refresh to within bounds
+		}
 		snapY();
 		invalidate();
 	}
@@ -259,14 +268,19 @@ public class FloorSeekBar extends View {
 		return floor;
 	}
 
-	public void setFloor(int floor) {
-		
+	public void setFloor(int floor, boolean forced){
+		if(!forced){
+			userSetFloor = floor;
+		}
 		int oldFloor = this.floor;
 		this.floor = Math.max(min, Math.min(max, floor));
 		if(oldFloor != this.floor){
 			fireFloorListeners();
 		}
 		invalidate();
+	}
+	public void setFloor(int floor) {
+		setFloor(floor, false);
 	}
 	
 	public void snapY(){

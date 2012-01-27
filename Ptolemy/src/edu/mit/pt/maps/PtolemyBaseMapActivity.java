@@ -99,10 +99,11 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							OverlayItem newFocus) {
 						if (newFocus == null) {
 							setPlace(null);
+							((PlacesItemizedOverlay) overlay).setFocusedTitle(null);
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
-						//((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
+						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
 						setPlace(pItem.getPlace());
 					}
 				});
