@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +48,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		setContentView(R.layout.map_main);
 		floorMapView = (FloorMapView) findViewById(R.id.floormapview);
 		mapView = (PtolemyMapView) floorMapView.getMapView();
+	
+		mapView.getController().setCenter(new GeoPoint(42359101, -71090890));
+		
 		floorMapView.getPlacesOverlay().setOnTapListener(new OnTapListener() {
 			public void onTap(Place p) {
 				setPlace(p);
@@ -143,6 +147,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		floorMapView.setFloor(place.getFloor());
 		floorMapView.getPlacesOverlay().setExtras(places);
 		setPlace(place);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {       
+	    super.onConfigurationChanged(newConfig);
+
 	}
 
 	@Override

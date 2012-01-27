@@ -17,10 +17,7 @@
         android:layout_height="match_parent"
         android:apiKey="@string/map_key"
         android:layout_above="@+id/backToAddTitle"
-        android:clickable="true"
-        pt:floor="4"
-        pt:maxFloor="10"
-        pt:minFloor="3" />
+        android:clickable="true" />
     
     <Button android:id="@+id/backToAddTitle"
         style="@style/BlueButton"
