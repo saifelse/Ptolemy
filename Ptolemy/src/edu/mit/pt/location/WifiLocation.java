@@ -154,11 +154,11 @@ public class WifiLocation {
 		
 		ScanResult closestAP1 = null;
 		String bssid1 = null;
-		GeoPoint closestAP1Location = null;
+		APGeoPoint closestAP1Location = null;
 		int j = 0;
 		for (; j < results.size(); j++) {
 			String bssid = maskBSSID(results.get(j).BSSID);
-			GeoPoint location = AP.getAPLocation(bssid, db);
+			APGeoPoint location = AP.getAPLocation(bssid, db);
 			if (location != null) { //found good ap
 				closestAP1 = results.get(j);
 				closestAP1Location = location;
@@ -171,12 +171,16 @@ public class WifiLocation {
 		if (closestAP1 == null)
 			return null;
 		
+		int floor = closestAP1Location.getFloor();
+		
+		System.out.println("CURRENT FLOOR: " + floor);
+		
 		ScanResult closestAP2 = null;
 		String bssid2 = null;
-		GeoPoint closestAP2Location = null;
+		APGeoPoint closestAP2Location = null;
 		for (; j < results.size(); j++) {
 			String bssid = maskBSSID(results.get(j).BSSID);
-			GeoPoint location = AP.getAPLocation(bssid, db);
+			APGeoPoint location = AP.getAPLocation(bssid, db);
 			if (!bssid.equals(bssid1) && location != null) {
 				closestAP2 = results.get(j);
 				closestAP2Location = location;
@@ -188,10 +192,10 @@ public class WifiLocation {
 		
 		ScanResult closestAP3 = null;
 		String bssid3 = null;
-		GeoPoint closestAP3Location = null;
+		APGeoPoint closestAP3Location = null;
 		for (; j < results.size(); j++) {
 			String bssid = maskBSSID(results.get(j).BSSID);
-			GeoPoint location = AP.getAPLocation(bssid, db);
+			APGeoPoint location = AP.getAPLocation(bssid, db);
 			if (!bssid.equals(bssid1) && !bssid.equals(bssid2) && location != null) {
 				closestAP3 = results.get(j);
 				closestAP3Location = location;
