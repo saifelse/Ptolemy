@@ -128,6 +128,11 @@ public class WifiLocation {
 		return new GeoPoint((int)guessLat, (int)guessLon);
 	}
 
+	private String maskBSSID(String bssid) {
+		return bssid.substring(0,
+				bssid.length() - 1) + '0';
+	}
+	
 	@SuppressWarnings("unchecked")
 	public GeoPoint getLocation() {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
@@ -142,32 +147,50 @@ public class WifiLocation {
 			}
 
 		});
-		if (results.size() < 1)
+		if (results.size() < 1) //no aps found
 			return null;
-		ScanResult closestAP1 = results.get(0);
-		String bssid1 = closestAP1.BSSID.substring(0,
-				closestAP1.BSSID.length() - 1) + '0';
-		int j = 1;
-		String bssid2 = null;
-		ScanResult closestAP2 = null;
-		for (j = 1; j < results.size(); j++) {
-			String bssid = results.get(j).BSSID;
-			String bssidtmp = bssid.substring(0, bssid.length() - 1) + '0';
-			if (!bssidtmp.equals(bssid1)) {
-				bssid2 = bssidtmp;
-				closestAP2 = results.get(j);
+		
+		ScanResult closestAP1 = null;
+		String bssid1 = null;
+		GeoPoint closestAP1Location = null;
+		int j = 0;
+		for (; j < results.size(); j++) {
+			String bssid = maskBSSID(results.get(j).BSSID);
+			GeoPoint location = AP.getAPLocation(bssid, db);
+			if (location != null) { //found good ap
+				closestAP1 = results.get(j);
+				closestAP1Location = location;
+				bssid1 = bssid;
 				j++;
 				break;
 			}
 		}
-		String bssid3 = null;
-		ScanResult closestAP3 = null;
+		
+		ScanResult closestAP2 = null;
+		String bssid2 = null;
+		GeoPoint closestAP2Location = null;
 		for (; j < results.size(); j++) {
-			String bssid = results.get(j).BSSID;
-			String bssidtmp = bssid.substring(0, bssid.length() - 1) + '0';
-			if (!bssidtmp.equals(bssid1) && !bssidtmp.equals(bssid2)) {
-				bssid3 = bssidtmp;
+			String bssid = maskBSSID(results.get(j).BSSID);
+			GeoPoint location = AP.getAPLocation(bssid, db);
+			if (!bssid.equals(bssid1)) {
+				closestAP2 = results.get(j);
+				closestAP2Location = location;
+				bssid2 = bssid;
+				j++;
+				break;
+			}
+		}
+		
+		ScanResult closestAP3 = null;
+		String bssid3 = null;
+		GeoPoint closestAP3Location = null;
+		for (; j < results.size(); j++) {
+			String bssid = maskBSSID(results.get(j).BSSID);
+			GeoPoint location = AP.getAPLocation(bssid, db);
+			if (!bssid.equals(bssid1) && !bssid.equals(bssid2)) {
 				closestAP3 = results.get(j);
+				closestAP3Location = location;
+				bssid3 = bssid;
 				j++;
 				break;
 			}
@@ -180,54 +203,20 @@ public class WifiLocation {
 //		
 //		return trilaterateGeoPoints(W20d100, -60, W20d101, -50, W20d102, -50);
 		
-		if (bssid2 == null) { // only 1 AP found
-			return AP.getAPLocation(bssid1, db);
-		} else if (bssid3 == null) { // 2 APs found
+		if (closestAP2 == null) { // only 1 AP found
+			return closestAP1Location;
+		} else if (closestAP3 == null) { // 2 APs found
 			// 2 results found
-			GeoPoint location1 = AP.getAPLocation(bssid1, db);
-			GeoPoint location2 = AP.getAPLocation(bssid2, db);
-			//error handling for missing APs
-			if (location1 == null && location2 == null) {
-				return null;
-			} else if (location1 == null)
-				return location2;
-			else if (location2 == null)
-				return location1;
-			// return midGeoPoint(location1, location2);
-			return weightedMidGeoPoint(location1, closestAP1.level, location2,
+			return weightedMidGeoPoint(closestAP1Location, closestAP1.level, closestAP2Location,
 					closestAP2.level);
 		} else {
 			// at least 3 APs found
 			assert (bssid1 != null) : "BSSID 1 is null";
 			assert (bssid2 != null) : "BSSID 2 is null";
 			assert (bssid3 != null) : "BSSID 3 is null";
-			GeoPoint location1 = AP.getAPLocation(bssid1, db);
-			GeoPoint location2 = AP.getAPLocation(bssid2, db);
-			GeoPoint location3 = AP.getAPLocation(bssid3, db);
-			//missing AP info handling
-			if (location1 == null || location2 == null || location3 == null) {
-				GeoPoint location = location3;
-				if (location2 != null)
-					location = location2;
-				if (location1 != null)
-					location = location3;
-				return location;
-			}
-			return trilaterateGeoPoints(location1, closestAP1.level, location2,
-					closestAP2.level, location3, closestAP3.level);
+			return trilaterateGeoPoints(closestAP1Location, closestAP1.level, closestAP2Location,
+					closestAP2.level, closestAP3Location, closestAP3.level);
 		}
-		
-		
-		// for (ScanResult r: results) {
-		// //System.out.println(r.BSSID);
-		// //System.out.println(r.level);
-		// System.out.println(r.BSSID.substring(0, r.BSSID.length() - 1));
-		// String bssid0 = r.BSSID.substring(0, r.BSSID.length() - 1) + '0';
-		// System.out.println(bssid0);
-		// String location = AP.getAPLocation(bssid0, db);
-		// output = output + location + "\n";
-		// }
-		// db.close();
 
 	}
 
