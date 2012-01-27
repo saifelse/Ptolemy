@@ -183,7 +183,17 @@ public class FloorMapView extends RelativeLayout {
 		seekBar.setFloor(floor);
 		seekBar.snapY();
 	}
-
+	void showPlace(final Place place) {
+		mapView.getController().animateTo(place.getPoint(), new Runnable(){
+		@Override
+		public void run() {
+			Log.v(Config.TAG, "We updating after move!");
+			updateMinMax();
+			setFloor(place.getFloor());
+			getPlacesOverlay().setFocusedTitle(place.getName());
+		}
+		});
+	}
 	private List<Place> getVisiblePlaces() {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
