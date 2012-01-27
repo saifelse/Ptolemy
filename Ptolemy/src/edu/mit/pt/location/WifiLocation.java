@@ -186,6 +186,13 @@ public class WifiLocation {
 			// 2 results found
 			GeoPoint location1 = AP.getAPLocation(bssid1, db);
 			GeoPoint location2 = AP.getAPLocation(bssid2, db);
+			//error handling for missing APs
+			if (location1 == null && location2 == null) {
+				return null;
+			} else if (location1 == null)
+				return location2;
+			else if (location2 == null)
+				return location1;
 			// return midGeoPoint(location1, location2);
 			return weightedMidGeoPoint(location1, closestAP1.level, location2,
 					closestAP2.level);
@@ -197,6 +204,15 @@ public class WifiLocation {
 			GeoPoint location1 = AP.getAPLocation(bssid1, db);
 			GeoPoint location2 = AP.getAPLocation(bssid2, db);
 			GeoPoint location3 = AP.getAPLocation(bssid3, db);
+			//missing AP info handling
+			if (location1 == null || location2 == null || location3 == null) {
+				GeoPoint location = location3;
+				if (location2 != null)
+					location = location2;
+				if (location1 != null)
+					location = location3;
+				return location;
+			}
 			return trilaterateGeoPoints(location1, closestAP1.level, location2,
 					closestAP2.level, location3, closestAP3.level);
 		}

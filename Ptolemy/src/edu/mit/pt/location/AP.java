@@ -33,8 +33,10 @@ public class AP {
 				null, null);
 
 		Log.v(Config.TAG, cursor.getCount() + " ssids found");
-		if (cursor.getCount() == 0)
+		if (cursor.getCount() == 0) {
+			System.out.println("Could not find " + bssid);
 			return null;
+		}
 		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
 		int lonIndex = cursor.getColumnIndex(APTable.COLUMN_LON);
 		cursor.moveToFirst();
