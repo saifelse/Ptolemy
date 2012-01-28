@@ -29,11 +29,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
-	private final int TUTORIAL_MAP_RESULT = 0;
-	private final int TUTORIAL_ITEM_RESULT = 1;
+	private final int TUTORIAL_INTRO_RESULT = 0;
+	private final int TUTORIAL_MAP_RESULT = 1;
+	private final int TUTORIAL_ITEM_RESULT = 2;
 	// MAKE SURE THIS ROOM EXISTS!
+	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "36-212";
-	
+
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	private XPSOverlay meOverlay;
@@ -117,7 +119,24 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 
 		if (!Config.isTourTaken(this)) {
-			startActivityForResult(new Intent(this, TourActivity.class), TUTORIAL_MAP_RESULT);
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					PtolemyMapActivity.this.runOnUiThread(new Runnable() {
+						public void run() {
+							startActivityForResult(
+									new Intent(PtolemyMapActivity.this,
+											TourActivity.class),
+											TUTORIAL_INTRO_RESULT);
+						}
+					});
+				}
+			}).start();
 		}
 
 	}
@@ -218,18 +237,42 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
+		case TUTORIAL_INTRO_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				startActivityForResult(new Intent(this, TourMapActivity.class),
+						TUTORIAL_MAP_RESULT);
+			}
+			break;
 		case TUTORIAL_MAP_RESULT:
 			switch (resultCode) {
 			case RESULT_OK:
-				startActivityForResult(new Intent(this, TourMapActivity.class), TUTORIAL_ITEM_RESULT);
+				floorMapView.setFloor(TUTORIAL_FLOOR);
+				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
+				findViewById(R.id.place_extra_button).setClickable(false);
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							Thread.sleep(1300);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						PtolemyMapActivity.this.runOnUiThread(new Runnable() {
+							public void run() {
+								startActivityForResult(new Intent(
+										PtolemyMapActivity.this,
+										TourItemActivity.class),
+										TUTORIAL_ITEM_RESULT);
+								findViewById(R.id.place_extra_button).setClickable(true);
+							}
+						});
+					}
+				}).start();
 			}
 			break;
 		case TUTORIAL_ITEM_RESULT:
-			switch (resultCode) {
-			case RESULT_OK:
-				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
-				startActivityForResult(new Intent(this, TourItemActivity.class), TUTORIAL_ITEM_RESULT);
-			}
+			
 			break;
 		}
 		Log.v(Config.TAG, "Received requestCode " + requestCode);

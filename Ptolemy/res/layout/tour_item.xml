@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:textColor="#FFFFFF"
         android:textSize="32dp"
-        android:text="Tap an item," />
+        android:text="Tap a marker" />
 
     <TextView
         android:id="@+id/item_text"
@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/item"
         android:lineSpacingExtra="2dp"
-        android:text="And the bar appears below with more details - "
+        android:text="And details appear below - from here you can directly add a bookmark with that place."
         android:textColor="#DDDDDD" />
 
     <Button

@@ -1,10 +1,11 @@
 package edu.mit.pt.tutorial;
 
-import edu.mit.pt.R;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import edu.mit.pt.R;
 
 public class TourItemActivity extends Activity {
 	
@@ -17,6 +18,11 @@ public class TourItemActivity extends Activity {
                 "coolvetica.ttf");
 		TextView tv = (TextView) findViewById(R.id.item);
         tv.setTypeface(tf);
+	}
+	
+	public void continueTour(View v) {
+		setResult(RESULT_OK);
+		finish();
 	}
 
 }

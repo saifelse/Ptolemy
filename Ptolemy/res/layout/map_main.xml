@@ -29,22 +29,23 @@
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:visibility="gone" >
-
+        
         <ImageButton
-            android:id="@+id/place_confirm_button"
+            android:id="@+id/place_extra_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
+            android:contentDescription="@string/add_bookmark"
             android:background="@drawable/navigate_bg"
-            android:contentDescription="@string/navigate"
-            android:src="@drawable/ic_menu_navigate" />
+            android:onClick="handleExtraButtonClick"
+            android:src="@drawable/ic_menu_bookmark_add" />
 
         <TextView
             android:id="@+id/place_confirm_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/place_confirm_button"
-            android:layout_toLeftOf="@+id/place_extra_button"
+            android:layout_toRightOf="@+id/place_extra_button"
+            android:layout_alignParentRight="true"
             android:background="@drawable/black_50"
             android:ellipsize="end"
             android:gravity="center_vertical"
@@ -54,16 +55,6 @@
             android:textSize="16dp"
             android:clickable="true"
             android:onClick="moveToFocusedPlace" />
-        
-        <ImageButton
-            android:id="@+id/place_extra_button"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:contentDescription="@string/add_bookmark"
-            android:background="@drawable/navigate_bg"
-            android:onClick="handleExtraButtonClick"
-            android:src="@drawable/ic_menu_bookmark_add" />
     </RelativeLayout>
 
 </RelativeLayout>
