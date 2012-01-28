@@ -53,10 +53,8 @@ public class PlacesOverlayItem extends OverlayItem {
 		// return this.markerSel;
 		// }
 		if (place.getFloor() == overlay.getFloor() - 1) {
-			Log.v(Config.TAG, "Floor below! "+place.getName());
 			return below;
 		} else if (place.getFloor() == overlay.getFloor() + 1) {
-			Log.v(Config.TAG, "Floor above! "+place.getName());
 			return above;
 		}
 		if (getTitle() != null && getTitle().equals(overlay.getFocusedTitle())) {

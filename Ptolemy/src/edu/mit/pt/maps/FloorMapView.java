@@ -21,6 +21,7 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.location.PlaceManager;
+import edu.mit.pt.location.PlaceManager.MinMax;
 import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
@@ -143,7 +144,6 @@ public class FloorMapView extends RelativeLayout {
 		updateMinMax();
 		
 		// Set update.
-		Log.v(Config.TAG+"_f", "Let's make a new Timer!");
 		updateHandler = new Handler();
 		timer = new Timer();
 		updateTask = new CheckUpdateTask();
@@ -172,7 +172,6 @@ public class FloorMapView extends RelativeLayout {
 		Log.v(Config.TAG, "Looking up visible places");
 		List<Place> places = getVisiblePlaces();
 		for (Place p : places) {
-			Log.v(Config.TAG, p.getName() + " " + p.getFloor());
 			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
 					p.getName(), p.getMarker(resources, false), p.getMarker(
 							resources, true), below, above, placesOverlay);
@@ -207,12 +206,12 @@ public class FloorMapView extends RelativeLayout {
 		return placeManager.getPlaces(topLeft, bottomRight, this.floor);
 	}
 
-	private List<Place> getPlaces() {
+	private MinMax getMinMax() {
 		if (mapView.getZoomLevel() < 20)
-			return new ArrayList<Place>();
+			return new MinMax(0,0);
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
-		return placeManager.getPlaces(topLeft, bottomRight);
+		return placeManager.getMinMax(topLeft, bottomRight);
 	}
 
 	@Override
@@ -232,16 +231,10 @@ public class FloorMapView extends RelativeLayout {
 	}
 
 	public void updateMinMax() {
-		int maxFloor = 0;
-		int minFloor = 0;
+		MinMax minMax = getMinMax();
 		
-		Log.v(Config.TAG, "LatSpan: "+mapView.getLatitudeSpan()+", LonSpan: "+mapView.getLongitudeSpan());
-		for (Place p : getPlaces()) {
-			maxFloor = Math.max(maxFloor, p.getFloor());
-			minFloor = Math.min(minFloor, p.getFloor());
-		}
-		seekBar.setMin(minFloor);
-		seekBar.setMax(maxFloor);
+		seekBar.setMin(minMax.min);
+		seekBar.setMax(minMax.max);
 		updateToFloor(floor);
 	}
 
