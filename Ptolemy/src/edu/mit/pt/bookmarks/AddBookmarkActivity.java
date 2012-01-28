@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +27,6 @@ import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.BrowsePlaceActivity;
 import edu.mit.pt.maps.PlacesItemizedOverlay;
 import edu.mit.pt.maps.PlacesOverlayItem;
-import edu.mit.pt.maps.PtolemyMapActivity;
 import edu.mit.pt.maps.PtolemyMapView;
 
 public class AddBookmarkActivity extends MapActivity {
@@ -83,11 +84,35 @@ public class AddBookmarkActivity extends MapActivity {
 		db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this)
 				.getReadableDatabase();
 		autoComplete.setup(db, this);
+		autoComplete.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				checkShouldEnableButton();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+			
+		});
 		
 		// Set up overlay
 		Drawable defaultMarker = getResources().getDrawable(
 				R.drawable.green_point);
 		showPlaceItemizedOverlay = new PlacesItemizedOverlay(defaultMarker);
+		
+		if (Config.shouldShowBookmarkHelp(this)) {
+			findViewById(R.id.bookmark_help).setVisibility(View.VISIBLE);
+			Config.setShouldShowBookmarkHelp(this, false);
+		}
+		
 		completeSetup();
 	}
 
@@ -195,6 +220,10 @@ public class AddBookmarkActivity extends MapActivity {
 			}
 			break;
 		}
+	}
+	
+	public void dismissHelp(View v) {
+		v.setVisibility(View.GONE);
 	}
 
 	@Override

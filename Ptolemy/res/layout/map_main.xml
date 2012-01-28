@@ -17,26 +17,39 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/nav"
         android:apiKey="@string/map_key"
-        android:clickable="true" />
-	<!-- 
+        android:clickable="true" >
+    </edu.mit.pt.maps.FloorMapView>
+
+    <ImageView
+        android:id="@+id/tutorial_add_bookmark_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/meta_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="3dp"
+        android:visibility="gone"
+        android:src="@drawable/tutorial_add_bookmark" />
+    <!--
 	    pt:floor="4"
         pt:maxFloor="10"
-        pt:minFloor="3" 
-	 -->
+        pt:minFloor="3" 
+    -->
+
     <RelativeLayout
         android:id="@+id/meta_view"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:visibility="gone" >
-        
+
         <ImageButton
             android:id="@+id/place_extra_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:contentDescription="@string/add_bookmark"
             android:background="@drawable/navigate_bg"
+            android:contentDescription="@string/add_bookmark"
             android:onClick="handleExtraButtonClick"
             android:src="@drawable/ic_menu_bookmark_add" />
 
@@ -44,17 +57,17 @@
             android:id="@+id/place_confirm_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/place_extra_button"
             android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/place_extra_button"
             android:background="@drawable/black_50"
+            android:clickable="true"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:onClick="moveToFocusedPlace"
             android:paddingLeft="8dp"
             android:singleLine="true"
             android:textColor="#FFF"
-            android:textSize="16dp"
-            android:clickable="true"
-            android:onClick="moveToFocusedPlace" />
+            android:textSize="16dp" />
     </RelativeLayout>
 
 </RelativeLayout>

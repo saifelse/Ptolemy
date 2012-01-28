@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/item"
         android:lineSpacingExtra="2dp"
-        android:text="And details appear below - from here you can directly add a bookmark with that place."
+        android:text="And details appear below - from here you can also directly add a bookmark for that place."
         android:textColor="#DDDDDD" />
 
     <Button

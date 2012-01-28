@@ -19,7 +19,7 @@ public class TourActivity extends Activity {
                 "coolvetica.ttf");
 		TextView tv = (TextView) findViewById(R.id.welcome);
         tv.setTypeface(tf);
-//		Config.setTourTaken(this);
+		Config.setTourTaken(this);
 	}
 	
 	public void finishTour(View v) {
