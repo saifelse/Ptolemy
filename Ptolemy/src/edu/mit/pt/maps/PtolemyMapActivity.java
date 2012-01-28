@@ -71,9 +71,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		mapView.getOverlays().add(meOverlay);
 
 		// Start Location data
-		String skyhookUsername = getString(R.string.skyhook_username);
-		String skyhookRealm = getString(R.string.skyhook_realm);
-
 		LocationSetter.getInstance(this, meOverlay).resume();
 
 		ImageButton compassButton = (ImageButton) getLayoutInflater().inflate(
