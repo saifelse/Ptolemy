@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
 
@@ -175,20 +176,21 @@ public class FloorMapView extends RelativeLayout {
 		placesOverlay.clear();
 
 		// FIXME Determine valid types
+
 		/*
-		boolean useAthena = ((ToggleButton)findViewById(R.id.filter_view).findViewById(R.id.athena_full).findViewById(R.id.athena_filter_btn)).isChecked();
-		boolean useClassroom = ((ToggleButton)findViewById(R.id.classroom_filter_btn)).isChecked();
-		boolean useMToilet = ((ToggleButton)findViewById(R.id.br_male_filter_btn)).isChecked();
-		boolean useFToilet = ((ToggleButton)findViewById(R.id.br_female_filter_btn)).isChecked();
+		boolean useAthena = ((ToggleButton)((View)getParent()).findViewById(R.id.athena_filter_btn)).isChecked();
+		boolean useClassroom = ((ToggleButton)((View)getParent()).findViewById(R.id.classroom_filter_btn)).isChecked();
+		boolean useMToilet = ((ToggleButton)((View)getParent()).findViewById(R.id.br_male_filter_btn)).isChecked();
+		boolean useFToilet = ((ToggleButton)((View)getParent()).findViewById(R.id.br_female_filter_btn)).isChecked();
 		*/
 		Log.v(Config.TAG, "Looking up visible places");
 		List<Place> places = getVisiblePlaces();
 		for (Place p : places) {
-			//if(p.getPlaceType() == PlaceType.ATHENA && useAthena ||
-			//  p.getPlaceType() == PlaceType.CLASSROOM && useClassroom ||
-			//  p.getPlaceType() == PlaceType.MTOILET && useMToilet ||
-		    //  p.getPlaceType() == PlaceType.FTOILET && useFToilet){
-				PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
+		/*	if(p.getPlaceType() == PlaceType.ATHENA && useAthena ||
+			   p.getPlaceType() == PlaceType.CLASSROOM  && useClassroom ||
+			   p.getPlaceType() == PlaceType.MTOILET && useMToilet ||
+		       p.getPlaceType() == PlaceType.FTOILET && useFToilet){*/
+				    PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
 					p.getName(), p.getMarker(resources, false), p.getMarker(
 							resources, true), below, above, downBelow, placesOverlay);
 			placesOverlay.addOverlayItem(item);
