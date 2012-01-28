@@ -15,17 +15,19 @@ public class PlacesOverlayItem extends OverlayItem {
 	Drawable markerSel;
 	Drawable above;
 	Drawable below;
-
+	Drawable downBelow;
+	
 	PlacesItemizedOverlay overlay;
 
 	public PlacesOverlayItem(Place p, String title, String snippet,
 			Drawable marker, Drawable markerSel, Drawable below,
-			Drawable above, PlacesItemizedOverlay overlay) {
+			Drawable above, Drawable downBelow, PlacesItemizedOverlay overlay) {
 		super(p.getPoint(), title, snippet);
 		this.place = p;
 		
 		above.setBounds(0, 0, above.getIntrinsicWidth(), above.getIntrinsicHeight());
 		below.setBounds(0, 0, below.getIntrinsicWidth(), below.getIntrinsicHeight());
+		downBelow.setBounds(0, 0, downBelow.getIntrinsicWidth(), downBelow.getIntrinsicHeight());
 		
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
@@ -37,6 +39,7 @@ public class PlacesOverlayItem extends OverlayItem {
 		this.markerSel = markerSel;
 		this.above = above;
 		this.below = below;
+		this.downBelow = downBelow;
 		this.overlay = overlay;
 	}
 
@@ -56,11 +59,14 @@ public class PlacesOverlayItem extends OverlayItem {
 			return below;
 		} else if (place.getFloor() == overlay.getFloor() + 1) {
 			return above;
+		}else if (place.getFloor() == overlay.getFloor()){
+			if (getTitle() != null && getTitle().equals(overlay.getFocusedTitle())) {
+				return this.markerSel;
+			}
+			return marker;
+		}else { // plage.getFloor() << overlay.getFloor() or some other case that shouldn't happen.
+			return downBelow;
 		}
-		if (getTitle() != null && getTitle().equals(overlay.getFocusedTitle())) {
-			return this.markerSel;
-		}
-		return marker;
 	}
 
 }

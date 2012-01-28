@@ -124,6 +124,15 @@ public class PlaceManager {
 		
 		Map<Integer, List<Place>> unfiltered = getPlaces(x,y);
 		
+		Integer max = null;
+		for(Integer k : unfiltered.keySet()){
+			if(max == null || k > max){
+				max = k;
+			}
+		}
+		if(max != null && max < f)
+			result.addAll(unfiltered.get(max));
+		
 		if(unfiltered.containsKey(f))
 			result.addAll(unfiltered.get(f));
 		

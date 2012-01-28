@@ -160,6 +160,9 @@ public class FloorMapView extends RelativeLayout {
 				R.drawable.green_point);
 		Drawable below = getResources().getDrawable(
 				R.drawable.blue_point);
+		Drawable downBelow = getResources().getDrawable(
+				R.drawable.icon_athena);
+		
 		// Remove old places
 		overlays.remove(placesOverlay);
 
@@ -174,7 +177,7 @@ public class FloorMapView extends RelativeLayout {
 		for (Place p : places) {
 			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
 					p.getName(), p.getMarker(resources, false), p.getMarker(
-							resources, true), below, above, placesOverlay);
+							resources, true), below, above, downBelow, placesOverlay);
 			placesOverlay.addOverlayItem(item);
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
