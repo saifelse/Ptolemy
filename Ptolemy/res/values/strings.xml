@@ -12,11 +12,17 @@
 
     <!-- AddClassActivity -->
     <string name="class_title">Title:</string>
-    <string name="class_title_hint">Title (hint: try \'6.570\')</string>
+    <string name="class_title_hint">Title (hint: try \'6.006\')</string>
     <string name="pick_place_hint">Pick a location</string>
     <string name="class_room_hint">Room #</string>
     <string name="room_browse_button">Browse</string>
 
+    <!--  Filter bar -->
+    <string name="athena_filter">Filter by Athena</string>
+    <string name="br_male_filter">Filter by Male Toilet</string>
+    <string name="br_female_filter">Filter by Female Toilet</string>
+    <string name="classroom_filter">Filter by Classroom</string>
+    
     <!-- Menu -->
     <string name="search">search</string>
     <string name="home">home</string>

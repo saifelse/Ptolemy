@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -82,11 +84,35 @@ public class AddBookmarkActivity extends MapActivity {
 		db = PtolemyDBOpenHelperSingleton.getPtolemyDBOpenHelper(this)
 				.getReadableDatabase();
 		autoComplete.setup(db, this);
+		autoComplete.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				checkShouldEnableButton();
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+			
+		});
 		
 		// Set up overlay
 		Drawable defaultMarker = getResources().getDrawable(
 				R.drawable.green_point);
 		showPlaceItemizedOverlay = new PlacesItemizedOverlay(defaultMarker);
+		
+		if (Config.shouldShowBookmarkHelp(this)) {
+			findViewById(R.id.bookmark_help).setVisibility(View.VISIBLE);
+			Config.setShouldShowBookmarkHelp(this, false);
+		}
+		
 		completeSetup();
 	}
 
@@ -95,7 +121,13 @@ public class AddBookmarkActivity extends MapActivity {
 	}
 	
 	protected void completeSetup() {
-		return;
+		long placeId = getIntent().getLongExtra(
+				BookmarksActivity.PLACE_ID, -1);
+		if (placeId == -1) {
+			return;
+		}
+		place = Place.getPlace(this, placeId);
+		setPlace(place, false);
 	}
 
 	void changeType(BookmarkType newType, boolean byUser) {
@@ -123,10 +155,18 @@ public class AddBookmarkActivity extends MapActivity {
 		
 		// Add current place.
 		Resources resources = getResources();
+		Drawable above = getResources().getDrawable(
+				R.drawable.green_point);
+		Drawable below = getResources().getDrawable(
+				R.drawable.blue_point);
+		Drawable downBelow = getResources().getDrawable(
+				R.drawable.icon_athena);
+		
 		PlacesOverlayItem item = new PlacesOverlayItem(place, place.getName(),
 				place.getName(), place.getMarker(resources, false), place.getMarker(
-						resources, true), showPlaceItemizedOverlay);
+						resources, true), below, above, downBelow, showPlaceItemizedOverlay);
 		
+		showPlaceItemizedOverlay.setFloor(place.getFloor());
 		showPlaceItemizedOverlay.addOverlayItem(item);
 		showPlaceItemizedOverlay.setFocusedTitle(place.getName());
 		mapView.getOverlays().add(showPlaceItemizedOverlay);
@@ -183,6 +223,10 @@ public class AddBookmarkActivity extends MapActivity {
 			}
 			break;
 		}
+	}
+	
+	public void dismissHelp(View v) {
+		v.setVisibility(View.GONE);
 	}
 
 	@Override

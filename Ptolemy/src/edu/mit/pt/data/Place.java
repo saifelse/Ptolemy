@@ -1,7 +1,9 @@
 package edu.mit.pt.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -106,7 +108,7 @@ abstract public class Place implements Parcelable {
 		case MTOILET:
 			return new MaleToilet(id, name, latE6, lonE6, floor);
 		case FTOILET:
-			return new MaleToilet(id, name, latE6, lonE6, floor);
+			return new FemaleToilet(id, name, latE6, lonE6, floor);
 		default:
 			return null;
 		}
@@ -266,7 +268,7 @@ abstract public class Place implements Parcelable {
 		return places;
 	}
 
-	public static List<Place> getPlaces(Context context, int latMin,
+	public static Map<Integer, List<Place>> getPlaces(Context context, int latMin,
 			int latMax, int lonMin, int lonMax) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
@@ -283,7 +285,9 @@ abstract public class Place implements Parcelable {
 				new String[] { Integer.toString(latMin),
 						Integer.toString(latMax), Integer.toString(lonMin),
 						Integer.toString(lonMax) }, null, null, null);
-		List<Place> places = new ArrayList<Place>();
+		
+		Map<Integer, List<Place>> places = new HashMap<Integer, List<Place>>();
+		Log.v(Config.TAG, "Am I stuck in Place.getPlaces?");
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 			long id = c.getLong(c.getColumnIndex(PlacesTable.COLUMN_ID));
 			String name = c
@@ -315,8 +319,12 @@ abstract public class Place implements Parcelable {
 			default:
 				continue;
 			}
-			places.add(p);
+			if(!places.containsKey(p.getFloor())){
+				places.put(p.getFloor(), new ArrayList<Place>());
+			}
+			places.get(p.getFloor()).add(p);
 		}
+		Log.v(Config.TAG, "Nope, not in Place.getPlaces?");
 		return places;
 	}
 

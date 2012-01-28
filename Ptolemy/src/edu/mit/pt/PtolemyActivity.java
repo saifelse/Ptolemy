@@ -47,15 +47,8 @@ public class PtolemyActivity extends Activity {
 	}
 
 	public void clearPreferences(View view) {
-		SharedPreferences settings = getPreferences(0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.clear();
-		editor.commit();
+		Config.clearPreferences(this);
 		finish();
-	}
-
-	public void launchFirstRun(View view) {
-		new Config.FirstRunTask(this, null, null, true).execute();
 	}
 
 	public void launchPtolemyMap(View view) {
@@ -77,7 +70,7 @@ public class PtolemyActivity extends Activity {
 			builder.setMessage("Could not connect to our servers! A connection is necessary in order to build the database.");
 			break;
 		case DIALOG_ERROR_JSON:
-			builder.setMessage("An error occurred while parsing the data.");
+			builder.setMessage("An error occurred while parsing the data. Make sure you're connected to the Internet!");
 			break;
 		case DIALOG_ERROR_OTHER:
 			builder.setMessage("An unexpected error occurred!");

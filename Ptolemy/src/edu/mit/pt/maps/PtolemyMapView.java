@@ -58,7 +58,6 @@ public class PtolemyMapView extends MapView {
 		// AddBookmarkActivity). Zooming in and out fixes this.
 		getController().zoomOut();
 		getController().zoomIn();
-		Log.v(Config.TAG,"SUP BABE?");
 	}
 
 	private void setup() {

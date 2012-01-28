@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="240dp"
+    android:layout_height="fill_parent"
+    android:background="@drawable/tour_bg"
+    android:padding="10dp" >
+    
+    <TextView
+        android:id="@+id/map_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="32dp"
+        android:text="The Main Map" />
+
+    <TextView
+        android:id="@+id/map_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/map_title"
+        android:lineSpacingExtra="2dp"
+        android:text="This is the main map. From here you can browse for classrooms, Athena clusters, and bathrooms.\n\nUse the slider at the right to move between floors, and use the buttons below to filter or find places nearby."
+        android:textColor="#DDDDDD" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/map_text"
+        android:onClick="continueTour"
+        android:text="Next" />
+
+</RelativeLayout>

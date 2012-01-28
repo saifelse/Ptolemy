@@ -18,9 +18,9 @@
 
         <RelativeLayout
             android:id="@+id/addBookmarkRow1"
-            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" >
 
             <edu.mit.pt.bookmarks.TitleAutoCompleteTextView
                 android:id="@+id/editBookmarkTitle"
@@ -30,10 +30,10 @@
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/typeButton"
                 android:hint="@string/class_title_hint"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:textSize="16sp"
                 android:textColor="#111"
-                android:imeOptions="actionDone" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/typeButton"
@@ -47,9 +47,9 @@
 
         <RelativeLayout
             android:id="@+id/addBookmarkRow2"
-            android:layout_below="@+id/addBookmarkRow1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/addBookmarkRow1"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="4dp"
@@ -66,10 +66,10 @@
                 android:layout_toLeftOf="@+id/buttonLogin"
                 android:background="@drawable/pick_place_bg"
                 android:gravity="center_vertical"
+                android:onClick="startPickPlace"
                 android:paddingLeft="8dp"
                 android:text="@string/pick_place_hint"
                 android:textColor="#888"
-                android:onClick="startPickPlace"
                 android:textSize="16sp" />
 
             <ImageButton
@@ -84,24 +84,41 @@
 
         <edu.mit.pt.maps.PtolemyMapView
             android:id="@+id/mapview"
-            android:layout_below="@+id/addBookmarkRow2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/addBookmarkButton"
+            android:layout_below="@+id/addBookmarkRow2"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="3dp"
             android:layout_marginTop="2dp"
-            android:apiKey="@string/map_key"
-            android:layout_above="@+id/addBookmarkButton" >
+            android:apiKey="@string/map_key" >
         </edu.mit.pt.maps.PtolemyMapView>
-        
+
+        <TextView
+            android:id="@+id/bookmark_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addBookmarkRow1"
+            android:background="@drawable/tour_bg"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:lineSpacingExtra="3dp"
+            android:visibility="gone"
+            android:clickable="true"
+            android:onClick="dismissHelp"
+            android:text="Type in class numbers for auto-complete!\nPtolemy will try to auto-complete the classroom - try 6.889 to see it in action.\n(Note: Our database is still a work in progress, and not all classes may work.)\n\nTap to dismiss."
+            android:textColor="#EEE" />
+
         <Button
             android:id="@+id/addBookmarkButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_bookmark"
-            android:layout_marginBottom="8dp"
             android:layout_alignParentBottom="true"
-            android:onClick="addBookmark" />
+            android:layout_marginBottom="8dp"
+            android:onClick="addBookmark"
+            android:text="@string/add_bookmark" />
     </RelativeLayout>
 
 </RelativeLayout>

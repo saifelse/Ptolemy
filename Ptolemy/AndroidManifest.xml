@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name=".maps.PtolemyMapActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -94,6 +94,26 @@
         </activity>
         <activity
             android:name=".bookmarks.EditBookmarkActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".tutorial.TourActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".tutorial.TourMapActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".tutorial.TourItemActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".tutorial.TourToolbarActivity"
+            android:theme="@style/Theme.Transparent"
             android:screenOrientation="portrait" >
         </activity>
     </application>
