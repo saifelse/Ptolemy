@@ -134,10 +134,12 @@ public class AddBookmarkActivity extends MapActivity {
 				R.drawable.green_point);
 		Drawable below = getResources().getDrawable(
 				R.drawable.blue_point);
+		Drawable downBelow = getResources().getDrawable(
+				R.drawable.icon_athena);
 		
 		PlacesOverlayItem item = new PlacesOverlayItem(place, place.getName(),
 				place.getName(), place.getMarker(resources, false), place.getMarker(
-						resources, true), below, above, showPlaceItemizedOverlay);
+						resources, true), below, above, downBelow, showPlaceItemizedOverlay);
 		
 		showPlaceItemizedOverlay.addOverlayItem(item);
 		showPlaceItemizedOverlay.setFocusedTitle(place.getName());
