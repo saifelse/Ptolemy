@@ -124,6 +124,10 @@ public class WifiLocation {
 					sigMagA, b, sigMagB, c, sigMagC)
 					- error;
 			System.out.println("dErrordLonE7: " + dErrordLonE7);
+			double dErrordLatLonE7 = calcError(guessLat + dLat, guessLon + dLon, a,
+					sigMagA, b, sigMagB, c, sigMagC)
+					- error;
+			System.out.println("dErrordLatLonE7: " + dErrordLatLonE7);
 			guessLat = guessLat - error / dErrordLatE7 * 1e-1;
 			guessLon = guessLon - error / dErrordLonE7 * 1e-1;
 		}
