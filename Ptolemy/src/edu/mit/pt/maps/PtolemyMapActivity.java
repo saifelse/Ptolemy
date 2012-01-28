@@ -16,7 +16,10 @@ import com.google.android.maps.GeoPoint;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.bookmarks.AddBookmarkActivity;
+import edu.mit.pt.bookmarks.Bookmark;
 import edu.mit.pt.bookmarks.BookmarksActivity;
+import edu.mit.pt.bookmarks.EditBookmarkActivity;
 import edu.mit.pt.data.Place;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
@@ -26,6 +29,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	private XPSOverlay meOverlay;
+	// Stores the bookmarkId corresponding to the focused place, if applicable.
+	private long focusedBookmarkId = -1;
 
 	@Override
 	public void onPause() {
@@ -68,7 +73,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				GeoPoint gp = LocationSetter.getInstance(PtolemyMapActivity.this, null).getPoint(c);
+				GeoPoint gp = LocationSetter.getInstance(
+						PtolemyMapActivity.this, null).getPoint(c);
 				if (gp != null)
 					mapView.getController().animateTo(gp);
 			}
@@ -98,7 +104,19 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
 
-		Intent intent = getIntent();
+		if (!handleIntent(getIntent())) {
+			mapView.getController().setCenter(Config.DEFAULT_POINT);
+		}
+
+	}
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleIntent(intent);
+	}
+
+	private boolean handleIntent(Intent intent) {
 		Log.v(Config.TAG, "INTENT: " + intent.getAction());
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			List<String> segments = intent.getData().getPathSegments();
@@ -107,17 +125,17 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				Place place = Place.getClassroom(this, room);
 				if (place != null) {
 					showClassroom(place);
-					return;
+					return true;
 				}
 			}
 		}
-		mapView.getController().setCenter(Config.DEFAULT_POINT);
-
+		return false;
 	}
 
 	@Override
 	protected void setPlace(Place place) {
 		focusedPlace = place;
+		
 		View metaView = findViewById(R.id.meta_view);
 		if (place == null) {
 			metaView.setVisibility(View.GONE);
@@ -126,6 +144,16 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
 				.getName());
 		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
+		
+		focusedBookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
+		
+		ImageButton extraBtn = ((ImageButton) findViewById(R.id.place_extra_button));
+		if (focusedBookmarkId == -1) {
+			extraBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_bookmark_add));
+		} else {
+			extraBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_edit));
+		}
+		
 		metaView.setVisibility(View.VISIBLE);
 	}
 
@@ -136,22 +164,34 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		mapView.getController().animateTo(focusedPlace.getPoint());
 	}
 
+	public void handleExtraButtonClick(View v) {
+		if (focusedPlace == null) {
+			return;
+		}
+		Intent intent;
+		if (focusedBookmarkId != -1) {
+			intent = new Intent(this, EditBookmarkActivity.class);
+			intent.putExtra(BookmarksActivity.BOOKMARK_ID, focusedBookmarkId);
+		} else {
+			intent = new Intent(this, AddBookmarkActivity.class);
+			intent.putExtra(BookmarksActivity.PLACE_ID, focusedPlace.getId());
+		}
+		startActivity(intent);
+	}
+
 	@Override
 	void showClassroom(final Place place) {
 		/*
-		// FIXME: _All_ animations need to call updateMinMax after finishing
-		// animation.
-		mapView.getController().animateTo(place.getPoint(), new Runnable(){
-
-		@Override
-		public void run() {
-			Log.v(Config.TAG, "We updating after move!");
-			floorMapView.updateMinMax();
-			floorMapView.setFloor(place.getFloor());
-			floorMapView.getPlacesOverlay().setFocusedTitle(place.getName());
-		}
-		});
-		*/
+		 * // FIXME: _All_ animations need to call updateMinMax after finishing
+		 * // animation. mapView.getController().animateTo(place.getPoint(), new
+		 * Runnable(){
+		 * 
+		 * @Override public void run() { Log.v(Config.TAG,
+		 * "We updating after move!"); floorMapView.updateMinMax();
+		 * floorMapView.setFloor(place.getFloor());
+		 * floorMapView.getPlacesOverlay().setFocusedTitle(place.getName()); }
+		 * });
+		 */
 		floorMapView.showPlace(place);
 		setPlace(place);
 	}
