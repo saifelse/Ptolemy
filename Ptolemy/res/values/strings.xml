@@ -17,6 +17,12 @@
     <string name="class_room_hint">Room #</string>
     <string name="room_browse_button">Browse</string>
 
+    <!--  Filter bar -->
+    <string name="athena_filter">Filter by Athena</string>
+    <string name="br_male_filter">Filter by Male Toilet</string>
+    <string name="br_female_filter">Filter by Female Toilet</string>
+    <string name="classroom_filter">Filter by Classroom</string>
+    
     <!-- Menu -->
     <string name="search">search</string>
     <string name="home">home</string>
