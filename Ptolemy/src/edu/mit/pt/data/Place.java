@@ -108,7 +108,7 @@ abstract public class Place implements Parcelable {
 		case MTOILET:
 			return new MaleToilet(id, name, latE6, lonE6, floor);
 		case FTOILET:
-			return new MaleToilet(id, name, latE6, lonE6, floor);
+			return new FemaleToilet(id, name, latE6, lonE6, floor);
 		default:
 			return null;
 		}
