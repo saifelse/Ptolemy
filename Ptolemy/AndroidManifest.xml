@@ -96,6 +96,21 @@
             android:name=".bookmarks.EditBookmarkActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".tutorial.TourActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".tutorial.TourMapActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".tutorial.TourItemActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

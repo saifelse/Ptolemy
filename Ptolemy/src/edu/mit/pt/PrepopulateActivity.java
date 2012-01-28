@@ -72,7 +72,7 @@ public class PrepopulateActivity extends Activity {
 					})
 					.setTitle("Hm...")
 					.setMessage(
-							"An error occurred trying to connect. Please try again!");
+							"An error occurred trying to connect. Please check your username or password and try again!");
 			dialog = builder.create();
 			break;
 		default:

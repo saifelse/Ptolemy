@@ -21,11 +21,19 @@ import edu.mit.pt.bookmarks.Bookmark;
 import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.bookmarks.EditBookmarkActivity;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.tutorial.TourActivity;
+import edu.mit.pt.tutorial.TourItemActivity;
+import edu.mit.pt.tutorial.TourMapActivity;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
+	private final int TUTORIAL_MAP_RESULT = 0;
+	private final int TUTORIAL_ITEM_RESULT = 1;
+	// MAKE SURE THIS ROOM EXISTS!
+	private final String TUTORIAL_ROOM = "36-212";
+	
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	private XPSOverlay meOverlay;
@@ -108,6 +116,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			mapView.getController().setCenter(Config.DEFAULT_POINT);
 		}
 
+		if (!Config.isTourTaken(this)) {
+			startActivityForResult(new Intent(this, TourActivity.class), TUTORIAL_MAP_RESULT);
+		}
+
 	}
 
 	@Override
@@ -135,7 +147,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void setPlace(Place place) {
 		focusedPlace = place;
-		
+
 		View metaView = findViewById(R.id.meta_view);
 		if (place == null) {
 			metaView.setVisibility(View.GONE);
@@ -144,16 +156,18 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
 				.getName());
 		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
-		
+
 		focusedBookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
-		
+
 		ImageButton extraBtn = ((ImageButton) findViewById(R.id.place_extra_button));
 		if (focusedBookmarkId == -1) {
-			extraBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_bookmark_add));
+			extraBtn.setImageDrawable(getResources().getDrawable(
+					R.drawable.ic_menu_bookmark_add));
 		} else {
-			extraBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_edit));
+			extraBtn.setImageDrawable(getResources().getDrawable(
+					R.drawable.ic_menu_edit));
 		}
-		
+
 		metaView.setVisibility(View.VISIBLE);
 	}
 
@@ -203,6 +217,21 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case TUTORIAL_MAP_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				startActivityForResult(new Intent(this, TourMapActivity.class), TUTORIAL_ITEM_RESULT);
+			}
+			break;
+		case TUTORIAL_ITEM_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
+				startActivityForResult(new Intent(this, TourItemActivity.class), TUTORIAL_ITEM_RESULT);
+			}
+			break;
+		}
 		Log.v(Config.TAG, "Received requestCode " + requestCode);
 	}
 

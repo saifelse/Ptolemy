@@ -16,12 +16,6 @@
         android:layout_height="wrap_content"
         android:onClick="clearPreferences"
         android:text="Clear Preferences" />
-    
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="launchFirstRun"
-        android:text="Launch First Run" />
             
     <Button
         android:layout_width="match_parent"
