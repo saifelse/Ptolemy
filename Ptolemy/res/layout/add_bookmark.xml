@@ -108,7 +108,7 @@
             android:visibility="gone"
             android:clickable="true"
             android:onClick="dismissHelp"
-            android:text="Type in class numbers for auto-completion!\nPtolemy will try to auto-complete the classroom - try 6.889 to see it in action.\n(Note: Our database is still a work in progress, and not all classes may work.)\n\nTap to dismiss."
+            android:text="Type in class numbers for auto-complete!\nPtolemy will try to auto-complete the classroom - try 6.889 to see it in action.\n(Note: Our database is still a work in progress, and not all classes may work.)\n\nTap to dismiss."
             android:textColor="#EEE" />
 
         <Button
