@@ -134,21 +134,6 @@ public class PlaceManager {
 		if(unfiltered.containsKey(f))
 			result.addAll(unfiltered.get(f));
 		
-		if(unfiltered.containsKey(f-1)){
-			for(Place p : unfiltered.get(f-1)){
-				if(p.getPlaceType() != PlaceType.CLASSROOM){
-					result.add(p);
-				}
-			}
-		}
-		if(unfiltered.containsKey(f+1)){
-			for(Place p : unfiltered.get(f+1)){
-				if(p.getPlaceType() != PlaceType.CLASSROOM){
-					result.add(p);
-				}
-			}
-		}
-		
 		/*
 		for(Place p : getPlaces(x,y)){
 			if(p.getFloor() == f || (p.getFloor() == f-1 || p.getFloor() == f+1) && p.getPlaceType() != PlaceType.CLASSROOM){

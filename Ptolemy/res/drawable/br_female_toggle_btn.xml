@@ -1,4 +1,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/toggle_button_background" />
-    <item android:drawable="@drawable/br_female_filter_btn" />
+    <item
+        android:drawable="@drawable/br_female_filter_btn"
+        android:top="-8dp"/>
+
 </layer-list>
