@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="fill_parent"
+    android:background="@drawable/tour_bg"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textColor="#FFFFFF"
+        android:textSize="46dp"
+        android:text="Welcome!" />
+
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/welcome"
+        android:lineSpacingExtra="2dp"
+        android:text="Ptolemy is the easiest way to find things at MIT, whether it&apos;s a classroom, an Athena cluster, or even a bathroom.\n\nNew to this app? Take a quick tour!"
+        android:textColor="#DDDDDD" />
+
+    <Button
+        android:id="@+id/go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/welcome_text"
+        android:layout_marginTop="8dp"
+        android:onClick="continueTour"
+        android:text="Go ahead!" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/go"
+        android:layout_toLeftOf="@+id/go"
+        android:onClick="finishTour"
+        android:text="Nah, I'm good." />
+
+</RelativeLayout>

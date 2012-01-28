@@ -34,9 +34,11 @@ public class Config {
 	static public final String TAG = "PTOLEMY";
 	static public final String FIRST_RUN = "firstRun";
 	static public final String TERM = "term";
-	static public final String DEFAULT_TERM = "fa11";
+	static public final String DEFAULT_TERM = "sp11";
+	static public final String TOUR_TAKEN = "tourTaken";
 	static public final GeoPoint DEFAULT_POINT = new GeoPoint(42361283,
 			-71092025);
+	static private final String SHARED_PREF = "PtolemyPrefsFile";
 
 	/**
 	 * Converts from DP to pixels.
@@ -45,15 +47,33 @@ public class Config {
 		float scale = a.getResources().getDisplayMetrics().density;
 		return (int) (dp * scale + 0.5f);
 	}
+	
+	static public void clearPreferences(Activity activity) {
+		SharedPreferences.Editor editor = activity.getSharedPreferences(SHARED_PREF, 0).edit();
+		editor.clear();
+		editor.commit();
+	}
 
 	static public String getTerm(Activity activity) {
-		SharedPreferences settings = activity.getPreferences(0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
 		String term = settings.getString(TERM, DEFAULT_TERM);
 		return term;
 	}
+	
+	static public boolean isTourTaken(Activity activity) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		return settings.getBoolean(TOUR_TAKEN, false);
+	}
+	
+	static public void setTourTaken(Activity activity) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(TOUR_TAKEN, true);
+		editor.commit();
+	}
 
 	static public boolean firstRunCheck(Activity activity) {
-		SharedPreferences settings = activity.getPreferences(0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
 		return settings.getBoolean(FIRST_RUN, true);
 	}
 
@@ -130,7 +150,7 @@ public class Config {
 
 				String rawTerm = MITClass.loadClasses(activity, db);
 				String term = standardizeTerm(rawTerm);
-				SharedPreferences settings = activity.getPreferences(0);
+				SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString(TERM, term);
 				editor.commit();
@@ -193,12 +213,10 @@ public class Config {
 		}
 
 		protected void onPostExecute(Boolean result) {
-
 			if (!result) {
 				return;
 			}
-
-			SharedPreferences settings = activity.getPreferences(0);
+			SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(FIRST_RUN, false);
 			editor.commit();
