@@ -24,20 +24,27 @@ import edu.mit.pt.data.Place;
 import edu.mit.pt.tutorial.TourActivity;
 import edu.mit.pt.tutorial.TourItemActivity;
 import edu.mit.pt.tutorial.TourMapActivity;
+import edu.mit.pt.tutorial.TourToolbarActivity;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected PlacesItemizedOverlay placesItemizedOverlay;
 
 	private final String ACTIVITY_TITLE = "Ptolemy";
-	private final int TUTORIAL_MAP_RESULT = 0;
-	private final int TUTORIAL_ITEM_RESULT = 1;
+	private final int TUTORIAL_INTRO_RESULT = 0;
+	private final int TUTORIAL_MAP_RESULT = 1;
+	private final int TUTORIAL_TOOLBAR_RESULT = 2;
+	private final int TUTORIAL_ITEM_RESULT = 3;
+	private final int ADD_EDIT_BOOKMARK_RESULT = 4;
 	// MAKE SURE THIS ROOM EXISTS!
+	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "36-212";
-	
+	private final int SEARCH_BUTTON_ID = 100;
+	private final int BOOKMARKS_BUTTON_ID = 101;
+	private final int COMPASS_BUTTON_ID = 102;
+
 	private PtolemyMapView mapView;
 	private FloorMapView floorMapView;
 	private XPSOverlay meOverlay;
-	// Stores the bookmarkId corresponding to the focused place, if applicable.
 	private long focusedBookmarkId = -1;
 
 	@Override
@@ -71,8 +78,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		// Start Location data
 		LocationSetter.getInstance(this, meOverlay).resume();
 
-		ImageButton compassButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
+		final ImageButton compassButton = (ImageButton) getLayoutInflater()
+				.inflate(R.layout.menu_nav_button, null);
+		compassButton.setId(COMPASS_BUTTON_ID);
 		compassButton.setImageResource(R.drawable.ic_menu_compass);
 		compassButton.setContentDescription(getString(R.string.centre));
 		final Context c = this;
@@ -85,8 +93,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}
 		});
 
-		ImageButton searchButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
+		final ImageButton searchButton = (ImageButton) getLayoutInflater()
+				.inflate(R.layout.menu_nav_button, null);
+		searchButton.setId(SEARCH_BUTTON_ID);
 		searchButton.setImageResource(R.drawable.ic_menu_search);
 		searchButton.setContentDescription(getString(R.string.search));
 		searchButton.setOnClickListener(new OnClickListener() {
@@ -95,8 +104,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}
 		});
 
-		ImageButton bookmarksButton = (ImageButton) getLayoutInflater()
+		final ImageButton bookmarksButton = (ImageButton) getLayoutInflater()
 				.inflate(R.layout.menu_nav_button, null);
+		bookmarksButton.setId(BOOKMARKS_BUTTON_ID);
 		bookmarksButton.setImageResource(R.drawable.ic_menu_bookmark);
 		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
 		bookmarksButton.setOnClickListener(new OnClickListener() {
@@ -114,7 +124,32 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 
 		if (!Config.isTourTaken(this)) {
-			startActivityForResult(new Intent(this, TourActivity.class), TUTORIAL_MAP_RESULT);
+			// Prevent user from clicking a button until the first
+			// tutorial page comes up.
+			compassButton.setClickable(false);
+			searchButton.setClickable(false);
+			bookmarksButton.setClickable(false);
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					PtolemyMapActivity.this.runOnUiThread(new Runnable() {
+						public void run() {
+							startActivityForResult(
+									new Intent(PtolemyMapActivity.this,
+											TourActivity.class),
+									TUTORIAL_INTRO_RESULT);
+							compassButton.setClickable(true);
+							searchButton.setClickable(true);
+							bookmarksButton.setClickable(true);
+						}
+					});
+				}
+			}).start();
 		}
 
 	}
@@ -154,8 +189,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				.getName());
 		Log.v(Config.TAG, "TYPE: " + place.getPlaceType().name());
 
-		focusedBookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
+		setExtraButton();
 
+		metaView.setVisibility(View.VISIBLE);
+	}
+
+	private void setExtraButton() {
+		focusedBookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
 		ImageButton extraBtn = ((ImageButton) findViewById(R.id.place_extra_button));
 		if (focusedBookmarkId == -1) {
 			extraBtn.setImageDrawable(getResources().getDrawable(
@@ -164,8 +204,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			extraBtn.setImageDrawable(getResources().getDrawable(
 					R.drawable.ic_menu_edit));
 		}
-
-		metaView.setVisibility(View.VISIBLE);
 	}
 
 	public void moveToFocusedPlace(View v) {
@@ -187,7 +225,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			intent = new Intent(this, AddBookmarkActivity.class);
 			intent.putExtra(BookmarksActivity.PLACE_ID, focusedPlace.getId());
 		}
-		startActivity(intent);
+		startActivityForResult(intent, ADD_EDIT_BOOKMARK_RESULT);
 	}
 
 	@Override
@@ -215,21 +253,66 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
+		case ADD_EDIT_BOOKMARK_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				if (focusedPlace != null) {
+					setExtraButton();
+				}
+			}
+			break;
+		case TUTORIAL_INTRO_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				startActivityForResult(new Intent(this, TourMapActivity.class),
+						TUTORIAL_TOOLBAR_RESULT);
+			}
+			break;
+		case TUTORIAL_TOOLBAR_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				findViewById(R.id.tutorial_toolbar_img).setVisibility(
+						View.VISIBLE);
+				startActivityForResult(new Intent(PtolemyMapActivity.this,
+						TourToolbarActivity.class), TUTORIAL_MAP_RESULT);
+			}
+			break;
 		case TUTORIAL_MAP_RESULT:
 			switch (resultCode) {
 			case RESULT_OK:
-				startActivityForResult(new Intent(this, TourMapActivity.class), TUTORIAL_ITEM_RESULT);
+				findViewById(R.id.tutorial_toolbar_img).setVisibility(
+						View.GONE);
+				floorMapView.setFloor(TUTORIAL_FLOOR);
+				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							Thread.sleep(1300);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						PtolemyMapActivity.this.runOnUiThread(new Runnable() {
+							public void run() {
+								findViewById(R.id.tutorial_add_bookmark_img)
+										.setVisibility(View.VISIBLE);
+								startActivityForResult(new Intent(
+										PtolemyMapActivity.this,
+										TourItemActivity.class),
+										TUTORIAL_ITEM_RESULT);
+								Config.setShouldShowBookmarkHelp(
+										PtolemyMapActivity.this, true);
+							}
+						});
+					}
+				}).start();
 			}
 			break;
 		case TUTORIAL_ITEM_RESULT:
-			switch (resultCode) {
-			case RESULT_OK:
-				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
-				startActivityForResult(new Intent(this, TourItemActivity.class), TUTORIAL_ITEM_RESULT);
-			}
+			findViewById(R.id.tutorial_add_bookmark_img).setVisibility(
+					View.GONE);
 			break;
 		}
-		Log.v(Config.TAG, "Received requestCode " + requestCode);
 	}
 
 	@Override

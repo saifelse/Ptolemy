@@ -36,6 +36,7 @@ public class Config {
 	static public final String TERM = "term";
 	static public final String DEFAULT_TERM = "sp11";
 	static public final String TOUR_TAKEN = "tourTaken";
+	static public final String SHOW_ADD_BOOKMARK_HELP = "addBookmarkHelp";
 	static public final GeoPoint DEFAULT_POINT = new GeoPoint(42361283,
 			-71092025);
 	static private final String SHARED_PREF = "PtolemyPrefsFile";
@@ -69,6 +70,18 @@ public class Config {
 		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(TOUR_TAKEN, true);
+		editor.commit();
+	}
+	
+	static public boolean shouldShowBookmarkHelp(Activity activity) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		return settings.getBoolean(SHOW_ADD_BOOKMARK_HELP, false);
+	}
+	
+	static public void setShouldShowBookmarkHelp(Activity activity, boolean val) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(SHOW_ADD_BOOKMARK_HELP, val);
 		editor.commit();
 	}
 

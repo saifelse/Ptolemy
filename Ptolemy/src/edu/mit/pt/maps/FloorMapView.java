@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
+import android.widget.ToggleButton;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.Overlay;
@@ -20,8 +21,9 @@ import com.google.android.maps.Overlay;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
-import edu.mit.pt.location.PlaceManager;
-import edu.mit.pt.location.PlaceManager.MinMax;
+import edu.mit.pt.data.PlaceManager;
+import edu.mit.pt.data.PlaceType;
+import edu.mit.pt.data.PlaceManager.MinMax;
 import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
@@ -172,13 +174,25 @@ public class FloorMapView extends RelativeLayout {
 		// Add places that are on the specified floor
 		placesOverlay.clear();
 
+		// FIXME Determine valid types
+		/*
+		boolean useAthena = ((ToggleButton)findViewById(R.id.filter_view).findViewById(R.id.athena_full).findViewById(R.id.athena_filter_btn)).isChecked();
+		boolean useClassroom = ((ToggleButton)findViewById(R.id.classroom_filter_btn)).isChecked();
+		boolean useMToilet = ((ToggleButton)findViewById(R.id.br_male_filter_btn)).isChecked();
+		boolean useFToilet = ((ToggleButton)findViewById(R.id.br_female_filter_btn)).isChecked();
+		*/
 		Log.v(Config.TAG, "Looking up visible places");
 		List<Place> places = getVisiblePlaces();
 		for (Place p : places) {
-			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
+			//if(p.getPlaceType() == PlaceType.ATHENA && useAthena ||
+			//  p.getPlaceType() == PlaceType.CLASSROOM && useClassroom ||
+			//  p.getPlaceType() == PlaceType.MTOILET && useMToilet ||
+		    //  p.getPlaceType() == PlaceType.FTOILET && useFToilet){
+				PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
 					p.getName(), p.getMarker(resources, false), p.getMarker(
 							resources, true), below, above, downBelow, placesOverlay);
 			placesOverlay.addOverlayItem(item);
+			//}
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
 		overlays.add(placesOverlay);

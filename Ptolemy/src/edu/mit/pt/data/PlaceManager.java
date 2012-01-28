@@ -1,4 +1,4 @@
-package edu.mit.pt.location;
+package edu.mit.pt.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +11,6 @@ import com.google.android.maps.GeoPoint;
 import android.content.Context;
 import android.util.Log;
 import edu.mit.pt.Config;
-import edu.mit.pt.data.Place;
-import edu.mit.pt.data.PlaceType;
 
 
 public class PlaceManager {

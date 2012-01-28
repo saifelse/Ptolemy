@@ -111,6 +111,11 @@
             android:theme="@style/Theme.Transparent"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".tutorial.TourToolbarActivity"
+            android:theme="@style/Theme.Transparent"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

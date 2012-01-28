@@ -17,14 +17,39 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/nav"
         android:apiKey="@string/map_key"
-        android:clickable="true" />
-	 
-	 <LinearLayout
+        android:clickable="true" >
+    </edu.mit.pt.maps.FloorMapView>
+
+    <ImageView
+        android:id="@+id/tutorial_add_bookmark_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/meta_view"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="3dp"
+        android:visibility="gone"
+        android:src="@drawable/tutorial_add_bookmark" />
+
+    <ImageView
+        android:id="@+id/tutorial_toolbar_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/nav"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="3dp"
+        android:visibility="gone"
+        android:src="@drawable/tutorial_toolbar" />
+  
+    
+    	 <LinearLayout
         android:id="@+id/filter_view"
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true">
+
 	        <RelativeLayout
 	            android:id="@+id/athena_full"
 	            android:layout_weight="1"
@@ -36,6 +61,7 @@
 		            android:layout_height="48dp"
 		            android:textOn=""
 		            android:textOff=""
+		            android:checked="true"
 		            android:layout_alignParentBottom="true"
 		            android:background="@drawable/athena_toggle_btn"
 		            android:contentDescription="@string/athena_filter"
@@ -64,6 +90,7 @@
 		            android:layout_height="48dp"
 		            android:textOn=""
 		            android:textOff=""
+		            android:checked="false"
 		            android:layout_alignParentBottom="true"
 		            android:background="@drawable/classroom_toggle_btn"
 		            android:contentDescription="@string/classroom_filter"
@@ -91,6 +118,7 @@
 		            android:layout_height="48dp"
 		            android:textOn=""
 		            android:textOff=""
+		            android:checked="true"
 		            android:layout_alignParentBottom="true"
 		            android:background="@drawable/br_male_toggle_btn"
 		            android:contentDescription="@string/br_male_filter"
@@ -117,6 +145,7 @@
 		            android:layout_height="48dp"
 		            android:textOn=""
 		            android:textOff=""
+		            android:checked="true"
 		            android:layout_alignParentBottom="true"
 		            android:background="@drawable/br_female_toggle_btn"
 		            android:contentDescription="@string/br_female_filter"
@@ -134,7 +163,6 @@
 	    </RelativeLayout>
     </LinearLayout>
     
-	 
     <RelativeLayout
         android:id="@+id/meta_view"
         android:layout_width="match_parent"
@@ -143,39 +171,30 @@
         android:visibility="gone" >
 
         <ImageButton
-            android:id="@+id/place_confirm_button"
+            android:id="@+id/place_extra_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:background="@drawable/navigate_bg"
-            android:contentDescription="@string/navigate"
-            android:src="@drawable/ic_menu_navigate" />
+            android:contentDescription="@string/add_bookmark"
+            android:onClick="handleExtraButtonClick"
+            android:src="@drawable/ic_menu_bookmark_add" />
 
         <TextView
             android:id="@+id/place_confirm_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/place_confirm_button"
-            android:layout_toLeftOf="@+id/place_extra_button"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/place_extra_button"
             android:background="@drawable/black_50"
+            android:clickable="true"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:onClick="moveToFocusedPlace"
             android:paddingLeft="8dp"
             android:singleLine="true"
             android:textColor="#FFF"
-            android:textSize="16dp"
-            android:clickable="true"
-            android:onClick="moveToFocusedPlace" />
-        
-        <ImageButton
-            android:id="@+id/place_extra_button"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:contentDescription="@string/add_bookmark"
-            android:background="@drawable/navigate_bg"
-            android:onClick="handleExtraButtonClick"
-            android:src="@drawable/ic_menu_bookmark_add" />
+            android:textSize="16dp" />
     </RelativeLayout>
 
 </RelativeLayout>
