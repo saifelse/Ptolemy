@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.android.maps.GeoPoint;
 import android.content.Context;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PlaceType;
 
 
 public class PlaceManager {
@@ -78,7 +79,7 @@ public class PlaceManager {
 	private List<Place> getPlaces(int x, int y, int f) {
 		List<Place> result = new ArrayList<Place>();
 		for(Place p : getPlaces(x,y)){
-			if(p.getFloor() == f){
+			if(p.getFloor() == f || (p.getFloor() == f-1 || p.getFloor() == f+1) && p.getPlaceType() != PlaceType.CLASSROOM){
 				result.add(p);
 			}
 		}

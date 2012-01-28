@@ -156,10 +156,16 @@ public class FloorMapView extends RelativeLayout {
 		// seekBar.setFloor(floor);
 		List<Overlay> overlays = mapView.getOverlays();
 		Resources resources = getContext().getResources();
-
+		Drawable above = getResources().getDrawable(
+				R.drawable.green_point);
+		Drawable below = getResources().getDrawable(
+				R.drawable.blue_point);
 		// Remove old places
 		overlays.remove(placesOverlay);
 
+		// Specify floor (floor-1 shows transparent, floor+1 shows outline)
+		placesOverlay.setFloor(floor);
+		
 		// Add places that are on the specified floor
 		placesOverlay.clear();
 
@@ -169,7 +175,7 @@ public class FloorMapView extends RelativeLayout {
 			Log.v(Config.TAG, p.getName() + " " + p.getFloor());
 			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
 					p.getName(), p.getMarker(resources, false), p.getMarker(
-							resources, true), placesOverlay);
+							resources, true), below, above, placesOverlay);
 			placesOverlay.addOverlayItem(item);
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);

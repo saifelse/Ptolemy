@@ -12,7 +12,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
-
+	private int floor;
 	private List<PlacesOverlayItem> overlayItems = Collections
 			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
@@ -95,6 +95,12 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	
 	public String getFocusedTitle() {
 		return focusedTitle;
+	}
+	public void setFloor(int f){
+		floor = f;
+	}
+	public int getFloor() {
+		return floor;
 	}
 
 }
