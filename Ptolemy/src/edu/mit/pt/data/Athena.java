@@ -16,14 +16,21 @@ public class Athena extends Place {
 	public PlaceType getPlaceType() {
 		return PlaceType.ATHENA;
 	}
-	//TODO: Custom icon for athena
+
+	// TODO: Custom icon for athena
 	@Override
 	public int getMarkerId() {
 		return R.drawable.icon_athena;
 	}
+
 	@Override
 	public int getMarkerSelId() {
 		return R.drawable.icon_athena_sel;
+	}
+
+	@Override
+	public int getMarkerDownBelowId() {
+		return R.drawable.green_point;
 	}
 
 }

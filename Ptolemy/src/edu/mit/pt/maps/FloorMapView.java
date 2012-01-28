@@ -13,7 +13,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
-import android.widget.ToggleButton;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.Overlay;
@@ -22,7 +21,6 @@ import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceManager;
-import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlaceManager.MinMax;
 import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
@@ -48,8 +46,7 @@ public class FloorMapView extends RelativeLayout {
 	protected Handler updateHandler;
 	private Timer timer;
 	private TimerTask updateTask;
-	
-	
+
 	public FloorMapView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		this.context = context;
@@ -65,47 +62,53 @@ public class FloorMapView extends RelativeLayout {
 		seekBar = new FloorSeekBar(context, attrs);
 		setup();
 	}
-	
-	public void resumeUpdate(){
-		Log.v(Config.TAG+"_f", "Resuming update!");
+
+	public void resumeUpdate() {
+		Log.v(Config.TAG + "_f", "Resuming update!");
 		updateTask.cancel();
 		updateTask = new CheckUpdateTask();
 		timer.scheduleAtFixedRate(updateTask, 1000, 1000);
 	}
-	public void pauseUpdate(){
-		Log.v(Config.TAG+"_f", "Cancelled update!");
+
+	public void pauseUpdate() {
+		Log.v(Config.TAG + "_f", "Cancelled update!");
 		updateTask.cancel();
 	}
-	
+
 	@Override
-	public void onWindowFocusChanged(boolean hasWindowFocus){
-		if(hasWindowFocus){
+	public void onWindowFocusChanged(boolean hasWindowFocus) {
+		if (hasWindowFocus) {
 			updateMinMax();
-			//resumeUpdate();
-		}else{
-			//pauseUpdate();
+			// resumeUpdate();
+		} else {
+			// pauseUpdate();
 		}
 	}
+
 	// Periodically check if scrolling has taken place, if so, update.
 	public class CheckUpdateTask extends TimerTask {
 		private GeoPoint p;
+
 		@Override
 		public void run() {
-			Log.v(Config.TAG+"_f", "We moved?");
-			updateHandler.post(new Runnable(){
+			Log.v(Config.TAG + "_f", "We moved?");
+			updateHandler.post(new Runnable() {
 				public void run() {
-					Log.v(Config.TAG+"_f", "Idk... let's check");
-					if(p!=null && p.equals(mapView.getProjection().fromPixels(0, 0))){
+					Log.v(Config.TAG + "_f", "Idk... let's check");
+					if (p != null
+							&& p.equals(mapView.getProjection()
+									.fromPixels(0, 0))) {
 						return;
 					}
-					Log.v(Config.TAG+"_f", "We moved!");
+					Log.v(Config.TAG + "_f", "We moved!");
 					p = mapView.getProjection().fromPixels(0, 0);
 					updateMinMax();
 				}
 			});
 		}
-		
+
 	}
+
 	public void setup() {
 		// Define layout
 		mapView.setId(FloorMapView.MAP_VIEW_ID);
@@ -139,18 +142,19 @@ public class FloorMapView extends RelativeLayout {
 		// places = Place.getPlaces(context);
 		placesOverlay = new PlacesItemizedOverlay(defaultMarker);
 
-		Log.v(Config.TAG+"_f","FIRST TIME?");
+		Log.v(Config.TAG + "_f", "FIRST TIME?");
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
-		Log.v(Config.TAG, topLeft+" : "+bottomRight);
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(
+				mapView.getWidth(), mapView.getHeight());
+		Log.v(Config.TAG, topLeft + " : " + bottomRight);
 		updateMinMax();
-		
+
 		// Set update.
 		updateHandler = new Handler();
 		timer = new Timer();
 		updateTask = new CheckUpdateTask();
-		
-		//resumeUpdate();
+
+		// resumeUpdate();
 	}
 
 	private void updateToFloor(int floor) {
@@ -158,45 +162,45 @@ public class FloorMapView extends RelativeLayout {
 		// seekBar.setFloor(floor);
 		List<Overlay> overlays = mapView.getOverlays();
 		Resources resources = getContext().getResources();
-		Drawable above = getResources().getDrawable(
-				R.drawable.green_point);
-		Drawable below = getResources().getDrawable(
-				R.drawable.blue_point);
-		Drawable downBelow = getResources().getDrawable(
-				R.drawable.icon_athena);
-		
+
 		// Remove old places
 		overlays.remove(placesOverlay);
 
 		// Specify floor (floor-1 shows transparent, floor+1 shows outline)
 		placesOverlay.setFloor(floor);
-		
+
 		// Add places that are on the specified floor
 		placesOverlay.clear();
 
 		// FIXME Determine valid types
 		/*
-		boolean useAthena = ((ToggleButton)findViewById(R.id.filter_view).findViewById(R.id.athena_full).findViewById(R.id.athena_filter_btn)).isChecked();
-		boolean useClassroom = ((ToggleButton)findViewById(R.id.classroom_filter_btn)).isChecked();
-		boolean useMToilet = ((ToggleButton)findViewById(R.id.br_male_filter_btn)).isChecked();
-		boolean useFToilet = ((ToggleButton)findViewById(R.id.br_female_filter_btn)).isChecked();
-		*/
+		 * boolean useAthena =
+		 * ((ToggleButton)findViewById(R.id.filter_view).findViewById
+		 * (R.id.athena_full).findViewById(R.id.athena_filter_btn)).isChecked();
+		 * boolean useClassroom =
+		 * ((ToggleButton)findViewById(R.id.classroom_filter_btn)).isChecked();
+		 * boolean useMToilet =
+		 * ((ToggleButton)findViewById(R.id.br_male_filter_btn)).isChecked();
+		 * boolean useFToilet =
+		 * ((ToggleButton)findViewById(R.id.br_female_filter_btn)).isChecked();
+		 */
 		Log.v(Config.TAG, "Looking up visible places");
 		List<Place> places = getVisiblePlaces();
 		for (Place p : places) {
-			//if(p.getPlaceType() == PlaceType.ATHENA && useAthena ||
-			//  p.getPlaceType() == PlaceType.CLASSROOM && useClassroom ||
-			//  p.getPlaceType() == PlaceType.MTOILET && useMToilet ||
-		    //  p.getPlaceType() == PlaceType.FTOILET && useFToilet){
-				PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
+			// if(p.getPlaceType() == PlaceType.ATHENA && useAthena ||
+			// p.getPlaceType() == PlaceType.CLASSROOM && useClassroom ||
+			// p.getPlaceType() == PlaceType.MTOILET && useMToilet ||
+			// p.getPlaceType() == PlaceType.FTOILET && useFToilet){
+			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
 					p.getName(), p.getMarker(resources, false), p.getMarker(
-							resources, true), below, above, downBelow, placesOverlay);
+							resources, true), p.getMarkerDownBelow(resources),
+					placesOverlay);
 			placesOverlay.addOverlayItem(item);
-			//}
+			// }
 		}
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
 		overlays.add(placesOverlay);
-		
+
 		mapView.invalidate();
 	}
 
@@ -205,29 +209,33 @@ public class FloorMapView extends RelativeLayout {
 		seekBar.setFloor(floor);
 		seekBar.snapY();
 	}
+
 	void showPlace(final Place place) {
-		mapView.getController().animateTo(place.getPoint(), new Runnable(){
-		public void run() {
-			Log.v(Config.TAG, "We updating after move!");
-			updateMinMax();
-			setFloor(place.getFloor());
-			getPlacesOverlay().setFocusedTitle(place.getName());
-		}
+		mapView.getController().animateTo(place.getPoint(), new Runnable() {
+			public void run() {
+				Log.v(Config.TAG, "We updating after move!");
+				updateMinMax();
+				setFloor(place.getFloor());
+				getPlacesOverlay().setFocusedTitle(place.getName());
+			}
 		});
 	}
+
 	private List<Place> getVisiblePlaces() {
 		if (mapView.getZoomLevel() < 20)
 			return new ArrayList<Place>();
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(
+				mapView.getWidth(), mapView.getHeight());
 		return placeManager.getPlaces(topLeft, bottomRight, this.floor);
 	}
 
 	private MinMax getMinMax() {
 		if (mapView.getZoomLevel() < 20)
-			return new MinMax(0,0);
+			return new MinMax(0, 0);
 		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		GeoPoint bottomRight = mapView.getProjection().fromPixels(
+				mapView.getWidth(), mapView.getHeight());
 		return placeManager.getMinMax(topLeft, bottomRight);
 	}
 
@@ -249,7 +257,7 @@ public class FloorMapView extends RelativeLayout {
 
 	public void updateMinMax() {
 		MinMax minMax = getMinMax();
-		
+
 		seekBar.setMin(minMax.min);
 		seekBar.setMax(minMax.max);
 		updateToFloor(floor);
