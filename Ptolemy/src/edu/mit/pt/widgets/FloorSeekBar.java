@@ -100,7 +100,7 @@ public class FloorSeekBar extends View {
 
 	private void setUnsnappedY(int y) {
 		unsnappedY = Math.max(getTrackTop(), Math.min(getTrackBottom(), y));
-		setFloor(getFloorFromY(unsnappedY)); // live update floor.
+		//setFloor(getFloorFromY(unsnappedY)); // live update floor.
 		invalidate();
 	}
 
@@ -170,7 +170,7 @@ public class FloorSeekBar extends View {
 			}
 			canvas.drawRect(new Rect(centerXLine - width / 2, centerLine
 					- height / 2, centerXLine + width / 2, centerLine
-					+ height / 2), scrollTrackPaint);
+					+ height / 2), i == floor ? selTxt : scrollTrackPaint);
 		}
 		// Draw scroll thumb.
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY
@@ -185,11 +185,12 @@ public class FloorSeekBar extends View {
 	public boolean onTouchEvent(MotionEvent event) {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_UP:
+			setUnsnappedY((int) event.getY());
+			setFloor(getFloorFromY(unsnappedY));
 			snapY();
 			break;
 		case MotionEvent.ACTION_MOVE:
 			setUnsnappedY((int) event.getY());
-			setFloor(getFloorFromY(unsnappedY)); //user set
 			break;
 		}
 		return super.onTouchEvent(event);

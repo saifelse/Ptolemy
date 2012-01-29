@@ -65,7 +65,6 @@ public class PlaceManager {
 						result.add(p);
 					}
 				}
-				//result.addAll(getPlaces(x, y, floor));
 			}
 		}
 		return result;
