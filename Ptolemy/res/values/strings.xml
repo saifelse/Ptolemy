@@ -46,6 +46,7 @@
     <string name="room_not_found">The classroom \'%1$s\' could not be found. Try again with a room number like 10–250.</string>
 
     <string name="empty_bookmarks">You have no bookmarks. Go add some!\n\nIf you have a Kerberos account, try importing classes based on your current registration.</string>
+    <string name="empty_nearest">Couldn\'t find anything nearby. Sorry!</string>
     <string name="edit_bookmark">Edit Bookmark</string>
     <string name="delete_bookmark">Delete Bookmark</string>
     <string name="navigate">navigate</string>

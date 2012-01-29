@@ -38,6 +38,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int TUTORIAL_ITEM_RESULT = 3;
 	private final int ADD_EDIT_BOOKMARK_RESULT = 4;
 	private final int BOOKMARKS_RESULT = 5;
+	private final int CLOSEST_RESULT = 6;
 	// MAKE SURE THIS ROOM EXISTS!
 	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "36-212";
@@ -165,13 +166,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				}
 			}).start();
 		}
-		
+
 		Intent i = new Intent(this, NearbyActivity.class);
 		i.putExtra(NearbyActivity.LAT, 42361220);
-		i.putExtra(NearbyActivity.LON,-71092041);
+		i.putExtra(NearbyActivity.LON, -71092041);
 		i.putExtra(NearbyActivity.FLOOR, 2);
 		Log.v(Config.TAG, "STARTING NEARBY ACTIVITY");
-		startActivity(i);
+		startActivityForResult(i, CLOSEST_RESULT);
 	}
 
 	@Override
@@ -195,8 +196,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 		return false;
 	}
-	
-	private void handleButtonState(ToggleButton button, PlaceType type){
+
+	private void handleButtonState(ToggleButton button, PlaceType type) {
 		if (button.isChecked()) {
 			floorMapView.getPlaceManager().addFilter(type);
 		} else {
@@ -204,10 +205,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 		floorMapView.updateMinMax();
 	}
-	
-	private void setupFilterButton(final ToggleButton button, final PlaceType type) {
+
+	private void setupFilterButton(final ToggleButton button,
+			final PlaceType type) {
 		// Set up listener
-		button.setOnClickListener(new OnClickListener(){
+		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				handleButtonState(button, type);
 			}
@@ -255,7 +257,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	}
 
 	/**
-	 *  Called in map_main.xml.
+	 * Called in map_main.xml.
 	 */
 	public void moveToFocusedPlaces(View v) {
 		if (focusedPlace == null) {
@@ -297,6 +299,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
+		case CLOSEST_RESULT:
+			switch (resultCode) {
+			case RESULT_OK:
+				Place place = (Place) data.getParcelableExtra(NearbyActivity.PLACE);
+				showClassroom(place);
+			}
 		case ADD_EDIT_BOOKMARK_RESULT:
 		case BOOKMARKS_RESULT:
 			if (focusedPlace != null) {
