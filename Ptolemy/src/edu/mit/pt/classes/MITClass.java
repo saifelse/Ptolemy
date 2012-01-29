@@ -125,7 +125,6 @@ public class MITClass {
 	}
 
 	public static MITClass getClass(Context context, long id) {
-		List<MITClass> classes = new ArrayList<MITClass>();
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
 		Cursor cursor = db.query(MITClassTable.CLASSES_TABLE_NAME,

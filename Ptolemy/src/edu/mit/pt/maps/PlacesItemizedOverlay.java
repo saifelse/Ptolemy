@@ -22,6 +22,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 //	private List<PlacesOverlayItem> overlayItems = Collections
 //			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 	private List<PlacesOverlayItem> overlayItems = new ArrayList<PlacesOverlayItem>();
+	private String focusedTitle;
 
 	private Map<String, PlacesOverlayItem> overlayItemMap = new HashMap<String, PlacesOverlayItem>();
 
@@ -107,6 +108,14 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public int getFloor() {
 		return floor;
+	}
+	
+	public void setFocusedTitle(String title) {
+		focusedTitle = title;
+	}
+	
+	public String getFocusedTitle() {
+		return focusedTitle;
 	}
 
 }
