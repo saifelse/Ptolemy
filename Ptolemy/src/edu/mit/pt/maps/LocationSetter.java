@@ -24,6 +24,7 @@ import com.skyhookwireless.wps.WPSReturnCode;
 import com.skyhookwireless.wps.XPS;
 
 import edu.mit.pt.Config;
+import edu.mit.pt.location.APGeoPoint;
 import edu.mit.pt.location.WifiLocation;
 
 // FIXME: This also throws a 
@@ -33,7 +34,7 @@ public class LocationSetter {
 
 	// Available data
 	private double bearing;
-	private GeoPoint currentLocation;
+	private APGeoPoint currentLocation;
 
 	private Context context;
 	private XPSOverlay overlay;
@@ -75,9 +76,10 @@ public class LocationSetter {
 				System.out.println("Location changed: " + location.toString());
 				if (location.getAccuracy() < minGPSAccuracy) {
 					// want to use GPS instead
-					currentLocation = new GeoPoint(
+					currentLocation = new APGeoPoint(
 							(int) (location.getLatitude() * 1e6),
-							(int) (location.getLongitude() * 1e6));
+							(int) (location.getLongitude() * 1e6),
+							1); //assume first floor if gps works
 				}
 			}
 
@@ -102,9 +104,9 @@ public class LocationSetter {
 				locationListener);
 	}
 
-	public GeoPoint getPoint(Context context) {
+	public APGeoPoint getPoint(Context context) {
 		WifiLocation wifiLocation = WifiLocation.getInstance(context);
-		GeoPoint point = wifiLocation.getLocation();
+		APGeoPoint point = wifiLocation.getLocation();
 		setLocation(point);
 		return currentLocation;
 	}
@@ -203,7 +205,7 @@ public class LocationSetter {
 		return r[0];
 	}
 
-	public void setLocation(GeoPoint p) {
+	public void setLocation(APGeoPoint p) {
 		if (currentLocation == null) {
 			currentLocation = p;
 		} else {
@@ -211,8 +213,8 @@ public class LocationSetter {
 			if (distanceBetweenGeoPoints(currentLocation, p) > 100.0) {
 				currentLocation = p;
 			} else {
-				currentLocation = exponentialWeightedMovingAverage(currentLocation,
-					p, 0.9);
+				currentLocation = new APGeoPoint(exponentialWeightedMovingAverage(currentLocation,
+					p, 0.9), p.getFloor());
 			}
 
 		}

@@ -10,6 +10,11 @@ public class APGeoPoint extends GeoPoint {
 		this.floor = floor;
 	}
 	
+	public APGeoPoint(GeoPoint p, int floor) {
+		super(p.getLatitudeE6(), p.getLongitudeE6());
+		this.floor = floor;
+	}
+	
 	public int getFloor() {
 		return floor;
 	}
