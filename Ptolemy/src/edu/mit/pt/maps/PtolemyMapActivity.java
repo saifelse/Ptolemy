@@ -165,7 +165,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				}
 			}).start();
 		}
-
+		
+		Intent i = new Intent(this, NearbyActivity.class);
+		i.putExtra(NearbyActivity.LAT, 42361220);
+		i.putExtra(NearbyActivity.LON,-71092041);
+		i.putExtra(NearbyActivity.FLOOR, 2);
+		Log.v(Config.TAG, "STARTING NEARBY ACTIVITY");
+		startActivity(i);
 	}
 
 	@Override

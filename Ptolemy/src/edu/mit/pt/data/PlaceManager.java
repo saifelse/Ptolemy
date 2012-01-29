@@ -14,7 +14,7 @@ import android.content.Context;
 
 
 public class PlaceManager {
-	public static int LAT_TILE_SPAN = 400;
+	public static int LAT_TILE_SPAN = 300;
 	public static int LON_TILE_SPAN = 400;
 	public static int CACHE_SIZE = 15;
 	private Context context;

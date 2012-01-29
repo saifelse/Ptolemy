@@ -100,7 +100,6 @@ abstract public class Place implements Parcelable {
 		int floor = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_FLOOR));
 		String typeName = c
 				.getString(c.getColumnIndex(PlacesTable.COLUMN_TYPE));
-		Log.v(Config.TAG, "TYPENAME IS " + typeName);
 		PlaceType type = PlaceType.valueOf(typeName);
 		c.close();
 		switch (type) {
@@ -339,15 +338,12 @@ abstract public class Place implements Parcelable {
 
 	protected Place(Parcel in) {
 		id = in.readLong();
-		Log.v(Config.TAG, "ID IS " + id);
 		latE6 = in.readInt();
 		lonE6 = in.readInt();
 		name = in.readString();
-		Log.v(Config.TAG, "PLACE NAME IS " + name);
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
-		Log.v(Config.TAG, "PLACE WRITETO");
 		dest.writeString(getPlaceType().name());
 		dest.writeLong(id);
 		dest.writeInt(latE6);
