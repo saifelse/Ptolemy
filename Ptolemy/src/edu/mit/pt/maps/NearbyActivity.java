@@ -136,7 +136,6 @@ public class NearbyActivity extends Activity {
 			return "PD<" + this.id + "," + this.distance + ">";
 		}
 
-		@Override
 		public int compareTo(PlaceDistance y) {
 			if (this.distance < y.distance) {
 				return -1;
