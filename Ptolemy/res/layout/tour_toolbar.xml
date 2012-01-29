@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/title"
         android:lineSpacingExtra="2dp"
-        android:text="To browse your bookmarks, find places nearby,search for rooms, and center on where you are.\n\n(Centering is done through a combination of Wifi and GPS, and will work best on MIT campus.)"
+        android:text="To browse your bookmarks, find places nearby, search for rooms, and center on where you are.\n\n(Centering is done through a combination of Wifi and GPS, and will work best on MIT campus.)"
         android:textColor="#DDDDDD" />
 
     <Button
