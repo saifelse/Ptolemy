@@ -170,7 +170,7 @@ public class FloorSeekBar extends View {
 			}
 			canvas.drawRect(new Rect(centerXLine - width / 2, centerLine
 					- height / 2, centerXLine + width / 2, centerLine
-					+ height / 2), i == floor ? selTxt : scrollTrackPaint);
+					+ height / 2), scrollTrackPaint);
 		}
 		// Draw scroll thumb.
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY

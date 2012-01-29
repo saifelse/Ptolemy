@@ -26,6 +26,7 @@ import com.skyhookwireless.wps.XPS;
 import edu.mit.pt.Config;
 import edu.mit.pt.location.WifiLocation;
 
+// FIXME: This also throws a 
 public class LocationSetter {
 	// singleton
 	static LocationSetter locationSetter = null;

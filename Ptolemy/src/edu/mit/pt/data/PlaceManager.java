@@ -2,15 +2,15 @@ package edu.mit.pt.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.android.maps.GeoPoint;
 import android.content.Context;
-import android.util.Log;
-import edu.mit.pt.Config;
 
 
 public class PlaceManager {
@@ -18,10 +18,25 @@ public class PlaceManager {
 	public static int LON_TILE_SPAN = 400;
 	public static int CACHE_SIZE = 15;
 	private Context context;
+	private Set<PlaceType> placeTypeFilter;
+	
 	private Map<String, Map<Integer, List<Place>>> cachedTiles;
 
+	public void addFilter(PlaceType p){
+		
+		placeTypeFilter.add(p);
+	}
+	public void removeFilter(PlaceType p){
+		placeTypeFilter.remove(p);
+	}
+	public boolean hasFilter(PlaceType p){
+		return placeTypeFilter.contains(p);
+	}
+	
 	public PlaceManager(Context context) {
 		this.context = context;
+		placeTypeFilter = new HashSet<PlaceType>();
+		
 		cachedTiles = new LinkedHashMap<String, Map<Integer, List<Place>>>(){
 			/**
 			 * 
@@ -45,7 +60,12 @@ public class PlaceManager {
 		List<Place> result = new ArrayList<Place>();
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
-				result.addAll(getPlaces(x, y, floor));
+				for(Place p : getPlaces(x, y, floor)){
+					if(hasFilter(p.getPlaceType())){
+						result.add(p);
+					}
+				}
+				//result.addAll(getPlaces(x, y, floor));
 			}
 		}
 		return result;
