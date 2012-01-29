@@ -63,7 +63,9 @@ public class FloorMapView extends RelativeLayout {
 		seekBar = new FloorSeekBar(context, attrs);
 		setup();
 	}
-
+	public PlaceManager getPlaceManager(){
+		return placeManager;
+	}
 	public void resumeUpdate() {
 		Log.v(Config.TAG + "_f", "Resuming update!");
 		updateTask.cancel();

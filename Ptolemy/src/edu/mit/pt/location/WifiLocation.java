@@ -18,6 +18,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
+
+// FIXME: THIS BREAKS IF WIFI IS OFF.
+
 public class WifiLocation {
 	WifiManager wifi = null;
 	Context context;

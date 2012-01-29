@@ -189,13 +189,27 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 		return false;
 	}
-
-	private void setupFilterButton(ToggleButton button, PlaceType type) {
+	
+	private void handleButtonState(ToggleButton button, PlaceType type){
 		if (button.isChecked()) {
-			// TODO: implement this.
+			floorMapView.getPlaceManager().addFilter(type);
 		} else {
-			// TODO: implement this.
+			floorMapView.getPlaceManager().removeFilter(type);
 		}
+		floorMapView.updateMinMax();
+	}
+	
+	private void setupFilterButton(final ToggleButton button, final PlaceType type) {
+		// Set up listener
+		button.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				handleButtonState(button, type);
+			}
+		});
+		// Initialize
+		handleButtonState(button, type);
+
 	}
 
 	/**
