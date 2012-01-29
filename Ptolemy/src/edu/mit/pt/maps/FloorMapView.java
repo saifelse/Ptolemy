@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.google.android.maps.GeoPoint;
@@ -173,6 +174,7 @@ public class FloorMapView extends RelativeLayout {
 		placesOverlay.clear();
 
 		// FIXME Determine valid types
+
 		/*
 		 * boolean useAthena =
 		 * ((ToggleButton)findViewById(R.id.filter_view).findViewById
