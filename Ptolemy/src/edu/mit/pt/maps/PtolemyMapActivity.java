@@ -113,7 +113,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 						BookmarksActivity.class), BOOKMARKS_RESULT);
 			}
 		});
-		
+
 		final ImageButton nearestButton = (ImageButton) getLayoutInflater()
 				.inflate(R.layout.menu_nav_button, null);
 		nearestButton.setImageResource(R.drawable.ic_menu_goto);
@@ -122,7 +122,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			public void onClick(View v) {
 
 				Intent intent = new Intent(v.getContext(), NearbyActivity.class);
-				LocationSetter setter = LocationSetter.getInstance(v.getContext(), null);
+				LocationSetter setter = LocationSetter.getInstance(
+						v.getContext(), null);
 				APGeoPoint p = setter.getPoint(v.getContext());
 				intent.putExtra(NearbyActivity.LAT, p.getLatitudeE6());
 				intent.putExtra(NearbyActivity.LON, p.getLongitudeE6());
@@ -131,19 +132,19 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}
 		});
 
-		ActionBar.setButtons(this, new View[] { compassButton, searchButton, nearestButton,
-				bookmarksButton });
+		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
+				nearestButton, bookmarksButton });
 
-		final ToggleButton athenaFilterButton = (ToggleButton) findViewById(R.id.athena_filter_btn);
+		final PlaceFilterButton athenaFilterButton = (PlaceFilterButton) findViewById(R.id.athena_filter_btn);
 		setupFilterButton(athenaFilterButton, PlaceType.ATHENA);
 
-		final ToggleButton classroomFilterButton = (ToggleButton) findViewById(R.id.classroom_filter_btn);
+		final PlaceFilterButton classroomFilterButton = (PlaceFilterButton) findViewById(R.id.classroom_filter_btn);
 		setupFilterButton(classroomFilterButton, PlaceType.CLASSROOM);
 
-		final ToggleButton brMaleFilterButton = (ToggleButton) findViewById(R.id.br_male_filter_btn);
+		final PlaceFilterButton brMaleFilterButton = (PlaceFilterButton) findViewById(R.id.br_male_filter_btn);
 		setupFilterButton(brMaleFilterButton, PlaceType.MTOILET);
 
-		final ToggleButton brFemaleFilterButton = (ToggleButton) findViewById(R.id.br_female_filter_btn);
+		final PlaceFilterButton brFemaleFilterButton = (PlaceFilterButton) findViewById(R.id.br_female_filter_btn);
 		setupFilterButton(brFemaleFilterButton, PlaceType.FTOILET);
 
 		if (!handleIntent(getIntent())) {
@@ -204,26 +205,35 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		return false;
 	}
 
-	private void handleButtonState(ToggleButton button, PlaceType type) {
+	private void setToggleState(PlaceType placeType, boolean isChecked) {
+		PlaceFilterButton button = PlaceFilterButton
+				.getPlaceFilterButton(placeType);
+		if (button != null) {
+			button.setChecked(isChecked);
+			handleButtonState(button);
+		}
+	}
+
+	private void handleButtonState(PlaceFilterButton button) {
 		if (button.isChecked()) {
-			floorMapView.getPlaceManager().addFilter(type);
+			floorMapView.getPlaceManager().addFilter(button.getPlaceType());
 		} else {
-			floorMapView.getPlaceManager().removeFilter(type);
+			floorMapView.getPlaceManager().removeFilter(button.getPlaceType());
 		}
 		floorMapView.updateMinMax();
 	}
 
-	private void setupFilterButton(final ToggleButton button,
-			final PlaceType type) {
+	private void setupFilterButton(final PlaceFilterButton button,
+			final PlaceType placeType) {
 		// Set up listener
+		PlaceFilterButton.registerPlaceType(placeType, button);
 		button.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				handleButtonState(button, type);
+				handleButtonState(button);
 			}
 		});
 		// Initialize
-		handleButtonState(button, type);
-
+		handleButtonState(button);
 	}
 
 	/**
@@ -256,7 +266,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	 */
 	@Override
 	void showPlaceOnMap(final Place place) {
-		// TODO: turn on filter if necessary.
+		setToggleState(place.getPlaceType(), true);
 		floorMapView.showPlace(place);
 		setPlaceMeta(place);
 	}
@@ -309,7 +319,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		case NEAREST_RESULT:
 			switch (resultCode) {
 			case RESULT_OK:
-				Place place = (Place) data.getParcelableExtra(NearbyActivity.PLACE);
+				Place place = (Place) data
+						.getParcelableExtra(NearbyActivity.PLACE);
 				showPlaceOnMap(place);
 			}
 		case ADD_EDIT_BOOKMARK_RESULT:
