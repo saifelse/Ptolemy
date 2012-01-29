@@ -19,18 +19,18 @@ public class FloorSeekBar extends View {
 	private List<OnFloorSelectListener> listeners;
 	
 	private int trackPad = 5;
-
-	private int trackWidth = 4;
-
+	private int trackWidth = 24;
 	private int tickHeight = 4;
 	private int tickWidth = 8;
 	
-	private int topBarHeight = 8;
-	private int topBarWidth = 12;
+	private int topBarHeight = 10;
+	private int topBarWidth = 24;
 
-	private int thumbHeight = 6;
-	private int thumbWidth = 10;
+	private int thumbHeight = 12;
+	private int thumbWidth = 24;
 
+	private float scrollDotRadius = 3;
+	
 	private int min;
 	private int max;
 	private int userSetFloor;
@@ -44,6 +44,17 @@ public class FloorSeekBar extends View {
 
 	private boolean firstDraw;
 	private Context context;
+
+	private TextPaint indicTxt;
+	private Paint circlePaint;
+	
+	private float indicHeight;
+
+	private float indicPad;
+
+	private Paint topBarPaint;
+
+	
 	
 	public FloorSeekBar(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
@@ -77,6 +88,20 @@ public class FloorSeekBar extends View {
 		a.recycle();
 	}
 	private void initText() {
+		
+		indicTxt = new TextPaint();
+		indicTxt.setAntiAlias(true);
+		indicTxt.setTextSize(32 * getResources().getDisplayMetrics().density);
+		indicTxt.setColor(0xFF000000);
+		indicPad = 15;
+		indicHeight = -indicTxt.ascent();
+		
+		circlePaint = new Paint();
+		circlePaint.setColor(0xFFBBBBBB);
+		
+		topBarPaint = new Paint();
+		topBarPaint.setColor(0xFFBBBBBB);
+		
 		mTxt = new TextPaint();
 		mTxt.setAntiAlias(true);
 		mTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
@@ -122,7 +147,7 @@ public class FloorSeekBar extends View {
 	}
 
 	private int getTrackTop() {
-		return getPaddingTop() + (int) textHeight + trackPad;
+		return getPaddingTop() + trackPad + (int)indicHeight + (int)indicPad;
 	}
 
 	@Override
@@ -140,6 +165,9 @@ public class FloorSeekBar extends View {
 		int centerXLine = this.getWidth() / 2;
 		float textHeight = -mTxt.ascent();
 
+		// Draw floor indicator
+		canvas.drawText(Integer.toString(targetFloor), centerXLine-10, getTrackTop()-indicPad, indicTxt);
+		
 		// Add numerical labels above and below.
 		
 		if(targetFloor != min){
@@ -164,15 +192,22 @@ public class FloorSeekBar extends View {
 			if(i == min-1 || i==max+1){
 				width = topBarWidth;
 				height = topBarHeight;
+				canvas.drawRect(new Rect(centerXLine - width / 2, centerLine
+						- height / 2, centerXLine + width / 2, centerLine
+						+ height / 2), topBarPaint);
 			}else {
 				height = tickHeight;
 				width = tickWidth;
+				canvas.drawCircle(centerXLine, centerLine, scrollDotRadius, circlePaint);
 			}
-			canvas.drawRect(new Rect(centerXLine - width / 2, centerLine
-					- height / 2, centerXLine + width / 2, centerLine
-					+ height / 2), i == floor ? selTxt : scrollTrackPaint);
-		}
+			//canvas.drawRect(new Rect(centerXLine - width / 2, centerLine
+			//		- height / 2, centerXLine + width / 2, centerLine
+			//		+ height / 2), i == floor ? selTxt : scrollTrackPaint);
+			//canvas.drawCircle(centerXLine, centerLine, scrollDotRadius, circlePaint);
+		}	
 		// Draw scroll thumb.
+		
+		
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY
 				- thumbHeight / 2, centerXLine + thumbWidth / 2, unsnappedY
 				+ thumbHeight / 2), scrollThumbPaint);
