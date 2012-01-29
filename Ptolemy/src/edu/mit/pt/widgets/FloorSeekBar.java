@@ -5,6 +5,7 @@ import java.util.EventObject;
 import java.util.List;
 
 import edu.mit.pt.R;
+import android.R.color;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -36,8 +37,8 @@ public class FloorSeekBar extends View {
 	private int userSetFloor;
 	private int floor;
 	private int unsnappedY;	
-	private TextPaint mTxt;
-	private TextPaint selTxt;
+	private TextPaint minMaxTxt;
+	private TextPaint scrollFloorTxt;
 	private float textHeight;
 	private Paint scrollTrackPaint;
 	private Paint scrollThumbPaint;
@@ -55,6 +56,8 @@ public class FloorSeekBar extends View {
 	private Paint topBarPaint;
 
 	private float extraPad;
+
+	private Paint ghostScrollThumbPaint;
 
 	
 	
@@ -105,24 +108,28 @@ public class FloorSeekBar extends View {
 		topBarPaint = new Paint();
 		topBarPaint.setColor(0xFFBBBBBB);
 		
-		mTxt = new TextPaint();
-		mTxt.setAntiAlias(true);
-		mTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
-		mTxt.setColor(0xFF666666);
+		minMaxTxt = new TextPaint();
+		minMaxTxt.setAntiAlias(true);
+		minMaxTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
+		minMaxTxt.setColor(0xFF666666);
 		
-		selTxt = new TextPaint();
-		selTxt.setAntiAlias(true);
-		selTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
-		selTxt.setColor(0xFF000000);
+		scrollFloorTxt = new TextPaint();
+		scrollFloorTxt.setAntiAlias(true);
+		scrollFloorTxt.setTextSize(20 * getResources().getDisplayMetrics().density);
+		scrollFloorTxt.setColor(0xFF222222);
 		
-		textHeight = -mTxt.ascent();
+		textHeight = -minMaxTxt.ascent();
 
 		scrollTrackPaint = new Paint();
-		scrollTrackPaint.setColor(0xFFCCCCCC);
+		scrollTrackPaint.setColor(0x99CCCCCC);
 
 		scrollThumbPaint = new Paint();
-  		scrollThumbPaint.setColor(0xFF999999);
+  		scrollThumbPaint.setColor(0xFF222222);
 
+  		ghostScrollThumbPaint = new Paint();
+  		ghostScrollThumbPaint.setColor(0xFF999999);
+  		
+  		
   		extraPad = 100;
 		invalidate();
 	}
@@ -167,7 +174,7 @@ public class FloorSeekBar extends View {
 		int targetFloor = getFloorFromY(unsnappedY);
 		
 		int centerXLine = this.getWidth() / 2;
-		float textHeight = -mTxt.ascent();
+		float textHeight = -minMaxTxt.ascent();
 
 		// Draw floor indicator
 		canvas.drawText(Integer.toString(targetFloor), centerXLine, getTrackTop()+indicHeight-indicPad-extraPad, indicTxt);
@@ -176,11 +183,11 @@ public class FloorSeekBar extends View {
 		
 		if(targetFloor != min){
 		canvas.drawText(Integer.toString(min),
-				centerXLine + thumbWidth / 2, getYFromFloor(min) + textHeight / 2, mTxt);
+				centerXLine + thumbWidth / 2, getYFromFloor(min) + textHeight / 2, minMaxTxt);
 		}
 		if(targetFloor != max){
 			canvas.drawText(Integer.toString(max),
-					centerXLine + thumbWidth / 2, getYFromFloor(max) + textHeight / 2, mTxt);
+					centerXLine + thumbWidth / 2, getYFromFloor(max) + textHeight / 2, minMaxTxt);
 		}
 		// Scroll
 
@@ -209,17 +216,20 @@ public class FloorSeekBar extends View {
 			//		+ height / 2), i == floor ? selTxt : scrollTrackPaint);
 			//canvas.drawCircle(centerXLine, centerLine, scrollDotRadius, circlePaint);
 		}	
-		// Draw scroll thumb.
+		// Draw scroll thumb with floor number
 		
-		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, getYFromFloor(floor)
-				- thumbHeight / 2, centerXLine + thumbWidth / 2, getYFromFloor(floor)
-				+ thumbHeight / 2), selTxt);
+		canvas.drawText(Integer.toString(getFloorFromY(unsnappedY)),
+				centerXLine + thumbWidth / 2, unsnappedY + textHeight / 2, scrollFloorTxt);
+		
 		
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY
 				- thumbHeight / 2, centerXLine + thumbWidth / 2, unsnappedY
 				+ thumbHeight / 2), scrollThumbPaint);
-		canvas.drawText(Integer.toString(getFloorFromY(unsnappedY)),
-				centerXLine + thumbWidth / 2, unsnappedY + textHeight / 2, selTxt);
+		
+		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, getYFromFloor(floor)
+				- thumbHeight / 2, centerXLine + thumbWidth / 2, getYFromFloor(floor)
+				+ thumbHeight / 2), ghostScrollThumbPaint);
+
 
 	}
 

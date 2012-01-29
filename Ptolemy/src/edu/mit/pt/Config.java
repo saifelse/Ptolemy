@@ -161,10 +161,6 @@ public class Config {
 				AP.loadAPs(activity, db);
 				publishProgress(new ProgressUpdate("Ptolemizing classes...", 20));
 
-				// TODO: remove debug code.
-				Place.addPlace(activity, "athena", 42361664, -71091065, 3,
-						PlaceType.ATHENA);
-
 				String rawTerm = MITClass.loadClasses(activity, db);
 				String term = standardizeTerm(rawTerm);
 				SharedPreferences settings = activity.getSharedPreferences(
