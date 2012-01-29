@@ -49,13 +49,13 @@ public class NearbyActivity extends ListActivity {
 			finish();
 		}
 		setContentView(R.layout.nearest);
-		List<NearestPlace> places = findClosestPlaces(lat, lon, floor);
+		List<PlaceDistance> places = findClosestPlaces(lat, lon, floor);
 		
-		ActionBar.setTitle(this, "Nearest Places");
+		ActionBar.setTitle(this, "Nearby Places");
 		ActionBar.setDefaultBackAction(this);
 
 		ListView lv = getListView();
-		final ArrayAdapter<NearestPlace> adapter = new ArrayAdapter<NearestPlace>(
+		final ArrayAdapter<PlaceDistance> adapter = new ArrayAdapter<PlaceDistance>(
 				this, R.layout.nearest_item) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
@@ -63,7 +63,7 @@ public class NearbyActivity extends ListActivity {
 					convertView = getLayoutInflater().inflate(
 							R.layout.nearest_item, null);
 				}
-				NearestPlace p = getItem(position);
+				PlaceDistance p = getItem(position);
 				Resources res = getResources();
 				((ImageView) convertView.findViewById(R.id.icon))
 						.setBackgroundDrawable(p.place.getMarker(res, false));
@@ -79,7 +79,7 @@ public class NearbyActivity extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				NearestPlace np = adapter.getItem(position);
+				PlaceDistance np = adapter.getItem(position);
 				Intent intent = new Intent();
 				intent.putExtra(PLACE, np.place);
 				setResult(RESULT_OK, intent);
@@ -87,12 +87,12 @@ public class NearbyActivity extends ListActivity {
 			}
 		});
 
-		for (NearestPlace p : places) {
+		for (PlaceDistance p : places) {
 			adapter.add(p);
 		}
 	}
 
-	private List<NearestPlace> findClosestPlaces(int myLat, int myLon,
+	private List<PlaceDistance> findClosestPlaces(int myLat, int myLon,
 			int myFloor) {
 		PriorityQueue<PlaceDistance> athenaQueue = new PriorityQueue<PlaceDistance>(
 				3);
@@ -119,13 +119,13 @@ public class NearbyActivity extends ListActivity {
 					.getColumnIndex(PlacesTable.COLUMN_TYPE)));
 			switch (type) {
 			case ATHENA:
-				athenaQueue.add(new PlaceDistance(id, distance));
+				athenaQueue.add(new PlaceDistance(this, id, distance));
 				break;
 			case MTOILET:
-				maleToiletQueue.add(new PlaceDistance(id, distance));
+				maleToiletQueue.add(new PlaceDistance(this, id, distance));
 				break;
 			case FTOILET:
-				femaleToiletQueue.add(new PlaceDistance(id, distance));
+				femaleToiletQueue.add(new PlaceDistance(this, id, distance));
 				break;
 			case CLASSROOM:
 			case FOUNTAIN:
@@ -157,9 +157,9 @@ public class NearbyActivity extends ListActivity {
 			}
 		}
 
-		List<NearestPlace> out = new ArrayList<NearestPlace>();
+		List<PlaceDistance> out = new ArrayList<PlaceDistance>();
 		while (finalQueue.size() > 0) {
-			out.add(new NearestPlace(this, finalQueue.remove()));
+			out.add(finalQueue.remove());
 		}
 
 		return out;
@@ -177,25 +177,15 @@ public class NearbyActivity extends ListActivity {
 		return flatDistance + FLOOR_PENALTY * Math.abs(floor2 - floor1);
 	}
 
-	private class NearestPlace {
-
-		public Place place;
-		public double distance;
-
-		public NearestPlace(Context context, PlaceDistance pd) {
-			this.place = Place.getPlace(context, pd.id);
-			this.distance = pd.distance;
-		}
-
-	}
-
 	private class PlaceDistance implements Comparable<PlaceDistance> {
 		long id;
 		double distance;
+		Place place;
 
-		public PlaceDistance(long id, double distance) {
+		public PlaceDistance(Context context, long id, double distance) {
 			this.id = id;
 			this.distance = distance;
+			this.place = Place.getPlace(context, id);
 		}
 
 		@Override
