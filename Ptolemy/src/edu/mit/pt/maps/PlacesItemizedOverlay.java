@@ -63,7 +63,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	 * http://groups.google
 	 * .com/group/android-developers/browse_thread/thread/38b11314e34714c3
 	 */
-	private void update() {
+	public void update() {
 		setLastFocusedIndex(-1);
 		populate();
 	}

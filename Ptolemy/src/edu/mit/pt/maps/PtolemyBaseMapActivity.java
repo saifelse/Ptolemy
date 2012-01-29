@@ -113,6 +113,8 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 	public void onBackPressed() {
 		if (focusedPlace != null && floorMapView != null) {
 			floorMapView.getPlacesOverlay().setFocus(null);
+			floorMapView.getPlacesOverlay().update();
+			Log.v(Config.TAG, "DESELECTING");
 		} else {
 			super.onBackPressed();
 		}
