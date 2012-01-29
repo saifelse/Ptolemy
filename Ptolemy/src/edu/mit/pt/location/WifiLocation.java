@@ -143,7 +143,7 @@ public class WifiLocation {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public GeoPoint getLocation() {
+	public APGeoPoint getLocation() {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this.context).getReadableDatabase();
 		List<ScanResult> results = wifi.getScanResults();
@@ -223,15 +223,15 @@ public class WifiLocation {
 			return closestAP1Location;
 		} else if (closestAP3 == null) { // 2 APs found
 			// 2 results found
-			return weightedMidGeoPoint(closestAP1Location, closestAP1.level, closestAP2Location,
-					closestAP2.level);
+			return new APGeoPoint(weightedMidGeoPoint(closestAP1Location, closestAP1.level, closestAP2Location,
+					closestAP2.level), floor);
 		} else {
 			// at least 3 APs found
 			assert (bssid1 != null) : "BSSID 1 is null";
 			assert (bssid2 != null) : "BSSID 2 is null";
 			assert (bssid3 != null) : "BSSID 3 is null";
-			return trilaterateGeoPoints(closestAP1Location, closestAP1.level, closestAP2Location,
-					closestAP2.level, closestAP3Location, closestAP3.level);
+			return new APGeoPoint(trilaterateGeoPoints(closestAP1Location, closestAP1.level, closestAP2Location,
+					closestAP2.level, closestAP3Location, closestAP3.level), floor);
 		}
 
 	}
