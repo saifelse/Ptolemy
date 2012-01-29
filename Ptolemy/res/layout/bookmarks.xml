@@ -23,6 +23,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/nav"
         android:gravity="center"
+        android:lineSpacingExtra="3dp"
         android:text="@string/empty_bookmarks" />
 
 </RelativeLayout>

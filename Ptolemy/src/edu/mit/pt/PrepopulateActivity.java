@@ -16,10 +16,7 @@ import android.widget.EditText;
 import edu.mit.pt.classes.MITClass;
 
 /**
- * 
  * TODO: Make it choose the term.
- * FIXME: fix naming conventions for ids to underscores.
- * FIXME: can't auth again after already auth'ing
  */
 public class PrepopulateActivity extends Activity {
 	private String term;
