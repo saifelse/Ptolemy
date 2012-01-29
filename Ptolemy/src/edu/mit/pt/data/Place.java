@@ -341,6 +341,7 @@ abstract public class Place implements Parcelable {
 		latE6 = in.readInt();
 		lonE6 = in.readInt();
 		name = in.readString();
+		floor = in.readInt();
 	}
 
 	public void writeToParcel(Parcel dest, int flags) {
@@ -349,6 +350,7 @@ abstract public class Place implements Parcelable {
 		dest.writeInt(latE6);
 		dest.writeInt(lonE6);
 		dest.writeString(name);
+		dest.writeInt(floor);
 	}
 
 	/**

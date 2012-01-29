@@ -38,13 +38,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int TUTORIAL_ITEM_RESULT = 3;
 	private final int ADD_EDIT_BOOKMARK_RESULT = 4;
 	private final int BOOKMARKS_RESULT = 5;
-	private final int CLOSEST_RESULT = 6;
+	private final int NEAREST_RESULT = 6;
 	// MAKE SURE THIS ROOM EXISTS!
 	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "36-212";
-	private final int SEARCH_BUTTON_ID = 100;
-	private final int BOOKMARKS_BUTTON_ID = 101;
-	private final int COMPASS_BUTTON_ID = 102;
 
 	private PtolemyMapView mapView;
 	private XPSOverlay meOverlay;
@@ -83,7 +80,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		final ImageButton compassButton = (ImageButton) getLayoutInflater()
 				.inflate(R.layout.menu_nav_button, null);
-		compassButton.setId(COMPASS_BUTTON_ID);
 		compassButton.setImageResource(R.drawable.ic_menu_compass);
 		compassButton.setContentDescription(getString(R.string.centre));
 		final Context c = this;
@@ -98,7 +94,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		final ImageButton searchButton = (ImageButton) getLayoutInflater()
 				.inflate(R.layout.menu_nav_button, null);
-		searchButton.setId(SEARCH_BUTTON_ID);
 		searchButton.setImageResource(R.drawable.ic_menu_search);
 		searchButton.setContentDescription(getString(R.string.search));
 		searchButton.setOnClickListener(new OnClickListener() {
@@ -109,7 +104,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		final ImageButton bookmarksButton = (ImageButton) getLayoutInflater()
 				.inflate(R.layout.menu_nav_button, null);
-		bookmarksButton.setId(BOOKMARKS_BUTTON_ID);
 		bookmarksButton.setImageResource(R.drawable.ic_menu_bookmark);
 		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
 		bookmarksButton.setOnClickListener(new OnClickListener() {
@@ -118,6 +112,26 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 						BookmarksActivity.class), BOOKMARKS_RESULT);
 			}
 		});
+		
+		final ImageButton nearestButton = (ImageButton) getLayoutInflater()
+				.inflate(R.layout.menu_nav_button, null);
+		nearestButton.setImageResource(R.drawable.ic_menu_goto);
+		nearestButton.setContentDescription(getString(R.string.bookmarks));
+		nearestButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+
+				Intent intent = new Intent(v.getContext(), NearbyActivity.class);
+				LocationSetter setter = LocationSetter.getInstance(v.getContext(), null);
+				GeoPoint p = setter.getPoint(v.getContext());
+				intent.putExtra(NearbyActivity.LAT, p.getLatitudeE6());
+				intent.putExtra(NearbyActivity.LON, p.getLatitudeE6());
+				intent.putExtra(NearbyActivity.FLOOR, 2);
+				startActivityForResult(intent, NEAREST_RESULT);
+			}
+		});
+
+		ActionBar.setButtons(this, new View[] { compassButton, searchButton, nearestButton,
+				bookmarksButton });
 
 		final ToggleButton athenaFilterButton = (ToggleButton) findViewById(R.id.athena_filter_btn);
 		setupFilterButton(athenaFilterButton, PlaceType.ATHENA);
@@ -130,9 +144,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		final ToggleButton brFemaleFilterButton = (ToggleButton) findViewById(R.id.br_female_filter_btn);
 		setupFilterButton(brFemaleFilterButton, PlaceType.FTOILET);
-
-		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
-				bookmarksButton });
 
 		if (!handleIntent(getIntent())) {
 			mapView.getController().setCenter(Config.DEFAULT_POINT);
@@ -166,13 +177,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				}
 			}).start();
 		}
-
-		Intent i = new Intent(this, NearbyActivity.class);
-		i.putExtra(NearbyActivity.LAT, 42361220);
-		i.putExtra(NearbyActivity.LON, -71092041);
-		i.putExtra(NearbyActivity.FLOOR, 2);
-		Log.v(Config.TAG, "STARTING NEARBY ACTIVITY");
-		startActivityForResult(i, CLOSEST_RESULT);
 	}
 
 	@Override
@@ -191,7 +195,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				System.out.println("ROOM: " + room);
 				Place place = Place.getClassroom(this, room);
 				if (place != null) {
-					showClassroom(place);
+					showPlaceOnMap(place);
 					return true;
 				}
 			}
@@ -225,7 +229,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	 * Sets view at bottom to reflect focused place.
 	 */
 	@Override
-	protected void setPlace(Place place) {
+	protected void setPlaceMeta(Place place) {
 		focusedPlace = place;
 
 		View metaView = findViewById(R.id.meta_view);
@@ -243,7 +247,17 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		metaView.setVisibility(View.VISIBLE);
 		filterView.setVisibility(View.GONE);
+	}
 
+	/**
+	 * Moves map to place, highlights marker, and sets view at bottom to reflect
+	 * selection.
+	 */
+	@Override
+	void showPlaceOnMap(final Place place) {
+		// TODO: turn on filter if necessary.
+		floorMapView.showPlace(place);
+		setPlaceMeta(place);
 	}
 
 	private void setExtraButton() {
@@ -283,16 +297,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		startActivityForResult(intent, ADD_EDIT_BOOKMARK_RESULT);
 	}
 
-	/**
-	 * Moves map to place, highlights marker, and sets view at bottom to reflect
-	 * selection.
-	 */
-	@Override
-	void showClassroom(final Place place) {
-		floorMapView.showPlace(place);
-		setPlace(place);
-	}
-
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -301,11 +305,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case CLOSEST_RESULT:
+		case NEAREST_RESULT:
 			switch (resultCode) {
 			case RESULT_OK:
 				Place place = (Place) data.getParcelableExtra(NearbyActivity.PLACE);
-				showClassroom(place);
+				showPlaceOnMap(place);
 			}
 		case ADD_EDIT_BOOKMARK_RESULT:
 		case BOOKMARKS_RESULT:
@@ -336,7 +340,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				findViewById(R.id.tutorial_toolbar_img)
 						.setVisibility(View.GONE);
 				floorMapView.setFloor(TUTORIAL_FLOOR);
-				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
+				showPlaceOnMap(Place.getClassroom(this, TUTORIAL_ROOM));
 				new Thread(new Runnable() {
 					public void run() {
 						try {

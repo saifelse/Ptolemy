@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -53,6 +52,7 @@ public class NearbyActivity extends ListActivity {
 		List<NearestPlace> places = findClosestPlaces(lat, lon, floor);
 		
 		ActionBar.setTitle(this, "Nearest Places");
+		ActionBar.setDefaultBackAction(this);
 
 		ListView lv = getListView();
 		final ArrayAdapter<NearestPlace> adapter = new ArrayAdapter<NearestPlace>(

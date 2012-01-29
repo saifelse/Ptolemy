@@ -58,7 +58,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 					return;
 				}
 			}
-			showClassroom(p);
+			showPlaceOnMap(p);
 		}
 	}
 
@@ -109,12 +109,12 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 					public void onFocusChanged(ItemizedOverlay overlay,
 							OverlayItem newFocus) {
 						if (newFocus == null) {
-							setPlace(null);
+							setPlaceMeta(null);
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
 						floorMapView.setFloor(pItem.getPlace().getFloor());
-						setPlace(pItem.getPlace());
+						setPlaceMeta(pItem.getPlace());
 					}
 				});
 	}
@@ -130,8 +130,8 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 		}
 	}
 
-	abstract void setPlace(Place p);
+	abstract void setPlaceMeta(Place p);
 
-	abstract void showClassroom(Place p);
+	abstract void showPlaceOnMap(Place p);
 
 }

@@ -220,6 +220,7 @@ public class FloorMapView extends RelativeLayout {
 				Log.v(Config.TAG, "We updating after move!");
 				updateMinMax();
 				setFloor(place.getFloor());
+				Log.v(Config.TAG, "showPlace is setting floor to " + place.getFloor());
 				placesOverlay.setFocusByPlace(place);
 			}
 		});

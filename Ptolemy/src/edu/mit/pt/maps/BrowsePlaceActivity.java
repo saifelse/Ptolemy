@@ -75,7 +75,7 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 	}
 
 	@Override
-	protected void setPlace(Place p) {
+	protected void setPlaceMeta(Place p) {
 		focusedPlace = p;
 		TextView lowerText = (TextView) findViewById(R.id.backToAddTitle);
 		CharSequence newText = null;
@@ -107,9 +107,9 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 	}
 
 	@Override
-	void showClassroom(final Place p) {
+	void showPlaceOnMap(final Place p) {
 		floorMapView.showPlace(p);
-		setPlace(p);
+		setPlaceMeta(p);
 		/*
 		mapView.getController().animateTo(p.getPoint());
 		floorMapView.setFloor(p.getFloor());
