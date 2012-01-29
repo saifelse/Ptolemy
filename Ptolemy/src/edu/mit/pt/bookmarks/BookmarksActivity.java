@@ -31,6 +31,7 @@ import edu.mit.pt.PrepopulateActivity;
 import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.classes.MITClass;
+import edu.mit.pt.data.Athena;
 import edu.mit.pt.data.FemaleToilet;
 import edu.mit.pt.data.MaleToilet;
 import edu.mit.pt.data.PlaceType;
@@ -222,6 +223,7 @@ public class BookmarksActivity extends ListActivity {
 				locationName = FemaleToilet.decorateName(locationName);
 				break;
 			case ATHENA:
+				locationName = Athena.decorateName(locationName);
 				break;
 			case CLASSROOM:
 				break;

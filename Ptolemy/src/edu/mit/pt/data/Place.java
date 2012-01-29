@@ -118,7 +118,7 @@ abstract public class Place implements Parcelable {
 		}
 	}
 
-	public static Place getClassroom(Context context, String room) {
+	public static Place getPlaceByName(Context context, String room) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getWritableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
@@ -142,12 +142,19 @@ abstract public class Place implements Parcelable {
 				.getString(c.getColumnIndex(PlacesTable.COLUMN_TYPE));
 		PlaceType type = PlaceType.valueOf(typeName);
 		c.close();
-		// db.close();
-		// This only searches classrooms.
-		if (type != PlaceType.CLASSROOM) {
-			return null;
+		switch(type) {
+		case ATHENA:
+			return new Athena(id, name, latE6, lonE6, floor);
+		case CLASSROOM:
+			return new Classroom(id, name, latE6, lonE6, floor);
+		case FOUNTAIN:
+			return new Fountain(id, name, latE6, lonE6, floor);
+		case FTOILET:
+			return new FemaleToilet(id, name, latE6, lonE6, floor);
+		case MTOILET:
+			return new MaleToilet(id, name, latE6, lonE6, floor);
 		}
-		return new Classroom(id, name, latE6, lonE6, floor);
+		return null;
 	}
 
 	public static Place addPlace(Context context, String name, int latE6,

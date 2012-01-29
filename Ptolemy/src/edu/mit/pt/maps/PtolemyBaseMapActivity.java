@@ -51,7 +51,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 				}
 			} else {
 				roomQuery = intent.getStringExtra(SearchManager.QUERY);
-				p = Place.getClassroom(this, roomQuery);
+				p = Place.getPlaceByName(this, roomQuery);
 				if (p == null) {
 					showDialog(DIALOG_INVALID_ROOM);
 					return;

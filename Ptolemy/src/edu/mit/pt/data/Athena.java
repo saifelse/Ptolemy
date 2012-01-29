@@ -11,6 +11,15 @@ public class Athena extends Place {
 	public Athena(Parcel in) {
 		super(in);
 	}
+	
+	@Override
+	public String getName() {
+		return decorateName(name);
+	}
+	
+	static public String decorateName(String name) {
+		return "Athena Cluster (" + name + ")";
+	}
 
 	@Override
 	public PlaceType getPlaceType() {
