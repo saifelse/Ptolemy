@@ -1,6 +1,7 @@
 package edu.mit.pt.maps;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -62,7 +63,8 @@ public class NearbyActivity extends Activity {
 			int floor = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_FLOOR));
 			int lat = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LAT));
 			int lon = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LON));
-			double distance = getDistance(lat, lon, myLat, myLon, floor, myFloor);
+			double distance = getDistance(lat, lon, myLat, myLon, floor,
+					myFloor);
 			PlaceType type = PlaceType.valueOf(c.getString(c
 					.getColumnIndex(PlacesTable.COLUMN_TYPE)));
 			switch (type) {
@@ -98,20 +100,26 @@ public class NearbyActivity extends Activity {
 				toiletTop = null;
 			}
 		}
-		for (PlaceDistance pd : athenaQueue) {
+		PlaceDistance pd;
+		while (athenaQueue.size() != 0) {
+			pd = athenaQueue.remove();
 			out.add(Place.getPlace(this, pd.id));
 		}
-		for (PlaceDistance pd : toiletQueue) {
+		while (toiletQueue.size() != 0) {
+			pd = toiletQueue.remove();
 			out.add(Place.getPlace(this, pd.id));
 		}
 		return out;
 	}
 
-	private double getDistance(int lat1, int lon1, int lat2, int lon2, int floor1, int floor2) {
-		double x = (lon2 - lon1) / 1000000 * Math.cos((lat1 + lat2) / 2000000);
-		double y = (lat2 - lat1) / 1000000;
+	private double getDistance(int lat1, int lon1, int lat2, int lon2,
+			int floor1, int floor2) {
+		Log.v(Config.TAG, "lon2 - lon1:" + (lon2 - lon1));
+		Log.v(Config.TAG, "cos:" + Math.cos((lat1 + lat2) / 2000000.));
+		double x = (lon2 - lon1) / 1000000. * Math.cos((lat1 + lat2) / 2000000.);
+		double y = (lat2 - lat1) / 1000000.;
 		double flatDistance = RADIUS * Math.hypot(x, y);
-		return flatDistance + FLOOR_PENALTY*Math.abs(floor2 - floor1);
+		return flatDistance + FLOOR_PENALTY * Math.abs(floor2 - floor1);
 	}
 
 	private class PlaceDistance implements Comparable<PlaceDistance> {
@@ -124,13 +132,18 @@ public class NearbyActivity extends Activity {
 		}
 
 		@Override
-		public int compareTo(PlaceDistance another) {
-			if (this.distance < another.distance) {
+		public String toString() {
+			return "PD<" + this.id + "," + this.distance + ">";
+		}
+
+		@Override
+		public int compareTo(PlaceDistance y) {
+			if (this.distance < y.distance) {
 				return -1;
-			} else if (this.distance > another.distance) {
+			} else if (this.distance > y.distance) {
 				return 1;
 			}
-			return 0;
+			return (int) (this.id - y.id);
 		}
 
 	}
