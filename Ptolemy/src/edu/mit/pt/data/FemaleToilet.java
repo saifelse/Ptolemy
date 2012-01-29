@@ -39,6 +39,6 @@ public class FemaleToilet extends Place {
 	
 	@Override
 	public int getMarkerDownBelowId() {
-		return R.drawable.green_point;
+		return R.drawable.icon_br_female_down_below;
 	}
 }

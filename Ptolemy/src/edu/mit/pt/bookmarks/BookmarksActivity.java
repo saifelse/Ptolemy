@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.PrepopulateActivity;
@@ -177,8 +178,18 @@ public class BookmarksActivity extends ListActivity {
 			long[] mitClassIds = data
 					.getLongArrayExtra(PrepopulateActivity.CLASSES);
 			for (MITClass c : MITClass.getClasses(this, mitClassIds)) {
-				Bookmark.addBookmark(this, c.getName(), c.getPlace(), BookmarkType.LECTURE);
+				Bookmark.addBookmark(this, c.getName(), c.getPlace(),
+						BookmarkType.LECTURE);
 			}
+			Toast toast;
+			if (mitClassIds.length != 0) {
+				toast = Toast.makeText(this, mitClassIds.length
+						+ " bookmarks added!", 1000);
+			} else {
+				toast = Toast.makeText(this,
+						"Sorry, no bookmarks could be added.", 1000);
+			}
+			toast.show();
 		}
 	}
 

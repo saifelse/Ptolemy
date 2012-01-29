@@ -90,7 +90,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 	/**
 	 * Sets behavior to deselect place when nothing is selected.
 	 */
-	protected void configureFloorMapView(FloorMapView floorMapView) {
+	protected void configureFloorMapView(final FloorMapView floorMapView) {
 		floorMapView.getPlacesOverlay().setOnFocusChangeListener(
 				new ItemizedOverlay.OnFocusChangeListener() {
 
@@ -104,6 +104,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
 						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
+						floorMapView.setFloor(pItem.getPlace().getFloor());
 						setPlace(pItem.getPlace());
 					}
 				});
