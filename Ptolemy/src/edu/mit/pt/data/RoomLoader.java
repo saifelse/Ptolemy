@@ -91,6 +91,8 @@ public class RoomLoader {
 				ptype = PlaceType.MTOILET;
 			} else if (type.equals("ftoilet")) {
 				ptype = PlaceType.FTOILET;
+			} else if (type.equals("athena")) {
+				ptype = PlaceType.ATHENA;
 			}
 
 			ContentValues values = new ContentValues();

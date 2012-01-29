@@ -208,7 +208,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private void setupFilterButton(final ToggleButton button, final PlaceType type) {
 		// Set up listener
 		button.setOnClickListener(new OnClickListener(){
-			@Override
 			public void onClick(View v) {
 				handleButtonState(button, type);
 			}
