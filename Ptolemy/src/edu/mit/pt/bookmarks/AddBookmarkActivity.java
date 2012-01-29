@@ -89,6 +89,7 @@ public class AddBookmarkActivity extends MapActivity {
 
 			public void afterTextChanged(Editable s) {
 				checkShouldEnableButton();
+				dismissHelp(findViewById(R.id.bookmark_help));
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
@@ -158,7 +159,7 @@ public class AddBookmarkActivity extends MapActivity {
 
 		showPlaceItemizedOverlay.setFloor(place.getFloor());
 		showPlaceItemizedOverlay.addOverlayItem(item);
-		showPlaceItemizedOverlay.setFocusedTitle(place.getName());
+		showPlaceItemizedOverlay.setFocusByPlace(place);
 		mapView.getOverlays().add(showPlaceItemizedOverlay);
 
 		this.place = place;

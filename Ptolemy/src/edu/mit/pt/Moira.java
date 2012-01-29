@@ -17,11 +17,11 @@ import com.jcraft.jsch.UIKeyboardInteractive;
 import com.jcraft.jsch.UserInfo;
 
 public class Moira {
-	public static List<String> getClasses(String username, String password, String semester)
-			throws JSchException, IOException {
+	public static List<String> getClasses(String username, String password,
+			String semester) throws JSchException, IOException {
 
-		Pattern p = Pattern.compile("("+semester+"-.+)-reg");
-		
+		Pattern p = Pattern.compile("(" + semester + "-.+)-reg");
+
 		JSch jsch = new JSch();
 		String user = username;
 		String host = "athena.dialup.mit.edu";
@@ -38,19 +38,20 @@ public class Moira {
 		((ChannelExec) channel).setCommand(command);
 		channel.setInputStream(null);
 		((ChannelExec) channel).setErrStream(null);
-		
-		BufferedReader bufferedIn = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+
+		BufferedReader bufferedIn = new BufferedReader(new InputStreamReader(
+				channel.getInputStream()));
 		channel.connect();
-		
-		
+
 		// Read buffer; add classes matching semester to list.
 		List<String> classes = new ArrayList<String>();
 		String line;
-		while((line=bufferedIn.readLine())!=null){
+		while ((line = bufferedIn.readLine()) != null) {
 			Matcher m = p.matcher(line);
-			if(m.matches())	classes.add(m.group(1));
+			if (m.matches())
+				classes.add(m.group(1));
 		}
-		//Disconnect and return.
+		// Disconnect and return.
 		channel.disconnect();
 		session.disconnect();
 		return classes;

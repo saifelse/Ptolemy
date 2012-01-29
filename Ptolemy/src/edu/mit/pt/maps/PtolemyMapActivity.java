@@ -117,16 +117,16 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 						BookmarksActivity.class), BOOKMARKS_RESULT);
 			}
 		});
-		
+
 		final ToggleButton athenaFilterButton = (ToggleButton) findViewById(R.id.athena_filter_btn);
 		setupFilterButton(athenaFilterButton, PlaceType.ATHENA);
-		
+
 		final ToggleButton classroomFilterButton = (ToggleButton) findViewById(R.id.classroom_filter_btn);
 		setupFilterButton(classroomFilterButton, PlaceType.CLASSROOM);
-		
+
 		final ToggleButton brMaleFilterButton = (ToggleButton) findViewById(R.id.br_male_filter_btn);
 		setupFilterButton(brMaleFilterButton, PlaceType.MTOILET);
-		
+
 		final ToggleButton brFemaleFilterButton = (ToggleButton) findViewById(R.id.br_female_filter_btn);
 		setupFilterButton(brFemaleFilterButton, PlaceType.FTOILET);
 
@@ -165,7 +165,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				}
 			}).start();
 		}
-
+		
+		Intent i = new Intent(this, NearbyActivity.class);
+		i.putExtra(NearbyActivity.LAT, 42361220);
+		i.putExtra(NearbyActivity.LON,-71092041);
+		i.putExtra(NearbyActivity.FLOOR, 2);
+		Log.v(Config.TAG, "STARTING NEARBY ACTIVITY");
+		startActivity(i);
 	}
 
 	@Override
@@ -173,7 +179,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		super.onNewIntent(intent);
 		handleIntent(intent);
 	}
-	
+
 	private boolean handleIntent(Intent intent) {
 		Log.v(Config.TAG, "INTENT: " + intent.getAction());
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -198,6 +204,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 		floorMapView.updateMinMax();
 	}
+	
 	private void setupFilterButton(final ToggleButton button, final PlaceType type) {
 		// Set up listener
 		button.setOnClickListener(new OnClickListener(){
@@ -211,6 +218,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 	}
 
+	/**
+	 * Sets view at bottom to reflect focused place.
+	 */
 	@Override
 	protected void setPlace(Place place) {
 		focusedPlace = place;
@@ -230,7 +240,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 		metaView.setVisibility(View.VISIBLE);
 		filterView.setVisibility(View.GONE);
-		
+
 	}
 
 	private void setExtraButton() {
@@ -267,19 +277,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		startActivityForResult(intent, ADD_EDIT_BOOKMARK_RESULT);
 	}
 
+	/**
+	 * Moves map to place, highlights marker, and sets view at bottom to reflect
+	 * selection.
+	 */
 	@Override
 	void showClassroom(final Place place) {
-		/*
-		 * // FIXME: _All_ animations need to call updateMinMax after finishing
-		 * // animation. mapView.getController().animateTo(place.getPoint(), new
-		 * Runnable(){
-		 * 
-		 * @Override public void run() { Log.v(Config.TAG,
-		 * "We updating after move!"); floorMapView.updateMinMax();
-		 * floorMapView.setFloor(place.getFloor());
-		 * floorMapView.getPlacesOverlay().setFocusedTitle(place.getName()); }
-		 * });
-		 */
 		floorMapView.showPlace(place);
 		setPlace(place);
 	}
@@ -299,6 +302,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}
 			break;
 		case TUTORIAL_INTRO_RESULT:
+			Config.setTourTaken(this);
 			switch (resultCode) {
 			case RESULT_OK:
 				startActivityForResult(new Intent(this, TourMapActivity.class),
@@ -317,8 +321,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		case TUTORIAL_MAP_RESULT:
 			switch (resultCode) {
 			case RESULT_OK:
-				findViewById(R.id.tutorial_toolbar_img).setVisibility(
-						View.GONE);
+				findViewById(R.id.tutorial_toolbar_img)
+						.setVisibility(View.GONE);
 				floorMapView.setFloor(TUTORIAL_FLOOR);
 				showClassroom(Place.getClassroom(this, TUTORIAL_ROOM));
 				new Thread(new Runnable() {

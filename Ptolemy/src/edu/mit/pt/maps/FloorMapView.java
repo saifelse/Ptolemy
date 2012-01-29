@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.google.android.maps.GeoPoint;
@@ -31,6 +30,7 @@ import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 public class FloorMapView extends RelativeLayout {
 	public final static int MAP_VIEW_ID = 0;
 	public final static int SEEK_BAR_ID = 1;
+	public final static int FLOOR_INDICATOR_ID = 2;
 
 	private final PtolemyMapView mapView;
 	private final FloorSeekBar seekBar;
@@ -220,7 +220,7 @@ public class FloorMapView extends RelativeLayout {
 				Log.v(Config.TAG, "We updating after move!");
 				updateMinMax();
 				setFloor(place.getFloor());
-				getPlacesOverlay().setFocusedTitle(place.getName());
+				placesOverlay.setFocusByPlace(place);
 			}
 		});
 	}

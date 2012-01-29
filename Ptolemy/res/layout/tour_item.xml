@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/item"
         android:lineSpacingExtra="2dp"
-        android:text="And details appear below - from here you can also directly add a bookmark for that place.\n\nTry adding a bookmark - that's it for this tour!"
+        android:text="And details appear below - from here you can also directly add a bookmark for that place.\n\n(One final note: we scraped this database of locations ourselves, and it's still a work in progress. Expect to see more locations added in the weeks to come!)"
         android:textColor="#DDDDDD" />
 
     <Button

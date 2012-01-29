@@ -42,16 +42,18 @@ public class PlacesOverlayItem extends OverlayItem {
 
 	@Override
 	public Drawable getMarker(int stateBitset) {
-		// if (((stateBitset & OverlayItem.ITEM_STATE_SELECTED_MASK) ==
-		// OverlayItem.ITEM_STATE_SELECTED_MASK)
-		// || (stateBitset & OverlayItem.ITEM_STATE_PRESSED_MASK) ==
-		// OverlayItem.ITEM_STATE_PRESSED_MASK) {
-		// return this.markerSel;
-		// }
 		if (place.getFloor() == overlay.getFloor()) {
-			if (getTitle() != null
-					&& getTitle().equals(overlay.getFocusedTitle())) {
+			if(((stateBitset & OverlayItem.ITEM_STATE_SELECTED_MASK) == OverlayItem.ITEM_STATE_SELECTED_MASK)
+					|| (stateBitset & OverlayItem.ITEM_STATE_PRESSED_MASK) == OverlayItem.ITEM_STATE_PRESSED_MASK) {
 				return this.markerSel;
+			}
+			OverlayItem item = overlay.getFocus();
+			if (item != null) {
+				PlacesOverlayItem pItem = (PlacesOverlayItem) item;
+				if (pItem.getPlace().getName()
+						.equals(place.getName())) {
+					return this.markerSel;
+				}
 			}
 			return marker;
 		} else { // plage.getFloor() << overlay.getFloor() or some other case

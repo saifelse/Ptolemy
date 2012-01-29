@@ -48,45 +48,52 @@ public class Config {
 		float scale = a.getResources().getDisplayMetrics().density;
 		return (int) (dp * scale + 0.5f);
 	}
-	
+
 	static public void clearPreferences(Activity activity) {
-		SharedPreferences.Editor editor = activity.getSharedPreferences(SHARED_PREF, 0).edit();
+		SharedPreferences.Editor editor = activity.getSharedPreferences(
+				SHARED_PREF, 0).edit();
 		editor.clear();
 		editor.commit();
 	}
 
 	static public String getTerm(Activity activity) {
-		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
 		String term = settings.getString(TERM, DEFAULT_TERM);
 		return term;
 	}
-	
+
 	static public boolean isTourTaken(Activity activity) {
-		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
 		return settings.getBoolean(TOUR_TAKEN, false);
 	}
-	
+
 	static public void setTourTaken(Activity activity) {
-		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(TOUR_TAKEN, true);
 		editor.commit();
 	}
-	
+
 	static public boolean shouldShowBookmarkHelp(Activity activity) {
-		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
 		return settings.getBoolean(SHOW_ADD_BOOKMARK_HELP, false);
 	}
-	
+
 	static public void setShouldShowBookmarkHelp(Activity activity, boolean val) {
-		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(SHOW_ADD_BOOKMARK_HELP, val);
 		editor.commit();
 	}
 
 	static public boolean firstRunCheck(Activity activity) {
-		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
 		return settings.getBoolean(FIRST_RUN, true);
 	}
 
@@ -129,6 +136,7 @@ public class Config {
 				db.execSQL("DROP TABLE IF EXISTS " + table);
 			}
 			String[] create = new String[] { PlacesTable.PLACES_TABLE_CREATE,
+					PlacesTable.PLACES_INDEX_CREATE,
 					MITClassTable.CLASSES_TABLE_CREATE, APTable.AP_TABLE_CREATE };
 			for (String stmt : create) {
 				db.execSQL(stmt);
@@ -154,16 +162,13 @@ public class Config {
 				publishProgress(new ProgressUpdate("Ptolemizing classes...", 20));
 
 				// TODO: remove debug code.
-				Place.addPlace(activity, "male", 42359101, -71090869, 2,
-						PlaceType.MTOILET);
-				Place.addPlace(activity, "female", 42359110, -71090900, 2,
-						PlaceType.FTOILET);
-				Place.addPlace(activity, "athena", 42359110, -71091000, 2,
+				Place.addPlace(activity, "athena", 42361664, -71091065, 3,
 						PlaceType.ATHENA);
 
 				String rawTerm = MITClass.loadClasses(activity, db);
 				String term = standardizeTerm(rawTerm);
-				SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+				SharedPreferences settings = activity.getSharedPreferences(
+						SHARED_PREF, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString(TERM, term);
 				editor.commit();
@@ -210,7 +215,7 @@ public class Config {
 			if (matcher.matches()) {
 				String year = matcher.group(1);
 				String semester = matcher.group(2);
-				return year.substring(2) + semester.toLowerCase();
+				return semester.toLowerCase() + year.substring(2);
 			}
 			return DEFAULT_TERM;
 		}
@@ -229,7 +234,8 @@ public class Config {
 			if (!result) {
 				return;
 			}
-			SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF, 0);
+			SharedPreferences settings = activity.getSharedPreferences(
+					SHARED_PREF, 0);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean(FIRST_RUN, false);
 			editor.commit();

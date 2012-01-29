@@ -100,13 +100,9 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							OverlayItem newFocus) {
 						if (newFocus == null) {
 							setPlace(null);
-							((PlacesItemizedOverlay) overlay)
-									.setFocusedTitle(null);
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
-						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem
-								.getTitle());
 						floorMapView.setFloor(pItem.getPlace().getFloor());
 						setPlace(pItem.getPlace());
 					}
@@ -117,6 +113,8 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 	public void onBackPressed() {
 		if (focusedPlace != null && floorMapView != null) {
 			floorMapView.getPlacesOverlay().setFocus(null);
+			floorMapView.getPlacesOverlay().update();
+			Log.v(Config.TAG, "DESELECTING");
 		} else {
 			super.onBackPressed();
 		}

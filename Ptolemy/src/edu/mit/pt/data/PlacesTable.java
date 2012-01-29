@@ -38,10 +38,12 @@ public class PlacesTable {
 			+ " REAL, " + COLUMN_FLOOR + " integer, "+ COLUMN_TYPE + " TEXT);";
 	//TODO: change floor to not null?
 	
+	public static final String PLACES_INDEX_CREATE = "CREATE INDEX latIndex ON "
+			+ PLACES_TABLE_NAME + " (" + COLUMN_LAT + "," + COLUMN_LON + "," + COLUMN_TYPE + ");";
 
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(PLACES_TABLE_CREATE);
-
+		db.execSQL(PLACES_INDEX_CREATE);
 	}
 
 	public static void onUpgrade(SQLiteDatabase db, int oldVersion,

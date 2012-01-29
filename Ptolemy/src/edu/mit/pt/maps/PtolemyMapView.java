@@ -1,13 +1,10 @@
 package edu.mit.pt.maps;
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.WindowManager;
@@ -16,9 +13,8 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
-import edu.mit.pt.Config;
-
 public class PtolemyMapView extends MapView {
+
 	Context ctx;
 	private final int SUPPORTED_ZOOM_LEVEL = 19;
 	private final int IMAGE_TILE_SIZE = 512;
@@ -62,15 +58,15 @@ public class PtolemyMapView extends MapView {
 
 	private void setup() {
 
-//		List<Overlay> overlays = getOverlays();
+		// List<Overlay> overlays = getOverlays();
 		// overlays.add(new TileOverlay());
 
 		getController().setZoom(21);
 
 		setRowsCols();
-		//getController().setCenter(new GeoPoint(42359101, -71090890));
+		// getController().setCenter(new GeoPoint(42359101, -71090890));
 
-//		tm = new PtolemyTileManager(ctx);
+		// tm = new PtolemyTileManager(ctx);
 
 		// Load places.
 
@@ -84,12 +80,19 @@ public class PtolemyMapView extends MapView {
 			invalidate();
 			break;
 		case MotionEvent.ACTION_MOVE:
-			pinchZoom = (ev.getPointerCount() > 1);
+//			pinchZoom = (ev.getPointerCount() > 1);
 			break;
 		case MotionEvent.ACTION_UP:
-			// ((View) getParent()).onTouchEvent(ev);
+			break;
 		}
-		return super.onTouchEvent(ev);
+		// This is a hack, no clue why it throws ArrayOutOfBounds here.
+		// Has to do with internals of Google Maps API.
+		try {
+			return super.onTouchEvent(ev);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	private void setRowsCols() {
