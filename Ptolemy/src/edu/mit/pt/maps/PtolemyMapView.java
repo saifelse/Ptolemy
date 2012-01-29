@@ -85,7 +85,14 @@ public class PtolemyMapView extends MapView {
 		case MotionEvent.ACTION_UP:
 			break;
 		}
-		return super.onTouchEvent(ev);
+		// This is a hack, no clue why it throws ArrayOutOfBounds here.
+		// Has to do with internals of Google Maps API.
+		try {
+			return super.onTouchEvent(ev);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	private void setRowsCols() {
