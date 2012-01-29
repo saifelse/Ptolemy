@@ -185,8 +185,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		Log.v(Config.TAG, "INTENT: " + intent.getAction());
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			List<String> segments = intent.getData().getPathSegments();
+			Log.v(Config.TAG, "INTENT  : " + intent.getData());
 			if (segments.size() == 1) {
 				String room = segments.get(0);
+				System.out.println("ROOM: " + room);
 				Place place = Place.getClassroom(this, room);
 				if (place != null) {
 					showClassroom(place);
