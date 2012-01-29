@@ -255,11 +255,14 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 	}
 
-	public void moveToFocusedPlace(View v) {
+	/**
+	 *  Called in map_main.xml.
+	 */
+	public void moveToFocusedPlaces(View v) {
 		if (focusedPlace == null) {
 			return;
 		}
-		mapView.getController().animateTo(focusedPlace.getPoint());
+		floorMapView.showPlace(focusedPlace);
 	}
 
 	public void handleExtraButtonClick(View v) {
