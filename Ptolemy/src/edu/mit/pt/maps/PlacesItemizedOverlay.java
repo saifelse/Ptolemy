@@ -19,8 +19,9 @@ import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private int floor;
-	private List<PlacesOverlayItem> overlayItems = Collections
-			.synchronizedList(new ArrayList<PlacesOverlayItem>());
+//	private List<PlacesOverlayItem> overlayItems = Collections
+//			.synchronizedList(new ArrayList<PlacesOverlayItem>());
+	private List<PlacesOverlayItem> overlayItems = new ArrayList<PlacesOverlayItem>();
 
 	private Map<String, PlacesOverlayItem> overlayItemMap = new HashMap<String, PlacesOverlayItem>();
 
@@ -30,11 +31,16 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		// http://code.google.com/p/android/issues/detail?id=2035
 		populate();
 	}
-
+	
 	public void addOverlayItem(PlacesOverlayItem overlayItem) {
 		overlayItems.add(overlayItem);
 		overlayItemMap.put(overlayItem.getPlace().getName(), overlayItem);
 		update();
+	}
+	
+	public void addOverlayItemNoUpdate(PlacesOverlayItem overlayItem) {
+		overlayItems.add(overlayItem);
+		overlayItemMap.put(overlayItem.getPlace().getName(), overlayItem);
 	}
 
 	@Override
