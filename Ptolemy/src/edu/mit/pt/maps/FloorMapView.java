@@ -200,9 +200,10 @@ public class FloorMapView extends RelativeLayout {
 					p.getName(), p.getMarker(resources, false), p.getMarker(
 							resources, true), p.getMarkerDownBelow(resources),
 					placesOverlay);
-			placesOverlay.addOverlayItem(item);
+			placesOverlay.addOverlayItemNoUpdate(item);
 			// }
 		}
+		placesOverlay.update();
 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
 		overlays.add(placesOverlay);
 
