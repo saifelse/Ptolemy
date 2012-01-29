@@ -20,9 +20,9 @@ public class PlacesTable {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put(SearchManager.SUGGEST_COLUMN_TEXT_1, COLUMN_NAME + " AS "
 				+ SearchManager.SUGGEST_COLUMN_TEXT_1);
-		map.put(COLUMN_LAT, COLUMN_LAT);
-		map.put(COLUMN_LON, COLUMN_LON);
-		map.put(COLUMN_FLOOR, COLUMN_FLOOR);
+		//map.put(COLUMN_LAT, COLUMN_LAT);
+		//map.put(COLUMN_LON, COLUMN_LON);
+		//map.put(COLUMN_FLOOR, COLUMN_FLOOR);
 		// Cute SQLite thing: ROWID aliases to whatever primary key you have.
 		map.put(BaseColumns._ID, "ROWID AS " + BaseColumns._ID);
 		map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "ROWID AS "
