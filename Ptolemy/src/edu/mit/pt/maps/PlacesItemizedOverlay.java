@@ -2,21 +2,27 @@ package edu.mit.pt.maps;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+
+import edu.mit.pt.Config;
+import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private int floor;
 	private List<PlacesOverlayItem> overlayItems = Collections
 			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 
-	private String focusedTitle;
+	private Map<String, PlacesOverlayItem> overlayItemMap = new HashMap<String, PlacesOverlayItem>();
 
 	public PlacesItemizedOverlay(Drawable defaultMarker) {
 		super(boundCenterBottom(defaultMarker));
@@ -27,6 +33,7 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public void addOverlayItem(PlacesOverlayItem overlayItem) {
 		overlayItems.add(overlayItem);
+		overlayItemMap.put(overlayItem.getPlace().getName(), overlayItem);
 		update();
 	}
 
@@ -38,7 +45,19 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	private PlacesOverlayItem getOverlayItem(int i) {
 		return overlayItems.get(i);
 	}
-	
+
+	public void setFocusByPlace(Place p) {
+		String key = p.getName();
+		if (overlayItemMap.containsKey(key)) {
+			Log.v(Config.TAG, "TRYING TO FOCUS ON " + p.getName());
+			setFocus(overlayItemMap.get(key));
+		} else {
+			for (String name : overlayItemMap.keySet()) {
+				Log.v(Config.TAG, p.getName() + ": NOPE ITS NOT: " + name);
+			}
+		}
+	}
+
 	/**
 	 * Call this method after any changes are made, to avoid bug:
 	 * http://groups.google
@@ -54,22 +73,9 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		return overlayItems.size();
 	}
 
-	// public void setOnTapListener(OnTapListener listener) {
-	// this.tapListener = listener;
-	// }
-	//
-	// @Override
-	// public boolean onTap(int index) {
-	// Log.v(Config.TAG, "TAPPED");
-	// if (tapListener != null) {
-	// Place p = getOverlayItem(index).getPlace();
-	// tapListener.onTap(p);
-	// }
-	// return true;
-	// }
-
 	public void clear() {
 		overlayItems.clear();
+		overlayItemMap.clear();
 		update();
 	}
 
@@ -88,17 +94,11 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			super.draw(canvas, mapView, false);
 		}
 	}
-	
-	public void setFocusedTitle(String title) {
-		focusedTitle = title;
-	}
-	
-	public String getFocusedTitle() {
-		return focusedTitle;
-	}
-	public void setFloor(int f){
+
+	public void setFloor(int f) {
 		floor = f;
 	}
+
 	public int getFloor() {
 		return floor;
 	}
