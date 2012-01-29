@@ -145,6 +145,8 @@ public class WifiLocation {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this.context).getReadableDatabase();
 		List<ScanResult> results = wifi.getScanResults();
+		if (results == null)
+			return null;
 		Collections.sort(results, new Comparator<ScanResult>() {
 
 			public int compare(ScanResult a, ScanResult b) {
