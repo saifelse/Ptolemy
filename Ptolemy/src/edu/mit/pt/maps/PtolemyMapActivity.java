@@ -23,6 +23,7 @@ import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.bookmarks.EditBookmarkActivity;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceType;
+import edu.mit.pt.location.APGeoPoint;
 import edu.mit.pt.tutorial.TourActivity;
 import edu.mit.pt.tutorial.TourItemActivity;
 import edu.mit.pt.tutorial.TourMapActivity;
@@ -122,10 +123,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 
 				Intent intent = new Intent(v.getContext(), NearbyActivity.class);
 				LocationSetter setter = LocationSetter.getInstance(v.getContext(), null);
-				GeoPoint p = setter.getPoint(v.getContext());
+				APGeoPoint p = setter.getPoint(v.getContext());
 				intent.putExtra(NearbyActivity.LAT, p.getLatitudeE6());
-				intent.putExtra(NearbyActivity.LON, p.getLatitudeE6());
-				intent.putExtra(NearbyActivity.FLOOR, 2);
+				intent.putExtra(NearbyActivity.LON, p.getLongitudeE6());
+				intent.putExtra(NearbyActivity.FLOOR, p.getFloor());
 				startActivityForResult(intent, NEAREST_RESULT);
 			}
 		});

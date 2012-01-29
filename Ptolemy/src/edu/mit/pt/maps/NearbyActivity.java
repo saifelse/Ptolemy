@@ -40,7 +40,6 @@ public class NearbyActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.v(Config.TAG, "STARTING NEARBYACTIVITY");
 		Intent intent = getIntent();
 		int lat = intent.getIntExtra(LAT, -1);
 		int lon = intent.getIntExtra(LON, -1);
@@ -48,9 +47,11 @@ public class NearbyActivity extends ListActivity {
 		if (lat == -1 || lon == -1 || floor == -1) {
 			finish();
 		}
+		Log.v(Config.TAG, "STARTING NEARBYACTIVITY: (" + lat + "," + lon + ","
+				+ floor + ")");
 		setContentView(R.layout.nearest);
 		List<PlaceDistance> places = findClosestPlaces(lat, lon, floor);
-		
+
 		ActionBar.setTitle(this, "Nearby Places");
 		ActionBar.setDefaultBackAction(this);
 
@@ -73,11 +74,11 @@ public class NearbyActivity extends ListActivity {
 			}
 		};
 		lv.setAdapter(adapter);
-		
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				PlaceDistance np = adapter.getItem(position);
 				Intent intent = new Intent();
 				intent.putExtra(PLACE, np.place);

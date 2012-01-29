@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/nav"
-        android:layout_marginRight="34dp"
+        android:layout_marginRight="28dp"
         android:layout_marginTop="3dp"
         android:src="@drawable/tutorial_toolbar"
         android:visibility="gone" />
