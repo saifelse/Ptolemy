@@ -41,8 +41,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 			if (dataUri != null) {
 				String id = dataUri.getLastPathSegment();
 				if (id.charAt(0) == 'c') {
-					//class
-					MITClass mitClass = MITClass.getClass(this, Integer.parseInt(id.substring(1)));
+					MITClass mitClass = MITClass.getClass(this, Long.parseLong(id.substring(1)));
 					p = mitClass.getPlace();
 					roomQuery = mitClass.getName();
 				} else {
@@ -52,7 +51,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 				}
 			} else {
 				roomQuery = intent.getStringExtra(SearchManager.QUERY);
-				p = Place.getClassroom(this, roomQuery);
+				p = Place.getPlaceByName(this, roomQuery);
 				if (p == null) {
 					showDialog(DIALOG_INVALID_ROOM);
 					return;
@@ -110,9 +109,11 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							OverlayItem newFocus) {
 						if (newFocus == null) {
 							setPlaceMeta(null);
+							floorMapView.getPlacesOverlay().setFocusedTitle(null);
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
+						floorMapView.getPlacesOverlay().setFocusedTitle(pItem.getTitle());
 						floorMapView.setFloor(pItem.getPlace().getFloor());
 						setPlaceMeta(pItem.getPlace());
 					}

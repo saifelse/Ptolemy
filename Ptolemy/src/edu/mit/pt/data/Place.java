@@ -24,7 +24,7 @@ abstract public class Place implements Parcelable {
 	int latE6;
 	int lonE6;
 	String name;
-	int floor;
+	public int floor;
 
 	public Place(long id, String name, int latE6, int lonE6, int floor) {
 		this.id = id;
@@ -118,7 +118,7 @@ abstract public class Place implements Parcelable {
 		}
 	}
 
-	public static Place getClassroom(Context context, String room) {
+	public static Place getPlaceByName(Context context, String room) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getWritableDatabase();
 		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
@@ -142,12 +142,19 @@ abstract public class Place implements Parcelable {
 				.getString(c.getColumnIndex(PlacesTable.COLUMN_TYPE));
 		PlaceType type = PlaceType.valueOf(typeName);
 		c.close();
-		// db.close();
-		// This only searches classrooms.
-		if (type != PlaceType.CLASSROOM) {
-			return null;
+		switch(type) {
+		case ATHENA:
+			return new Athena(id, name, latE6, lonE6, floor);
+		case CLASSROOM:
+			return new Classroom(id, name, latE6, lonE6, floor);
+		case FOUNTAIN:
+			return new Fountain(id, name, latE6, lonE6, floor);
+		case FTOILET:
+			return new FemaleToilet(id, name, latE6, lonE6, floor);
+		case MTOILET:
+			return new MaleToilet(id, name, latE6, lonE6, floor);
 		}
-		return new Classroom(id, name, latE6, lonE6, floor);
+		return null;
 	}
 
 	public static Place addPlace(Context context, String name, int latE6,
@@ -225,53 +232,6 @@ abstract public class Place implements Parcelable {
 		return places;
 	}
 
-	// FIXME: Don't use this.
-	public static List<Place> getPlaces(Context context) {
-		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
-				.getPtolemyDBOpenHelper(context).getReadableDatabase();
-		Cursor c = db.query(PlacesTable.PLACES_TABLE_NAME, new String[] {
-				PlacesTable.COLUMN_ID, PlacesTable.COLUMN_NAME,
-				PlacesTable.COLUMN_LAT, PlacesTable.COLUMN_LON,
-				PlacesTable.COLUMN_TYPE, PlacesTable.COLUMN_FLOOR }, null,
-				null, null, null, null);
-		List<Place> places = new ArrayList<Place>();
-		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			long id = c.getLong(c.getColumnIndex(PlacesTable.COLUMN_ID));
-			String name = c
-					.getString(c.getColumnIndex(PlacesTable.COLUMN_NAME));
-			int latE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LAT));
-			int lonE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LON));
-			int floor = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_FLOOR));
-			String typeName = c.getString(c
-					.getColumnIndex(PlacesTable.COLUMN_TYPE));
-
-			PlaceType type = PlaceType.valueOf(typeName);
-			Place p;
-			switch (type) {
-			case MTOILET:
-				p = new MaleToilet(id, name, latE6, lonE6, floor);
-				break;
-			case FTOILET:
-				p = new FemaleToilet(id, name, latE6, lonE6, floor);
-				break;
-			case FOUNTAIN:
-				p = new Fountain(id, name, latE6, lonE6, floor);
-				break;
-			case ATHENA:
-				p = new Athena(id, name, latE6, lonE6, floor);
-				break;
-			case CLASSROOM:
-				p = new Classroom(id, name, latE6, lonE6, floor);
-				break;
-			default:
-				continue;
-			}
-			places.add(p);
-		}
-		// db.close();
-		return places;
-	}
-
 	public static Map<Integer, List<Place>> getPlaces(Context context,
 			int latMin, int latMax, int lonMin, int lonMax) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
@@ -292,15 +252,21 @@ abstract public class Place implements Parcelable {
 
 		Map<Integer, List<Place>> places = new HashMap<Integer, List<Place>>();
 		Log.v(Config.TAG, "Am I stuck in Place.getPlaces?");
+		//Only get indices once for performance
+		int idIndex = c.getColumnIndex(PlacesTable.COLUMN_ID);
+		int nameIndex = c.getColumnIndex(PlacesTable.COLUMN_NAME);
+		int latE6Index = c.getColumnIndex(PlacesTable.COLUMN_LAT);
+		int lonE6Index = c.getColumnIndex(PlacesTable.COLUMN_LON);
+		int floorIndex = c.getColumnIndex(PlacesTable.COLUMN_FLOOR);
+		int typeNameIndex = c.getColumnIndex(PlacesTable.COLUMN_TYPE);
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			long id = c.getLong(c.getColumnIndex(PlacesTable.COLUMN_ID));
+			long id = c.getLong(idIndex);
 			String name = c
-					.getString(c.getColumnIndex(PlacesTable.COLUMN_NAME));
-			int latE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LAT));
-			int lonE6 = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_LON));
-			int floor = c.getInt(c.getColumnIndex(PlacesTable.COLUMN_FLOOR));
-			String typeName = c.getString(c
-					.getColumnIndex(PlacesTable.COLUMN_TYPE));
+					.getString(nameIndex);
+			int latE6 = c.getInt(latE6Index);
+			int lonE6 = c.getInt(lonE6Index);
+			int floor = c.getInt(floorIndex);
+			String typeName = c.getString(typeNameIndex);
 
 			PlaceType type = PlaceType.valueOf(typeName);
 			Place p;

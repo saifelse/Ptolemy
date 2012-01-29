@@ -56,7 +56,7 @@ public class TitleAutoCompleteTextView extends AutoCompleteTextView {
 				String room = c.getString(c
 						.getColumnIndex(MITClassTable.COLUMN_ROOM));
 				Log.v(Config.TAG, "Looked up room for class: " + room);
-				Place place = Place.getClassroom(activity, room);
+				Place place = Place.getPlaceByName(activity, room);
 				if (place != null) {
 					activity.setPlace(place, false);
 					InputMethodManager imm = (InputMethodManager) activity

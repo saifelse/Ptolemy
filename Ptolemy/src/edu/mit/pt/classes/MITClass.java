@@ -116,7 +116,7 @@ public class MITClass {
 		String roomName = c.getString(c
 				.getColumnIndex(MITClassTable.COLUMN_ROOM));
 		Log.v(Config.TAG, "Search for " + name + " found a room: " + roomName);
-		Place room = Place.getClassroom(context, roomName);
+		Place room = Place.getPlaceByName(context, roomName);
 		if (room == null) {
 			Log.v(Config.TAG, "Couldn't find " + roomName);
 			return -1;
@@ -125,7 +125,6 @@ public class MITClass {
 	}
 
 	public static MITClass getClass(Context context, long id) {
-		List<MITClass> classes = new ArrayList<MITClass>();
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
 		Cursor cursor = db.query(MITClassTable.CLASSES_TABLE_NAME,
@@ -141,7 +140,7 @@ public class MITClass {
 				.getColumnIndex(MITClassTable.COLUMN_MITID));
 		String room = cursor.getString(cursor
 				.getColumnIndex(MITClassTable.COLUMN_ROOM));
-		Place place = Place.getClassroom(context, room);
+		Place place = Place.getPlaceByName(context, room);
 		if (place == null) {
 			return null;
 		}
@@ -167,7 +166,7 @@ public class MITClass {
 					.getColumnIndex(MITClassTable.COLUMN_MITID));
 			String room = cursor.getString(cursor
 					.getColumnIndex(MITClassTable.COLUMN_ROOM));
-			Place place = Place.getClassroom(context, room);
+			Place place = Place.getPlaceByName(context, room);
 			if (place == null) {
 				continue;
 			}

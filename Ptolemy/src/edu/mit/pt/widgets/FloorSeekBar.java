@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import edu.mit.pt.R;
-import android.R.color;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -15,6 +13,7 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import edu.mit.pt.R;
 
 public class FloorSeekBar extends View {
 	private List<OnFloorSelectListener> listeners;

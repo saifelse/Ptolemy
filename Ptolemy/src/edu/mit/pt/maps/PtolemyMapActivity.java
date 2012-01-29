@@ -11,9 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import com.google.android.maps.GeoPoint;
-
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
@@ -42,7 +39,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int NEAREST_RESULT = 6;
 	// MAKE SURE THIS ROOM EXISTS!
 	private final int TUTORIAL_FLOOR = 2;
-	private final String TUTORIAL_ROOM = "36-212";
+	private final String TUTORIAL_ROOM = "38-370";
 
 	private PtolemyMapView mapView;
 	private XPSOverlay meOverlay;
@@ -86,10 +83,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				GeoPoint gp = LocationSetter.getInstance(
+				APGeoPoint gp = LocationSetter.getInstance(
 						PtolemyMapActivity.this, null).getPoint(c);
-				if (gp != null)
+				if (gp != null) {
 					mapView.getController().animateTo(gp);
+					floorMapView.setFloor(gp.getFloor());
+				}
 			}
 		});
 
@@ -195,7 +194,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			if (segments.size() == 1) {
 				String room = segments.get(0);
 				System.out.println("ROOM: " + room);
-				Place place = Place.getClassroom(this, room);
+				Place place = Place.getPlaceByName(this, room);
 				if (place != null) {
 					showPlaceOnMap(place);
 					return true;
@@ -352,7 +351,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				findViewById(R.id.tutorial_toolbar_img)
 						.setVisibility(View.GONE);
 				floorMapView.setFloor(TUTORIAL_FLOOR);
-				showPlaceOnMap(Place.getClassroom(this, TUTORIAL_ROOM));
+				showPlaceOnMap(Place.getPlaceByName(this, TUTORIAL_ROOM));
 				new Thread(new Runnable() {
 					public void run() {
 						try {

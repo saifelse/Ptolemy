@@ -18,9 +18,11 @@ import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
-	private int floor;
-	private List<PlacesOverlayItem> overlayItems = Collections
-			.synchronizedList(new ArrayList<PlacesOverlayItem>());
+	public int floor;
+//	private List<PlacesOverlayItem> overlayItems = Collections
+//			.synchronizedList(new ArrayList<PlacesOverlayItem>());
+	private List<PlacesOverlayItem> overlayItems = new ArrayList<PlacesOverlayItem>();
+	private String focusedTitle;
 
 	private Map<String, PlacesOverlayItem> overlayItemMap = new HashMap<String, PlacesOverlayItem>();
 
@@ -30,11 +32,16 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		// http://code.google.com/p/android/issues/detail?id=2035
 		populate();
 	}
-
+	
 	public void addOverlayItem(PlacesOverlayItem overlayItem) {
 		overlayItems.add(overlayItem);
 		overlayItemMap.put(overlayItem.getPlace().getName(), overlayItem);
 		update();
+	}
+	
+	public void addOverlayItemNoUpdate(PlacesOverlayItem overlayItem) {
+		overlayItems.add(overlayItem);
+		overlayItemMap.put(overlayItem.getPlace().getName(), overlayItem);
 	}
 
 	@Override
@@ -101,6 +108,14 @@ public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public int getFloor() {
 		return floor;
+	}
+	
+	public void setFocusedTitle(String title) {
+		focusedTitle = title;
+	}
+	
+	public String getFocusedTitle() {
+		return focusedTitle;
 	}
 
 }
