@@ -13,9 +13,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
-
-import com.google.android.maps.GeoPoint;
-
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
 

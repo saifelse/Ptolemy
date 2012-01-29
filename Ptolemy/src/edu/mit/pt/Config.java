@@ -20,8 +20,6 @@ import com.google.android.maps.GeoPoint;
 import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.classes.MITClassTable;
-import edu.mit.pt.data.Place;
-import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.data.RoomLoader;

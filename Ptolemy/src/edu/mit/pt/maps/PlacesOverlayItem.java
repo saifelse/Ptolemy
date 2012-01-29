@@ -21,15 +21,28 @@ public class PlacesOverlayItem extends OverlayItem {
 		super(p.getPoint(), title, snippet);
 		this.place = p;
 
-		downBelow.setBounds(0, 0, downBelow.getIntrinsicWidth(),
-				downBelow.getIntrinsicHeight());
-
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
-		PlacesItemizedOverlay.boundCenterBottom(marker);
 		markerSel.setBounds(0, 0, markerSel.getIntrinsicWidth(),
 				markerSel.getIntrinsicHeight());
-		PlacesItemizedOverlay.boundCenterBottom(markerSel);
+		downBelow.setBounds(0, 0, downBelow.getIntrinsicWidth(),
+				downBelow.getIntrinsicHeight());
+		
+		switch (this.place.getPlaceType()) {
+		case CLASSROOM:
+			PlacesItemizedOverlay.boundCenter(marker);
+			PlacesItemizedOverlay.boundCenter(markerSel);
+			PlacesItemizedOverlay.boundCenter(downBelow);
+			break;
+		case ATHENA:
+		case FOUNTAIN:
+		case MTOILET:
+		case FTOILET:
+			PlacesItemizedOverlay.boundCenterBottom(marker);
+			PlacesItemizedOverlay.boundCenterBottom(markerSel);
+			PlacesItemizedOverlay.boundCenterBottom(downBelow);
+		}
+
 		this.marker = marker;
 		this.markerSel = markerSel;
 		this.downBelow = downBelow;
@@ -43,17 +56,15 @@ public class PlacesOverlayItem extends OverlayItem {
 	@Override
 	public Drawable getMarker(int stateBitset) {
 		if (place.getFloor() == overlay.getFloor()) {
-			if(((stateBitset & OverlayItem.ITEM_STATE_SELECTED_MASK) == OverlayItem.ITEM_STATE_SELECTED_MASK)
-					|| (stateBitset & OverlayItem.ITEM_STATE_PRESSED_MASK) == OverlayItem.ITEM_STATE_PRESSED_MASK) {
+			// if (((stateBitset & OverlayItem.ITEM_STATE_SELECTED_MASK) ==
+			// OverlayItem.ITEM_STATE_SELECTED_MASK)
+			// || (stateBitset & OverlayItem.ITEM_STATE_PRESSED_MASK) ==
+			// OverlayItem.ITEM_STATE_PRESSED_MASK) {
+			// return this.markerSel;
+			// }
+			if (getTitle() != null
+					&& getTitle().equals(overlay.getFocusedTitle())) {
 				return this.markerSel;
-			}
-			OverlayItem item = overlay.getFocus();
-			if (item != null) {
-				PlacesOverlayItem pItem = (PlacesOverlayItem) item;
-				if (pItem.getPlace().getName()
-						.equals(place.getName())) {
-					return this.markerSel;
-				}
 			}
 			return marker;
 		} else { // plage.getFloor() << overlay.getFloor() or some other case

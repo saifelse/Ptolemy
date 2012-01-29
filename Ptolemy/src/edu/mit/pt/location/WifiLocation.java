@@ -4,12 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.android.maps.GeoPoint;
-
-import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
-import edu.mit.pt.data.PtolemyOpenHelper;
-import edu.mit.pt.maps.LocationSetter;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +11,11 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+
+import com.google.android.maps.GeoPoint;
+
+import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
+import edu.mit.pt.maps.LocationSetter;
 
 
 // FIXME: THIS BREAKS IF WIFI IS OFF.
@@ -142,16 +141,13 @@ public class WifiLocation {
 				bssid.length() - 1) + '0';
 	}
 	
-	@SuppressWarnings("unchecked")
 	public APGeoPoint getLocation() {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this.context).getReadableDatabase();
 		List<ScanResult> results = wifi.getScanResults();
-		Collections.sort(results, new Comparator() {
+		Collections.sort(results, new Comparator<ScanResult>() {
 
-			public int compare(Object lhs, Object rhs) {
-				ScanResult a = (ScanResult) lhs;
-				ScanResult b = (ScanResult) rhs;
+			public int compare(ScanResult a, ScanResult b) {
 				return b.level - a.level;
 			}
 

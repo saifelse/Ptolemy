@@ -8,22 +8,11 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.net.wifi.WifiManager.WifiLock;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
-import com.skyhookwireless.wps.RegistrationCallback;
-import com.skyhookwireless.wps.WPSAuthentication;
-import com.skyhookwireless.wps.WPSContinuation;
-import com.skyhookwireless.wps.WPSLocation;
-import com.skyhookwireless.wps.WPSPeriodicLocationCallback;
-import com.skyhookwireless.wps.WPSReturnCode;
-import com.skyhookwireless.wps.XPS;
 
-import edu.mit.pt.Config;
 import edu.mit.pt.location.APGeoPoint;
 import edu.mit.pt.location.WifiLocation;
 

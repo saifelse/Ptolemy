@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import edu.mit.pt.Config;
 import edu.mit.pt.R;
 
 public class TourActivity extends Activity {
