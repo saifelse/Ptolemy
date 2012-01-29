@@ -184,8 +184,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		Log.v(Config.TAG, "INTENT: " + intent.getAction());
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			List<String> segments = intent.getData().getPathSegments();
+			Log.v(Config.TAG, "INTENT  : " + intent.getData());
 			if (segments.size() == 1) {
 				String room = segments.get(0);
+				System.out.println("ROOM: " + room);
 				Place place = Place.getClassroom(this, room);
 				if (place != null) {
 					showClassroom(place);
@@ -208,7 +210,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private void setupFilterButton(final ToggleButton button, final PlaceType type) {
 		// Set up listener
 		button.setOnClickListener(new OnClickListener(){
-			@Override
 			public void onClick(View v) {
 				handleButtonState(button, type);
 			}
@@ -255,11 +256,14 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 	}
 
-	public void moveToFocusedPlace(View v) {
+	/**
+	 *  Called in map_main.xml.
+	 */
+	public void moveToFocusedPlaces(View v) {
 		if (focusedPlace == null) {
 			return;
 		}
-		mapView.getController().animateTo(focusedPlace.getPoint());
+		floorMapView.showPlace(focusedPlace);
 	}
 
 	public void handleExtraButtonClick(View v) {

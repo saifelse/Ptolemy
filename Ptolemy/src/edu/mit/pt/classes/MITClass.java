@@ -99,6 +99,9 @@ public class MITClass {
 		return term;
 	}
 
+	/**
+	 * Given mitid, return id
+	 */
 	public static long getIdIfValidRoom(Context context, String name) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
@@ -121,6 +124,31 @@ public class MITClass {
 		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
 	}
 
+	public static MITClass getClass(Context context, long id) {
+		List<MITClass> classes = new ArrayList<MITClass>();
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		Cursor cursor = db.query(MITClassTable.CLASSES_TABLE_NAME,
+				new String[] { MITClassTable.COLUMN_MITID,
+						MITClassTable.COLUMN_ROOM },
+				MITClassTable.COLUMN_ID + "=?",
+				new String[] { Long.toString(id) }, null, null, null);
+		if (cursor.getCount() == 0) {
+			return null;
+		}
+		cursor.moveToFirst();
+		String name = cursor.getString(cursor
+				.getColumnIndex(MITClassTable.COLUMN_MITID));
+		String room = cursor.getString(cursor
+				.getColumnIndex(MITClassTable.COLUMN_ROOM));
+		Place place = Place.getClassroom(context, room);
+		if (place == null) {
+			return null;
+		}
+		MITClass c = new MITClass(name, place);
+		return c;
+	}
+	
 	public static List<MITClass> getClasses(Context context, long[] ids) {
 		List<MITClass> classes = new ArrayList<MITClass>();
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton

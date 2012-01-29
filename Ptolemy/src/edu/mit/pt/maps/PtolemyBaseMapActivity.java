@@ -16,6 +16,7 @@ import com.google.android.maps.OverlayItem;
 
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.Place;
 
 abstract public class PtolemyBaseMapActivity extends MapActivity {
@@ -35,11 +36,20 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			// Try autocomplete ID first.
 			Uri dataUri = intent.getData();
+			System.out.println("INTENT: " + intent.getData());
 			Place p;
 			if (dataUri != null) {
-				int classroomId = Integer.valueOf(dataUri.getLastPathSegment());
-				p = Place.getPlace(this, classroomId);
-				roomQuery = p.getName();
+				String id = dataUri.getLastPathSegment();
+				if (id.charAt(0) == 'c') {
+					//class
+					MITClass mitClass = MITClass.getClass(this, Integer.parseInt(id.substring(1)));
+					p = mitClass.getPlace();
+					roomQuery = mitClass.getName();
+				} else {
+					int classroomId = Integer.valueOf(id);
+					p = Place.getPlace(this, classroomId);
+					roomQuery = p.getName();
+				}
 			} else {
 				roomQuery = intent.getStringExtra(SearchManager.QUERY);
 				p = Place.getClassroom(this, roomQuery);
