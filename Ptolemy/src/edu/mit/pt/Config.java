@@ -215,7 +215,7 @@ public class Config {
 			if (matcher.matches()) {
 				String year = matcher.group(1);
 				String semester = matcher.group(2);
-				return year.substring(2) + semester.toLowerCase();
+				return semester.toLowerCase() + year.substring(2);
 			}
 			return DEFAULT_TERM;
 		}
