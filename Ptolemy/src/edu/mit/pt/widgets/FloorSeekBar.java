@@ -54,6 +54,8 @@ public class FloorSeekBar extends View {
 
 	private Paint topBarPaint;
 
+	private float extraPad;
+
 	
 	
 	public FloorSeekBar(Context context, AttributeSet attrs, int defStyle){
@@ -91,7 +93,8 @@ public class FloorSeekBar extends View {
 		
 		indicTxt = new TextPaint();
 		indicTxt.setAntiAlias(true);
-		indicTxt.setTextSize(32 * getResources().getDisplayMetrics().density);
+		indicTxt.setTextSize(48 * getResources().getDisplayMetrics().density);
+		indicTxt.setTextAlign(Paint.Align.CENTER);
 		indicTxt.setColor(0xFF000000);
 		indicPad = 15;
 		indicHeight = -indicTxt.ascent();
@@ -120,6 +123,7 @@ public class FloorSeekBar extends View {
 		scrollThumbPaint = new Paint();
   		scrollThumbPaint.setColor(0xFF999999);
 
+  		extraPad = 100;
 		invalidate();
 	}
 
@@ -143,11 +147,11 @@ public class FloorSeekBar extends View {
 	}
 
 	private int getTrackBottom() {
-		return (int) (this.getHeight() - getPaddingBottom() - textHeight - trackPad);
+		return (int) (this.getHeight() - getPaddingBottom() - textHeight - trackPad - extraPad);
 	}
 
 	private int getTrackTop() {
-		return getPaddingTop() + trackPad + (int)indicHeight + (int)indicPad;
+		return (int)(getPaddingTop() + trackPad + indicPad + extraPad);
 	}
 
 	@Override
@@ -166,7 +170,7 @@ public class FloorSeekBar extends View {
 		float textHeight = -mTxt.ascent();
 
 		// Draw floor indicator
-		canvas.drawText(Integer.toString(targetFloor), centerXLine-10, getTrackTop()-indicPad, indicTxt);
+		canvas.drawText(Integer.toString(targetFloor), centerXLine, getTrackTop()+indicHeight-indicPad-extraPad, indicTxt);
 		
 		// Add numerical labels above and below.
 		
@@ -207,6 +211,9 @@ public class FloorSeekBar extends View {
 		}	
 		// Draw scroll thumb.
 		
+		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, getYFromFloor(floor)
+				- thumbHeight / 2, centerXLine + thumbWidth / 2, getYFromFloor(floor)
+				+ thumbHeight / 2), selTxt);
 		
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY
 				- thumbHeight / 2, centerXLine + thumbWidth / 2, unsnappedY

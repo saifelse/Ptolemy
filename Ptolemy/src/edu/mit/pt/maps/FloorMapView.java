@@ -34,8 +34,9 @@ public class FloorMapView extends RelativeLayout {
 
 	private final PtolemyMapView mapView;
 	private final FloorSeekBar seekBar;
+	private final static int SEEK_TOP_MARGIN = 0;
 	private final static int SEEK_WIDTH = 75;
-	private final static int SEEK_HEIGHT = 400;
+	private final static int SEEK_HEIGHT = 500;
 
 	private Context context;
 	// Places
@@ -123,8 +124,8 @@ public class FloorMapView extends RelativeLayout {
 		addView(mapView, lpMap);
 
 		RelativeLayout.LayoutParams lpSeek = new RelativeLayout.LayoutParams(
-				FloorMapView.SEEK_WIDTH, FloorMapView.SEEK_HEIGHT);
-		lpSeek.topMargin = 100;
+				FloorMapView.SEEK_WIDTH, LayoutParams.MATCH_PARENT);
+		lpSeek.topMargin = SEEK_TOP_MARGIN;
 		lpSeek.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		lpSeek.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
