@@ -23,6 +23,7 @@ import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.bookmarks.EditBookmarkActivity;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceType;
+import edu.mit.pt.location.APGeoPoint;
 import edu.mit.pt.tutorial.TourActivity;
 import edu.mit.pt.tutorial.TourItemActivity;
 import edu.mit.pt.tutorial.TourMapActivity;
@@ -85,10 +86,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				GeoPoint gp = LocationSetter.getInstance(
+				APGeoPoint gp = LocationSetter.getInstance(
 						PtolemyMapActivity.this, null).getPoint(c);
-				if (gp != null)
+				if (gp != null) {
 					mapView.getController().animateTo(gp);
+					floorMapView.setFloor(gp.getFloor());
+				}
 			}
 		});
 
