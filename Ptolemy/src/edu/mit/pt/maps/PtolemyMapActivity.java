@@ -46,7 +46,6 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int COMPASS_BUTTON_ID = 102;
 
 	private PtolemyMapView mapView;
-	private FloorMapView floorMapView;
 	private XPSOverlay meOverlay;
 	private long focusedBookmarkId = -1;
 

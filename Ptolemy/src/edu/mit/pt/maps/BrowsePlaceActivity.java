@@ -1,10 +1,6 @@
 package edu.mit.pt.maps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -14,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.mit.pt.ActionBar;
-import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;
@@ -24,7 +19,6 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 	private final String ACTIVITY_TITLE = "Pick a location";
 	
 	private PtolemyMapView mapView;
-	private FloorMapView floorMapView;
 	
 	private CharSequence restoreText;
 	private Drawable restoreDrawable;

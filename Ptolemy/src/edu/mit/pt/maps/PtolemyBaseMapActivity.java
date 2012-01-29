@@ -23,6 +23,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 	private final int DIALOG_INVALID_ROOM = 0;
 	private String roomQuery = null;
 	protected Place focusedPlace;
+	protected FloorMapView floorMapView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,15 +100,26 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							OverlayItem newFocus) {
 						if (newFocus == null) {
 							setPlace(null);
-							((PlacesItemizedOverlay) overlay).setFocusedTitle(null);
+							((PlacesItemizedOverlay) overlay)
+									.setFocusedTitle(null);
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
-						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem.getTitle());
+						((PlacesItemizedOverlay) overlay).setFocusedTitle(pItem
+								.getTitle());
 						floorMapView.setFloor(pItem.getPlace().getFloor());
 						setPlace(pItem.getPlace());
 					}
 				});
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (focusedPlace != null && floorMapView != null) {
+			floorMapView.getPlacesOverlay().setFocus(null);
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 	abstract void setPlace(Place p);
