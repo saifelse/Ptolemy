@@ -21,7 +21,7 @@ import edu.mit.pt.R;
 
 public class AP {
 
-	public static GeoPoint getAPLocation(String bssid, SQLiteDatabase database) {
+	public static APGeoPoint getAPLocation(String bssid, SQLiteDatabase database) {
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
 		queryBuilder.setTables(APTable.AP_TABLE_NAME);
@@ -39,10 +39,13 @@ public class AP {
 		}
 		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
 		int lonIndex = cursor.getColumnIndex(APTable.COLUMN_LON);
+		int flrIndex = cursor.getColumnIndex(APTable.COLUMN_FLOOR);
 		cursor.moveToFirst();
 		int lat = cursor.getInt(latIndex);
 		int lon = cursor.getInt(lonIndex);
-		return new GeoPoint(lat, lon);
+		int flr = cursor.getInt(flrIndex);
+		System.out.println("FLOOR: " + flr + " BSSID: " + bssid);
+		return new APGeoPoint(lat, lon, flr);
 	}
 
 	public static Integer loadAPs(Context context, SQLiteDatabase db)

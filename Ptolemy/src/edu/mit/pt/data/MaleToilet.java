@@ -38,5 +38,10 @@ public class MaleToilet extends Place {
 	public PlaceType getPlaceType() {
 		return PlaceType.MTOILET;
 	}
+	
+	@Override
+	public int getMarkerDownBelowId() {
+		return R.drawable.green_point;
+	}
 
 }

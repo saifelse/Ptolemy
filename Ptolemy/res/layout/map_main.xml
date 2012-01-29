@@ -24,12 +24,12 @@
         android:id="@+id/tutorial_add_bookmark_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_above="@+id/meta_view"
-        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="3dp"
-        android:visibility="gone"
-        android:src="@drawable/tutorial_add_bookmark" />
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/tutorial_add_bookmark"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/tutorial_toolbar_img"
@@ -39,130 +39,129 @@
         android:layout_below="@+id/nav"
         android:layout_marginRight="34dp"
         android:layout_marginTop="3dp"
-        android:visibility="gone"
-        android:src="@drawable/tutorial_toolbar" />
-  
-    
-    	 <LinearLayout
+        android:src="@drawable/tutorial_toolbar"
+        android:visibility="gone" />
+
+    <LinearLayout
         android:id="@+id/filter_view"
-        android:baselineAligned="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:baselineAligned="false" >
 
-	        <RelativeLayout
-	            android:id="@+id/athena_full"
-	            android:layout_weight="1"
-	        	android:layout_width="0dip"
-	        	android:layout_height="wrap_content">
-		        <ToggleButton
-		            android:id="@+id/athena_filter_btn"
-		            android:layout_width="match_parent"
-		            android:layout_height="48dp"
-		            android:textOn=""
-		            android:textOff=""
-		            android:checked="true"
-		            android:layout_alignParentBottom="true"
-		            android:background="@drawable/athena_toggle_btn"
-		            android:contentDescription="@string/athena_filter"
-		            />
-		        <TextView
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:gravity="center"
-		            android:singleLine="true"
-		            android:layout_alignParentBottom="true"
-		            android:text="Athena"
-		            android:textColor="#FFFFFF"
-		            android:textSize="16dp"
-		            />
-	        </RelativeLayout>
-	
-
-	        <RelativeLayout
-	            android:id="@+id/classroom_full"
-	            android:layout_weight="1"
-	        	android:layout_width="0dip"
-	        	android:layout_height="wrap_content">
-		        <ToggleButton
-		            android:id="@+id/classroom_filter_btn"
-		            android:layout_width="match_parent"
-		            android:layout_height="48dp"
-		            android:textOn=""
-		            android:textOff=""
-		            android:checked="false"
-		            android:layout_alignParentBottom="true"
-		            android:background="@drawable/classroom_toggle_btn"
-		            android:contentDescription="@string/classroom_filter"
-		            />
-		        <TextView
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:gravity="center"
-		            android:singleLine="true"
-		            android:layout_alignParentBottom="true"
-		            android:text="Classroom"
-		            android:textColor="#FFFFFF"
-		            android:textSize="16dp"
-		            />
-	        </RelativeLayout>
-	    
         <RelativeLayout
-	            android:id="@+id/br_male_full"
-	            android:layout_weight="1"
-	        	android:layout_width="0dip"
-	        	android:layout_height="wrap_content">
-		        <ToggleButton
-		            android:id="@+id/br_male_filter_btn"
-		            android:layout_width="match_parent"
-		            android:layout_height="48dp"
-		            android:textOn=""
-		            android:textOff=""
-		            android:checked="true"
-		            android:layout_alignParentBottom="true"
-		            android:background="@drawable/br_male_toggle_btn"
-		            android:contentDescription="@string/br_male_filter"
-		            />
-		        <TextView
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:gravity="center"
-		            android:singleLine="true"
-		            android:layout_alignParentBottom="true"
-		            android:text="Toilet (M)"
-		            android:textColor="#FFFFFF"
-		            android:textSize="16dp"
-		            />
-	    </RelativeLayout>
-                <RelativeLayout
-	            android:id="@+id/br_female_full"
-	            android:layout_weight="1"
-	        	android:layout_width="0dip"
-	        	android:layout_height="wrap_content">
-		        <ToggleButton
-		            android:id="@+id/br_female_filter_btn"
-		            android:layout_width="match_parent"
-		            android:layout_height="48dp"
-		            android:textOn=""
-		            android:textOff=""
-		            android:checked="true"
-		            android:layout_alignParentBottom="true"
-		            android:background="@drawable/br_female_toggle_btn"
-		            android:contentDescription="@string/br_female_filter"
-		            />
-		        <TextView
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:gravity="center"
-		            android:singleLine="true"
-		            android:layout_alignParentBottom="true"
-		            android:text="Toilet (F)"
-		            android:textColor="#FFFFFF"
-		            android:textSize="16dp"
-		            />
-	    </RelativeLayout>
+            android:id="@+id/athena_full"
+            android:layout_width="0dip"
+            android:layout_height="48dp"
+            android:layout_weight="1" >
+
+            <ToggleButton
+                android:id="@+id/athena_filter_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/athena_toggle_btn"
+                android:checked="true"
+                android:contentDescription="@string/athena_filter"
+                android:textOff=""
+                android:textOn="" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Athena"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/classroom_full"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ToggleButton
+                android:id="@+id/classroom_filter_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/classroom_toggle_btn"
+                android:checked="false"
+                android:contentDescription="@string/classroom_filter"
+                android:textOff=""
+                android:textOn="" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Classroom"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/br_male_full"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ToggleButton
+                android:id="@+id/br_male_filter_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/br_male_toggle_btn"
+                android:checked="true"
+                android:contentDescription="@string/br_male_filter"
+                android:textOff=""
+                android:textOn="" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Toilet (M)"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/br_female_full"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ToggleButton
+                android:id="@+id/br_female_filter_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/br_female_toggle_btn"
+                android:checked="true"
+                android:contentDescription="@string/br_female_filter"
+                android:textOff=""
+                android:textOn="" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Toilet (F)"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </RelativeLayout>
     </LinearLayout>
-    
+
     <RelativeLayout
         android:id="@+id/meta_view"
         android:layout_width="match_parent"

@@ -16,8 +16,6 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.OverlayItem;
 
 import edu.mit.pt.Config;
 
@@ -71,8 +69,15 @@ abstract public class Place implements Parcelable {
 		}
 	}
 
+	public Drawable getMarkerDownBelow(Resources resources) {
+		return resources.getDrawable(getMarkerDownBelowId());
+	}
+
 	abstract public int getMarkerId();
+
 	abstract public int getMarkerSelId();
+
+	abstract public int getMarkerDownBelowId();
 
 	public static Place getPlace(Context context, long id) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
@@ -268,8 +273,8 @@ abstract public class Place implements Parcelable {
 		return places;
 	}
 
-	public static Map<Integer, List<Place>> getPlaces(Context context, int latMin,
-			int latMax, int lonMin, int lonMax) {
+	public static Map<Integer, List<Place>> getPlaces(Context context,
+			int latMin, int latMax, int lonMin, int lonMax) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
 
@@ -285,7 +290,7 @@ abstract public class Place implements Parcelable {
 				new String[] { Integer.toString(latMin),
 						Integer.toString(latMax), Integer.toString(lonMin),
 						Integer.toString(lonMax) }, null, null, null);
-		
+
 		Map<Integer, List<Place>> places = new HashMap<Integer, List<Place>>();
 		Log.v(Config.TAG, "Am I stuck in Place.getPlaces?");
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -319,7 +324,7 @@ abstract public class Place implements Parcelable {
 			default:
 				continue;
 			}
-			if(!places.containsKey(p.getFloor())){
+			if (!places.containsKey(p.getFloor())) {
 				places.put(p.getFloor(), new ArrayList<Place>());
 			}
 			places.get(p.getFloor()).add(p);

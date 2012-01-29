@@ -27,5 +27,10 @@ public class Fountain extends Place {
 	public int getMarkerSelId() {
 		return R.drawable.green_point;
 	}
+	
+	@Override
+	public int getMarkerDownBelowId() {
+		return R.drawable.green_point;
+	}
 
 }

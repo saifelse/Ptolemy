@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.maps.GeoPoint;
 
@@ -21,6 +22,7 @@ import edu.mit.pt.bookmarks.Bookmark;
 import edu.mit.pt.bookmarks.BookmarksActivity;
 import edu.mit.pt.bookmarks.EditBookmarkActivity;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.tutorial.TourActivity;
 import edu.mit.pt.tutorial.TourItemActivity;
 import edu.mit.pt.tutorial.TourMapActivity;
@@ -35,6 +37,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int TUTORIAL_TOOLBAR_RESULT = 2;
 	private final int TUTORIAL_ITEM_RESULT = 3;
 	private final int ADD_EDIT_BOOKMARK_RESULT = 4;
+	private final int BOOKMARKS_RESULT = 5;
 	// MAKE SURE THIS ROOM EXISTS!
 	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "36-212";
@@ -111,10 +114,22 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		bookmarksButton.setContentDescription(getString(R.string.bookmarks));
 		bookmarksButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent(v.getContext(),
-						BookmarksActivity.class));
+				startActivityForResult(new Intent(v.getContext(),
+						BookmarksActivity.class), BOOKMARKS_RESULT);
 			}
 		});
+		
+		final ToggleButton athenaFilterButton = (ToggleButton) findViewById(R.id.athena_filter_btn);
+		setupFilterButton(athenaFilterButton, PlaceType.ATHENA);
+		
+		final ToggleButton classroomFilterButton = (ToggleButton) findViewById(R.id.classroom_filter_btn);
+		setupFilterButton(classroomFilterButton, PlaceType.CLASSROOM);
+		
+		final ToggleButton brMaleFilterButton = (ToggleButton) findViewById(R.id.br_male_filter_btn);
+		setupFilterButton(brMaleFilterButton, PlaceType.MTOILET);
+		
+		final ToggleButton brFemaleFilterButton = (ToggleButton) findViewById(R.id.br_female_filter_btn);
+		setupFilterButton(brFemaleFilterButton, PlaceType.FTOILET);
 
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				bookmarksButton });
@@ -159,7 +174,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		super.onNewIntent(intent);
 		handleIntent(intent);
 	}
-
+	
 	private boolean handleIntent(Intent intent) {
 		Log.v(Config.TAG, "INTENT: " + intent.getAction());
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -175,14 +190,24 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		}
 		return false;
 	}
+	
+	private void setupFilterButton(ToggleButton button, PlaceType type) {
+		if (button.isChecked()) {
+			// TODO: implement this.
+		} else {
+			// TODO: implement this.
+		}
+	}
 
 	@Override
 	protected void setPlace(Place place) {
 		focusedPlace = place;
 
 		View metaView = findViewById(R.id.meta_view);
+		View filterView = findViewById(R.id.filter_view);
 		if (place == null) {
 			metaView.setVisibility(View.GONE);
+			filterView.setVisibility(View.VISIBLE);
 			return;
 		}
 		((TextView) findViewById(R.id.place_confirm_text)).setText(place
@@ -192,6 +217,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		setExtraButton();
 
 		metaView.setVisibility(View.VISIBLE);
+		filterView.setVisibility(View.GONE);
+		
 	}
 
 	private void setExtraButton() {
@@ -254,11 +281,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case ADD_EDIT_BOOKMARK_RESULT:
-			switch (resultCode) {
-			case RESULT_OK:
-				if (focusedPlace != null) {
-					setExtraButton();
-				}
+		case BOOKMARKS_RESULT:
+			if (focusedPlace != null) {
+				setExtraButton();
 			}
 			break;
 		case TUTORIAL_INTRO_RESULT:

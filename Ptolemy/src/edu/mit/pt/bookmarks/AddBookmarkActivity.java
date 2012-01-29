@@ -42,6 +42,7 @@ public class AddBookmarkActivity extends MapActivity {
 	private boolean userHasEditedPlace = false;
 
 	private PlacesItemizedOverlay showPlaceItemizedOverlay;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,43 +87,39 @@ public class AddBookmarkActivity extends MapActivity {
 		autoComplete.setup(db, this);
 		autoComplete.addTextChangedListener(new TextWatcher() {
 
-			@Override
 			public void afterTextChanged(Editable s) {
 				checkShouldEnableButton();
 			}
 
-			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 			}
 
-			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 			}
-			
+
 		});
-		
+
 		// Set up overlay
 		Drawable defaultMarker = getResources().getDrawable(
 				R.drawable.green_point);
 		showPlaceItemizedOverlay = new PlacesItemizedOverlay(defaultMarker);
-		
+
 		if (Config.shouldShowBookmarkHelp(this)) {
 			findViewById(R.id.bookmark_help).setVisibility(View.VISIBLE);
 			Config.setShouldShowBookmarkHelp(this, false);
 		}
-		
+
 		completeSetup();
 	}
 
 	protected String getNavTitle() {
 		return "Add Bookmark";
 	}
-	
+
 	protected void completeSetup() {
-		long placeId = getIntent().getLongExtra(
-				BookmarksActivity.PLACE_ID, -1);
+		long placeId = getIntent().getLongExtra(BookmarksActivity.PLACE_ID, -1);
 		if (placeId == -1) {
 			return;
 		}
@@ -148,29 +145,22 @@ public class AddBookmarkActivity extends MapActivity {
 		}
 		PtolemyMapView mapView = (PtolemyMapView) findViewById(R.id.mapview);
 		mapView.getController().setCenter(place.getPoint());
-		
-		
 
 		showPlaceItemizedOverlay.clear();
-		
+
 		// Add current place.
 		Resources resources = getResources();
-		Drawable above = getResources().getDrawable(
-				R.drawable.green_point);
-		Drawable below = getResources().getDrawable(
-				R.drawable.blue_point);
-		Drawable downBelow = getResources().getDrawable(
-				R.drawable.icon_athena);
-		
+
 		PlacesOverlayItem item = new PlacesOverlayItem(place, place.getName(),
-				place.getName(), place.getMarker(resources, false), place.getMarker(
-						resources, true), below, above, downBelow, showPlaceItemizedOverlay);
-		
+				place.getName(), place.getMarker(resources, false),
+				place.getMarker(resources, true),
+				place.getMarkerDownBelow(resources), showPlaceItemizedOverlay);
+
 		showPlaceItemizedOverlay.setFloor(place.getFloor());
 		showPlaceItemizedOverlay.addOverlayItem(item);
 		showPlaceItemizedOverlay.setFocusedTitle(place.getName());
 		mapView.getOverlays().add(showPlaceItemizedOverlay);
-		
+
 		this.place = place;
 		Button placeButton = (Button) findViewById(R.id.pickedPlace);
 		Log.v(Config.TAG, "Setting placeButton to have text " + place.getName());
@@ -208,6 +198,7 @@ public class AddBookmarkActivity extends MapActivity {
 			return;
 		}
 		Bookmark.addBookmark(this, customName, place, type);
+		setResult(RESULT_OK);
 		finish();
 	}
 
@@ -224,7 +215,7 @@ public class AddBookmarkActivity extends MapActivity {
 			break;
 		}
 	}
-	
+
 	public void dismissHelp(View v) {
 		v.setVisibility(View.GONE);
 	}

@@ -1,11 +1,9 @@
 package edu.mit.pt.maps;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.google.android.maps.OverlayItem;
 
-import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 
 public class PlacesOverlayItem extends OverlayItem {
@@ -13,22 +11,19 @@ public class PlacesOverlayItem extends OverlayItem {
 	Place place;
 	Drawable marker;
 	Drawable markerSel;
-	Drawable above;
-	Drawable below;
 	Drawable downBelow;
-	
+
 	PlacesItemizedOverlay overlay;
 
 	public PlacesOverlayItem(Place p, String title, String snippet,
-			Drawable marker, Drawable markerSel, Drawable below,
-			Drawable above, Drawable downBelow, PlacesItemizedOverlay overlay) {
+			Drawable marker, Drawable markerSel, Drawable downBelow,
+			PlacesItemizedOverlay overlay) {
 		super(p.getPoint(), title, snippet);
 		this.place = p;
-		
-		above.setBounds(0, 0, above.getIntrinsicWidth(), above.getIntrinsicHeight());
-		below.setBounds(0, 0, below.getIntrinsicWidth(), below.getIntrinsicHeight());
-		downBelow.setBounds(0, 0, downBelow.getIntrinsicWidth(), downBelow.getIntrinsicHeight());
-		
+
+		downBelow.setBounds(0, 0, downBelow.getIntrinsicWidth(),
+				downBelow.getIntrinsicHeight());
+
 		marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 				marker.getIntrinsicHeight());
 		PlacesItemizedOverlay.boundCenterBottom(marker);
@@ -37,8 +32,6 @@ public class PlacesOverlayItem extends OverlayItem {
 		PlacesItemizedOverlay.boundCenterBottom(markerSel);
 		this.marker = marker;
 		this.markerSel = markerSel;
-		this.above = above;
-		this.below = below;
 		this.downBelow = downBelow;
 		this.overlay = overlay;
 	}
@@ -55,16 +48,14 @@ public class PlacesOverlayItem extends OverlayItem {
 		// OverlayItem.ITEM_STATE_PRESSED_MASK) {
 		// return this.markerSel;
 		// }
-		if (place.getFloor() == overlay.getFloor() - 1) {
-			return below;
-		} else if (place.getFloor() == overlay.getFloor() + 1) {
-			return above;
-		}else if (place.getFloor() == overlay.getFloor()){
-			if (getTitle() != null && getTitle().equals(overlay.getFocusedTitle())) {
+		if (place.getFloor() == overlay.getFloor()) {
+			if (getTitle() != null
+					&& getTitle().equals(overlay.getFocusedTitle())) {
 				return this.markerSel;
 			}
 			return marker;
-		}else { // plage.getFloor() << overlay.getFloor() or some other case that shouldn't happen.
+		} else { // plage.getFloor() << overlay.getFloor() or some other case
+					// that shouldn't happen.
 			return downBelow;
 		}
 	}

@@ -34,6 +34,7 @@ public class LocationSetter {
 	private double bearing;
 	private GeoPoint currentLocation;
 
+	private Context context;
 	private XPSOverlay overlay;
 
 	// Bearings
@@ -58,6 +59,7 @@ public class LocationSetter {
 	}
 
 	private LocationSetter(Context context, XPSOverlay overlay) {
+		this.context = context;
 		this.overlay = overlay;
 		updateLocationHandler = new Handler();
 		isStopped = true;
@@ -127,6 +129,7 @@ public class LocationSetter {
 	}
 
 	private void resumeLocation() {
+		getPoint(context);
 
 	}
 
