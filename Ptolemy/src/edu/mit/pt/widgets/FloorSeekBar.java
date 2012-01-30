@@ -192,7 +192,7 @@ public class FloorSeekBar extends View {
 		strokePaint.setStrokeWidth(4);
 
 		Paint textPaint = new Paint(indicTxt);
-		textPaint.setARGB(255, 0, 0, 0);
+		textPaint.setARGB(255, 40, 40, 40);
 		textPaint.setTextAlign(Paint.Align.CENTER);
 		//textPaint.setTextSize(16);
 		textPaint.setTypeface(Typeface.DEFAULT_BOLD);

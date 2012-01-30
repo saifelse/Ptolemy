@@ -79,7 +79,7 @@ public class PtolemyMapView extends MapView {
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			if (System.currentTimeMillis() - lastPressTimestamp < 400)
+			if (System.currentTimeMillis() - lastPressTimestamp < 300)
 				getController().zoomInFixing((int)ev.getX(), (int)ev.getY());
 			lastPressTimestamp = System.currentTimeMillis();
 			break;
