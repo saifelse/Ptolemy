@@ -1,5 +1,6 @@
 package edu.mit.pt.maps;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,17 +29,19 @@ import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 
 public class FloorMapView extends RelativeLayout {
+	private Context context;
+	private final PtolemyMapView mapView;
+	private final FloorSeekBar seekBar;
+	
 	public final static int MAP_VIEW_ID = 0;
 	public final static int SEEK_BAR_ID = 1;
 	public final static int FLOOR_INDICATOR_ID = 2;
 
-	private final PtolemyMapView mapView;
-	private final FloorSeekBar seekBar;
 	private final static int SEEK_TOP_MARGIN = 0;
 	private final static int SEEK_WIDTH = 75;
 	private final static int SEEK_HEIGHT = LayoutParams.MATCH_PARENT;
+	private final static int MIN_ZOOM_LEVEL = 19;
 
-	private Context context;
 	// Places
 	private int floor;
 	private PlaceManager placeManager;
@@ -161,32 +164,43 @@ public class FloorMapView extends RelativeLayout {
 		// resumeUpdate();
 	}
 
-	private void updateToFloor(int floor) {
+	public void updateToFloor(int floor) {
+		updateToFloor(floor, null);
+	}
+	public void updateToFloor(int floor, Runnable r) {
 		this.floor = floor;
-		if (mapView.getZoomLevel() < 20){
-			handlePlaceData(new LinkedList<Place>());
+		seekBar.setFloor(floor);
+		seekBar.snapY();
+		if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL){
+			// handlePlaceData(new LinkedList<Place>());
+			handlePlaceData(new ArrayList<Place>());
 		}else {
 			GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 			GeoPoint bottomRight = mapView.getProjection().fromPixels(
 					mapView.getWidth(), mapView.getHeight());
-			new VisiblePlaceTask().execute(topLeft, bottomRight);
+			new VisiblePlaceTask(r).execute(topLeft, bottomRight);
 		}
 	}
-
-	public void setFloor(int floor) {
-		updateToFloor(floor);
+	/*
+	public void setFloor(int floor, Runnable r) {
+		updateToFloor(floor, r);
 		seekBar.setFloor(floor);
 		seekBar.snapY();
-	}
+	}*/
 
 	void showPlace(final Place place) {
 		mapView.getController().animateTo(place.getPoint(), new Runnable() {
 			public void run() {
 				Log.v(Config.TAG, "We updating after move!");
 				updateMinMax();
-				setFloor(place.getFloor());
-				Log.v(Config.TAG, "showPlace is setting floor to " + place.getFloor());
-				placesOverlay.setFocusByPlace(place);
+				updateToFloor(place.getFloor(), new Runnable(){
+					@Override
+					public void run() {
+						Log.v(Config.TAG, "showPlace is setting floor to " + place.getFloor());
+						placesOverlay.setFocusByPlace(place);
+					}
+				});
+				
 			}
 		});
 	}
@@ -196,7 +210,7 @@ public class FloorMapView extends RelativeLayout {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
-			if (mapView.getZoomLevel() < 20){
+			if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL){
 				seekBar.setVisibility(INVISIBLE);
 			}else {
 				seekBar.setVisibility(VISIBLE);
@@ -209,7 +223,7 @@ public class FloorMapView extends RelativeLayout {
 	// getMinMax(), sets seekbars, then update to floor
 	//  if zoom less than 20, (0,0), otherwise look it up.
 	public void updateMinMax() {
-		if (mapView.getZoomLevel() < 20){
+		if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL){
 			handleMinMaxData(new MinMax(0,0));
 		}else{
 			GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
@@ -277,6 +291,10 @@ public class FloorMapView extends RelativeLayout {
 	}
 	
 	private class VisiblePlaceTask extends AsyncTask<GeoPoint, Void, List<Place>> {
+		private Runnable postAction;
+		public VisiblePlaceTask(Runnable r){
+			postAction = r;
+		}
 		 @Override
 	     protected List<Place> doInBackground(GeoPoint... gp) {
 	    	 GeoPoint topLeft = gp[0];
@@ -290,6 +308,7 @@ public class FloorMapView extends RelativeLayout {
 		 
 	     protected void onPostExecute(List<Place> places) {
 	 		handlePlaceData(places);
+	 		if(postAction != null) postAction.run();
 	     }
 	 }
 	

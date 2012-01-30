@@ -114,7 +114,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
 						floorMapView.getPlacesOverlay().setFocusedTitle(pItem.getTitle());
-						floorMapView.setFloor(pItem.getPlace().getFloor());
+						floorMapView.updateToFloor(pItem.getPlace().getFloor());
 						setPlaceMeta(pItem.getPlace());
 					}
 				});

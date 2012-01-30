@@ -82,11 +82,16 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		final Context c = this;
 		compassButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				APGeoPoint gp = LocationSetter.getInstance(
+				final APGeoPoint gp = LocationSetter.getInstance(
 						PtolemyMapActivity.this, null).getPoint(c);
 				if (gp != null) {
-					mapView.getController().animateTo(gp);
-					floorMapView.setFloor(gp.getFloor());
+					mapView.getController().animateTo(gp, new Runnable(){
+						@Override
+						public void run() {
+							floorMapView.updateToFloor(gp.getFloor());
+						}
+					});
+					
 				}
 			}
 		});
@@ -349,30 +354,35 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			case RESULT_OK:
 				findViewById(R.id.tutorial_toolbar_img)
 						.setVisibility(View.GONE);
-				floorMapView.setFloor(TUTORIAL_FLOOR);
-				showPlaceOnMap(Place.getPlaceByName(this, TUTORIAL_ROOM));
-				new Thread(new Runnable() {
+				floorMapView.updateToFloor(TUTORIAL_FLOOR, new Runnable(){
+					@Override
 					public void run() {
-						try {
-							Thread.sleep(1300);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						PtolemyMapActivity.this.runOnUiThread(new Runnable() {
+						showPlaceOnMap(Place.getPlaceByName(PtolemyMapActivity.this, TUTORIAL_ROOM));
+						new Thread(new Runnable() {
 							public void run() {
-								findViewById(R.id.tutorial_add_bookmark_img)
-										.setVisibility(View.VISIBLE);
-								startActivityForResult(new Intent(
-										PtolemyMapActivity.this,
-										TourItemActivity.class),
-										TUTORIAL_ITEM_RESULT);
-								Config.setShouldShowBookmarkHelp(
-										PtolemyMapActivity.this, true);
+								try {
+									Thread.sleep(1300);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								PtolemyMapActivity.this.runOnUiThread(new Runnable() {
+									public void run() {
+										findViewById(R.id.tutorial_add_bookmark_img)
+												.setVisibility(View.VISIBLE);
+										startActivityForResult(new Intent(
+												PtolemyMapActivity.this,
+												TourItemActivity.class),
+												TUTORIAL_ITEM_RESULT);
+										Config.setShouldShowBookmarkHelp(
+												PtolemyMapActivity.this, true);
+									}
+								});
 							}
-						});
+						}).start();
 					}
-				}).start();
+				});
+
 			}
 			break;
 		case TUTORIAL_ITEM_RESULT:
