@@ -33,6 +33,7 @@
     <string name="sync_bookmark">Sync Bookmarks</string>
     <string name="save_bookmark">Save Bookmark</string>
     <string name="bookmark_type_prompt">Pick the bookmark type:</string>
+    <string name="close">close</string>
 
     <string-array name="bookmark_types">
         <item>Lecture</item>

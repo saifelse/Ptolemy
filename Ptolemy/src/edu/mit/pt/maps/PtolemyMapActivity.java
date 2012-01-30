@@ -441,4 +441,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		LocationSetter.getInstance(this, null).stop();
 		mapView.stop();
 	}
+	
+	public void handleCloseMeta(View v) {
+		floorMapView.getPlacesOverlay().setFocus(null);
+		floorMapView.getPlacesOverlay().update();
+	}
 }

@@ -187,8 +187,8 @@
             android:id="@+id/place_confirm_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/place_extra_button"
+            android:layout_toLeftOf="@+id/place_close_button"
             android:background="@drawable/black_50"
             android:clickable="true"
             android:ellipsize="end"
@@ -198,6 +198,16 @@
             android:singleLine="true"
             android:textColor="#FFF"
             android:textSize="16dp" />
+        
+        <ImageButton
+            android:id="@+id/place_close_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/navigate_bg"
+            android:contentDescription="@string/close"
+            android:onClick="handleCloseMeta"
+            android:src="@drawable/ic_menu_close_clear_cancel" />
     </RelativeLayout>
 
 </RelativeLayout>
