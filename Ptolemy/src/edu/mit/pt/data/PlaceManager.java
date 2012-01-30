@@ -75,7 +75,7 @@ public class PlaceManager {
 		int tileXMin = lonToTileX(topLeft.getLongitudeE6());
 		int tileXMax = lonToTileX(bottomRight.getLongitudeE6());
 
-		List<Place> result = new ArrayList<Place>();
+		List<Place> result = new LinkedList<Place>();
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
 				for (Place p : getPlaces(x, y, floor)) {
@@ -134,16 +134,16 @@ public class PlaceManager {
 					int floor = k.getKey();
 					List<Place> places = k.getValue();
 					if (!results.containsKey(floor)) {
-						results.put(floor, new ArrayList<Place>());
+						results.put(floor, new LinkedList<Place>());
 					}
-					results.get(floor).addAll(places);
+					((LinkedList<Place>)results.get(floor)).addAll((LinkedList<Place>)places);
 				}
 			}
 		}
 		return results;
 	}
 
-	private MinMax getPlacesMinMax(int x, int y) {
+	private synchronized MinMax getPlacesMinMax(int x, int y) {
 		String h = hash(x, y, 0);
 		if (!cachedTilesMinMax.containsKey(h)) {
 			MinMax minMax = new MinMax(1, 1);
@@ -161,10 +161,8 @@ public class PlaceManager {
 		}
 	}
 
-	private Map<Integer, List<Place>> getPlaces(int x, int y) {
+	private synchronized Map<Integer, List<Place>> getPlaces(int x, int y) {
 		String h = hash(x, y, 0);
-//		Log.v(Config.TAG, "Getting place: " + h);
-
 		if (!cachedTiles.containsKey(h)) {
 			int latMin = tileYToLat(y);
 			int lonMin = tileXToLon(x);
@@ -175,11 +173,9 @@ public class PlaceManager {
 		}
 		return cachedTiles.get(h);
 	}
-
-	// TODO use a linkedlist to optimize addAll.
-
+	
 	private List<Place> getPlaces(int x, int y, int f) {
-		List<Place> result = new ArrayList<Place>();
+		LinkedList<Place> result = new LinkedList<Place>();
 
 		Map<Integer, List<Place>> unfiltered = getPlaces(x, y);
 
@@ -190,10 +186,10 @@ public class PlaceManager {
 			}
 		}
 		if (max != null && max < f)
-			result.addAll(unfiltered.get(max));
+			result.addAll((LinkedList<Place>)unfiltered.get(max));
 
 		if (unfiltered.containsKey(f))
-			result.addAll(unfiltered.get(f));
+			result.addAll((LinkedList<Place>)unfiltered.get(f));
 
 		/*
 		 * for(Place p : getPlaces(x,y)){ if(p.getFloor() == f || (p.getFloor()
