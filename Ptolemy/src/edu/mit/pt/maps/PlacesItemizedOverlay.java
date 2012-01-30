@@ -18,7 +18,7 @@ import edu.mit.pt.Config;
 import edu.mit.pt.data.Place;
 
 public class PlacesItemizedOverlay extends ItemizedOverlay<OverlayItem> {
-	public int floor;
+	private int floor;
 //	private List<PlacesOverlayItem> overlayItems = Collections
 //			.synchronizedList(new ArrayList<PlacesOverlayItem>());
 	private List<PlacesOverlayItem> overlayItems = new ArrayList<PlacesOverlayItem>();
