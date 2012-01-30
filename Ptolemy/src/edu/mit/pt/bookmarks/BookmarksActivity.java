@@ -1,5 +1,6 @@
 package edu.mit.pt.bookmarks;
 
+import edu.mit.pt.R;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
@@ -28,7 +29,6 @@ import android.widget.Toast;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.PrepopulateActivity;
-import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.Athena;
