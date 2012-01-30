@@ -36,7 +36,7 @@ public class NearbyActivity extends ListActivity {
 	static public final String PLACE = "place";
 	static private final int FLOOR_PENALTY = 50; // "meters"
 	static private final double RADIUS = 6378100;
-	static private final int MAX_DISTANCE = 500;
+	static private final int MAX_DISTANCE = 800;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
