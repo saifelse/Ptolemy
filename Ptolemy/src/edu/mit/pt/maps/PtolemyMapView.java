@@ -81,8 +81,9 @@ public class PtolemyMapView extends MapView {
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
+			//double tap to zoom logic
 			if (System.currentTimeMillis() - lastPressTimestamp < 300) {
-				if (Math.abs(ev.getX() - lastPressX) + Math.abs(ev.getY() - lastPressY) < 50)
+				if (Math.abs(ev.getX() - lastPressX) + Math.abs(ev.getY() - lastPressY) < 60)
 					getController().zoomInFixing((int)ev.getX(), (int)ev.getY());
 			}
 			lastPressTimestamp = System.currentTimeMillis();

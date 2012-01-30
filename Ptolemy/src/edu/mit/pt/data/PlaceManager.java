@@ -16,8 +16,8 @@ import com.google.android.maps.GeoPoint;
 public class PlaceManager {
 	public static int LAT_TILE_SPAN = 400;
 	public static int LON_TILE_SPAN = 600;
-	public static int CACHE_SIZE = 80;
-	public static int CACHEMINMAX_SIZE = 200;
+	public static int CACHE_SIZE = 120;
+	public static int CACHEMINMAX_SIZE = 300;
 
 	private Context context;
 	private Set<PlaceType> placeTypeFilter;
