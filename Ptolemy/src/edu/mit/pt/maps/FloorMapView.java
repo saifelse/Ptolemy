@@ -72,7 +72,7 @@ public class FloorMapView extends RelativeLayout {
 	}
 	public void resumeUpdate() {
 		Log.v(Config.TAG + "_f", "Resuming update!");
-		timer.cancel();
+		if(timer != null) timer.cancel();
 		timer = new Timer();
 		timer.schedule(new CheckUpdateTask(), 500);
 		//timer.scheduleAtFixedRate(updateTask, 500, 500);
@@ -81,6 +81,7 @@ public class FloorMapView extends RelativeLayout {
 	public void pauseUpdate() {
 		Log.v(Config.TAG + "_f", "Cancelled update!");
 		timer.cancel();
+		timer = null;
 		//updateTask.cancel();
 	}
 
@@ -115,7 +116,7 @@ public class FloorMapView extends RelativeLayout {
 						@Override
 						public void run() {
 							Log.v(Config.TAG + "_hey", "Run check again!");
-							timer.schedule(new CheckUpdateTask(), 500);							
+							if(timer != null) timer.schedule(new CheckUpdateTask(), 500);							
 						}
 					});
 				}
