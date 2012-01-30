@@ -47,6 +47,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int DIALOG_MULTIPLE_BOOKMARKS = 0;
 	private final String BOOKMARKS = "bookmarks";
 
+	private PlaceFilterButton athenaFilterButton;
+	private PlaceFilterButton classroomFilterButton;
+	private PlaceFilterButton brMaleFilterButton;
+	private PlaceFilterButton brFemaleFilterButton;
+
 	private PtolemyMapView mapView;
 	private XPSOverlay meOverlay;
 	private List<Long> focusedBookmarkIds = new ArrayList<Long>();
@@ -54,6 +59,14 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		Config.saveFilter(this, athenaFilterButton.getPlaceType(),
+				athenaFilterButton.isChecked());
+		Config.saveFilter(this, classroomFilterButton.getPlaceType(),
+				classroomFilterButton.isChecked());
+		Config.saveFilter(this, brMaleFilterButton.getPlaceType(),
+				brMaleFilterButton.isChecked());
+		Config.saveFilter(this, brFemaleFilterButton.getPlaceType(),
+				brFemaleFilterButton.isChecked());
 		LocationSetter.getInstance(this, null).pause();
 	}
 
@@ -92,13 +105,13 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				final APGeoPoint gp = LocationSetter.getInstance(
 						PtolemyMapActivity.this, null).getPoint(c);
 				if (gp != null) {
-					mapView.getController().animateTo(gp, new Runnable(){
+					mapView.getController().animateTo(gp, new Runnable() {
 						@Override
 						public void run() {
 							floorMapView.updateToFloor(gp.getFloor());
 						}
 					});
-					
+
 				}
 			}
 		});
@@ -145,17 +158,24 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
 				nearestButton, bookmarksButton });
 
-		final PlaceFilterButton athenaFilterButton = (PlaceFilterButton) findViewById(R.id.athena_filter_btn);
+		athenaFilterButton = (PlaceFilterButton) findViewById(R.id.athena_filter_btn);
 		setupFilterButton(athenaFilterButton, PlaceType.ATHENA);
+		athenaFilterButton.setChecked(Config.getFilter(this, PlaceType.ATHENA));
 
-		final PlaceFilterButton classroomFilterButton = (PlaceFilterButton) findViewById(R.id.classroom_filter_btn);
+		classroomFilterButton = (PlaceFilterButton) findViewById(R.id.classroom_filter_btn);
 		setupFilterButton(classroomFilterButton, PlaceType.CLASSROOM);
+		classroomFilterButton.setChecked(Config.getFilter(this,
+				PlaceType.CLASSROOM));
 
-		final PlaceFilterButton brMaleFilterButton = (PlaceFilterButton) findViewById(R.id.br_male_filter_btn);
+		brMaleFilterButton = (PlaceFilterButton) findViewById(R.id.br_male_filter_btn);
 		setupFilterButton(brMaleFilterButton, PlaceType.MTOILET);
+		brMaleFilterButton
+				.setChecked(Config.getFilter(this, PlaceType.MTOILET));
 
-		final PlaceFilterButton brFemaleFilterButton = (PlaceFilterButton) findViewById(R.id.br_female_filter_btn);
+		brFemaleFilterButton = (PlaceFilterButton) findViewById(R.id.br_female_filter_btn);
 		setupFilterButton(brFemaleFilterButton, PlaceType.FTOILET);
+		brFemaleFilterButton.setChecked(Config.getFilter(this,
+				PlaceType.FTOILET));
 
 		if (!handleIntent(getIntent())) {
 			mapView.getController().setCenter(Config.DEFAULT_POINT);
@@ -374,10 +394,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			case RESULT_OK:
 				findViewById(R.id.tutorial_toolbar_img)
 						.setVisibility(View.GONE);
-				floorMapView.updateToFloor(TUTORIAL_FLOOR, new Runnable(){
+				floorMapView.updateToFloor(TUTORIAL_FLOOR, new Runnable() {
 					@Override
 					public void run() {
-						showPlaceOnMap(Place.getPlaceByName(PtolemyMapActivity.this, TUTORIAL_ROOM));
+						showPlaceOnMap(Place.getPlaceByName(
+								PtolemyMapActivity.this, TUTORIAL_ROOM));
 						new Thread(new Runnable() {
 							public void run() {
 								try {
@@ -386,18 +407,23 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								PtolemyMapActivity.this.runOnUiThread(new Runnable() {
-									public void run() {
-										findViewById(R.id.tutorial_add_bookmark_img)
-												.setVisibility(View.VISIBLE);
-										startActivityForResult(new Intent(
-												PtolemyMapActivity.this,
-												TourItemActivity.class),
-												TUTORIAL_ITEM_RESULT);
-										Config.setShouldShowBookmarkHelp(
-												PtolemyMapActivity.this, true);
-									}
-								});
+								PtolemyMapActivity.this
+										.runOnUiThread(new Runnable() {
+											public void run() {
+												findViewById(
+														R.id.tutorial_add_bookmark_img)
+														.setVisibility(
+																View.VISIBLE);
+												startActivityForResult(
+														new Intent(
+																PtolemyMapActivity.this,
+																TourItemActivity.class),
+														TUTORIAL_ITEM_RESULT);
+												Config.setShouldShowBookmarkHelp(
+														PtolemyMapActivity.this,
+														true);
+											}
+										});
 							}
 						}).start();
 					}
@@ -450,7 +476,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		LocationSetter.getInstance(this, null).stop();
 		mapView.stop();
 	}
-	
+
 	public void handleCloseMeta(View v) {
 		floorMapView.getPlacesOverlay().setFocus(null);
 		floorMapView.getPlacesOverlay().update();

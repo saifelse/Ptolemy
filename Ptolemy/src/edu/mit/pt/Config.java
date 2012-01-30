@@ -20,6 +20,7 @@ import com.google.android.maps.GeoPoint;
 import edu.mit.pt.bookmarks.BookmarksTable;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.classes.MITClassTable;
+import edu.mit.pt.data.PlaceType;
 import edu.mit.pt.data.PlacesTable;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.data.RoomLoader;
@@ -34,6 +35,7 @@ public class Config {
 	static public final String TERM = "term";
 	static public final String DEFAULT_TERM = "sp11";
 	static public final String TOUR_TAKEN = "tourTaken";
+	static public final String FILTER = "filter";
 	static public final String SHOW_ADD_BOOKMARK_HELP = "addBookmarkHelp";
 	static public final GeoPoint DEFAULT_POINT = new GeoPoint(42361283,
 			-71092025);
@@ -239,6 +241,25 @@ public class Config {
 			activity.finish();
 		}
 
+	}
+	
+	static private String makeFilterKey(PlaceType type) {
+		return FILTER + "_" + type.name();
+	}
+
+	static public void saveFilter(Activity activity, PlaceType type, boolean isChecked) {
+		Log.v(Config.TAG, "SAVING " + type.name() + " IS ENABLED: " + isChecked);
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(makeFilterKey(type), isChecked);
+		editor.commit();
+	}
+	
+	static public boolean getFilter(Activity activity, PlaceType type) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
+		return settings.getBoolean(makeFilterKey(type), true);
 	}
 
 }
