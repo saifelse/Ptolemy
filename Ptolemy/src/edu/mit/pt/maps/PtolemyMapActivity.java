@@ -3,6 +3,8 @@ package edu.mit.pt.maps;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.maps.GeoPoint;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -67,6 +69,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				brMaleFilterButton.isChecked());
 		Config.saveFilter(this, brFemaleFilterButton.getPlaceType(),
 				brFemaleFilterButton.isChecked());
+		int pixelsX = mapView.getWidth() / 2;
+		int pixelsY = mapView.getHeight() / 2;
+		GeoPoint point = mapView.getProjection().fromPixels(pixelsX, pixelsY);
+		Config.saveLocation(this, point.getLatitudeE6(), point.getLongitudeE6());
 		LocationSetter.getInstance(this, null).pause();
 	}
 
@@ -208,6 +214,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 					});
 				}
 			}).start();
+		} else {
+			mapView.getController().setCenter(Config.getLocation(this));
 		}
 	}
 

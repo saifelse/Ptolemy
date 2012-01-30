@@ -36,6 +36,8 @@ public class Config {
 	static public final String DEFAULT_TERM = "sp11";
 	static public final String TOUR_TAKEN = "tourTaken";
 	static public final String FILTER = "filter";
+	static public final String LAST_LAT = "lastLat";
+	static public final String LAST_LON = "lastLon";
 	static public final String SHOW_ADD_BOOKMARK_HELP = "addBookmarkHelp";
 	static public final GeoPoint DEFAULT_POINT = new GeoPoint(42361283,
 			-71092025);
@@ -248,7 +250,6 @@ public class Config {
 	}
 
 	static public void saveFilter(Activity activity, PlaceType type, boolean isChecked) {
-		Log.v(Config.TAG, "SAVING " + type.name() + " IS ENABLED: " + isChecked);
 		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
 				0);
 		SharedPreferences.Editor editor = settings.edit();
@@ -260,6 +261,24 @@ public class Config {
 		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
 				0);
 		return settings.getBoolean(makeFilterKey(type), true);
+	}
+	
+	static public void saveLocation(Activity activity, int latE6, int lonE6) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(LAST_LAT, latE6);
+		editor.putInt(LAST_LON, lonE6);
+		Log.v(Config.TAG, "SAVING LOCATION: " + latE6 + "," + lonE6);
+		editor.commit();
+	}
+	
+	static public GeoPoint getLocation(Activity activity) {
+		SharedPreferences settings = activity.getSharedPreferences(SHARED_PREF,
+				0);
+		int latE6 = settings.getInt(LAST_LAT, DEFAULT_POINT.getLatitudeE6());
+		int lonE6 = settings.getInt(LAST_LON, DEFAULT_POINT.getLongitudeE6());
+		return new GeoPoint(latE6, lonE6);
 	}
 
 }
