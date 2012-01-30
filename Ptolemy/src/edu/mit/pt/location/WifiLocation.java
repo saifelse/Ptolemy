@@ -28,6 +28,7 @@ public class WifiLocation {
 	WifiManager wifi = null;
 	Context context;
 	private boolean shownWifiNag = false;
+	private boolean paused = false;
 
 	// singleton
 	static WifiLocation wifiLocation = null;
@@ -56,9 +57,18 @@ public class WifiLocation {
 		context.registerReceiver(broadcastReceiver, intentFilter);
 	}
 
+	public void pause() {
+		paused = true;
+	}
+	
+	public void resume() {
+		paused = false;
+	}
+	
 	public void update() {
 		// TODO: FIXME passing null
-		LocationSetter.getInstance(context, null).setLocation(getLocation());
+		if (!paused)
+			LocationSetter.getInstance(context, null).setLocation(getLocation());
 	}
 
 	private GeoPoint midGeoPoint(GeoPoint a, GeoPoint b) {

@@ -45,13 +45,15 @@
     <string name="enter_title">«  Enter a title!</string>
     <string name="room_not_found">The classroom \'%1$s\' could not be found. Try again with a room number like 10–250.</string>
 
-    <string name="empty_bookmarks">You have no bookmarks. Go add some!\n\nIf you have a Kerberos account, try importing classes based on your current registration.</string>
+    <string name="empty_bookmarks">You have no bookmarks. Go add some!\n\nIf you have a Kerberos account, try importing classes based on your current registration:</string>
+    <string name="more_bookmarks">Import classes from registration</string>
+    <string name="bookmarks_help">Try long-pressing on a bookmark to edit or delete it.</string>
     <string name="empty_nearest">Couldn\'t find anything nearby. Sorry!</string>
     <string name="edit_bookmark">Edit Bookmark</string>
     <string name="delete_bookmark">Delete Bookmark</string>
     <string name="navigate">navigate</string>
     <string name="loading">Loading Ptolemy...</string>
-    <string name="wifi_nag_text">Ptolemy uses WiFi access point data in order to provide you with a location inside MIT\'s campus due to the inability of GPS to function indoors.  However, your wifi is currently off. Do you want me to enable it for you?</string>
+    <string name="wifi_nag_text">Ptolemy uses WiFi data to pinpoint your location on MIT campus, as GPS can be very inaccurate indoors.  Your WiFi is currently off - would like Ptolemy to enable it for you?</string>
     <string name="wifi_nag_title">Wifi Location Sources</string>
     <string name="wifi_nag_positive">Ok</string>
     <string name="wifi_nag_negative">Cancel</string>

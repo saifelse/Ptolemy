@@ -9,11 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.android.maps.GeoPoint;
-
-import edu.mit.pt.Config;
 import android.content.Context;
-import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
 
 public class PlaceManager {
 	public static int LAT_TILE_SPAN = 300;
@@ -28,7 +26,6 @@ public class PlaceManager {
 	private Map<String, MinMax> cachedTilesMinMax;
 
 	public void addFilter(PlaceType p) {
-
 		placeTypeFilter.add(p);
 	}
 
@@ -56,7 +53,7 @@ public class PlaceManager {
 				return size() > CACHE_SIZE;
 			}
 		};
-		
+
 		cachedTilesMinMax = new LinkedHashMap<String, MinMax>() {
 			/**
 			 * 
@@ -64,8 +61,7 @@ public class PlaceManager {
 			private static final long serialVersionUID = 5942076442426988803L;
 
 			@Override
-			protected boolean removeEldestEntry(
-					Entry<String, MinMax> x) {
+			protected boolean removeEldestEntry(Entry<String, MinMax> x) {
 				return size() > CACHEMINMAX_SIZE;
 			}
 		};
@@ -140,7 +136,7 @@ public class PlaceManager {
 					if (!results.containsKey(floor)) {
 						results.put(floor, new LinkedList<Place>());
 					}
-					((LinkedList<Place>)results.get(floor)).addAllLinked((LinkedList<Place>)places);
+					((LinkedList<Place>)results.get(floor)).addAll((LinkedList<Place>)places);
 				}
 			}
 		}
@@ -150,7 +146,7 @@ public class PlaceManager {
 	private synchronized MinMax getPlacesMinMax(int x, int y) {
 		String h = hash(x, y, 0);
 		if (!cachedTilesMinMax.containsKey(h)) {
-			MinMax minMax = new MinMax(1,1);
+			MinMax minMax = new MinMax(1, 1);
 			Map<Integer, List<Place>> indivTile = getPlaces(x, y);
 			for (Integer k : indivTile.keySet()) {
 				if (k < minMax.min)
@@ -158,7 +154,7 @@ public class PlaceManager {
 				if (k > minMax.max)
 					minMax.max = k;
 			}
-			cachedTilesMinMax.put(h,minMax);
+			cachedTilesMinMax.put(h, minMax);
 			return minMax;
 		} else {
 			return cachedTilesMinMax.get(h);
@@ -167,24 +163,17 @@ public class PlaceManager {
 
 	private synchronized Map<Integer, List<Place>> getPlaces(int x, int y) {
 		String h = hash(x, y, 0);
-		Log.v(Config.TAG, "Getting place: "+h);
-		
 		if (!cachedTiles.containsKey(h)) {
-			Log.v(Config.TAG, "Adding to cache! :(");
 			int latMin = tileYToLat(y);
 			int lonMin = tileXToLon(x);
 			Map<Integer, List<Place>> computed = Place.getPlaces(context,
 					latMin, latMin + LAT_TILE_SPAN, lonMin, lonMin
 							+ LON_TILE_SPAN);
 			cachedTiles.put(h, computed);
-		}else{
-			Log.v(Config.TAG, "Already in cache! :)");
 		}
 		return cachedTiles.get(h);
 	}
-
-	// TODO use a linkedlist to optimize addAll.
-
+	
 	private List<Place> getPlaces(int x, int y, int f) {
 		LinkedList<Place> result = new LinkedList<Place>();
 
@@ -197,10 +186,10 @@ public class PlaceManager {
 			}
 		}
 		if (max != null && max < f)
-			result.addAllLinked((LinkedList<Place>)unfiltered.get(max));
+			result.addAll((LinkedList<Place>)unfiltered.get(max));
 
 		if (unfiltered.containsKey(f))
-			result.addAllLinked((LinkedList<Place>)unfiltered.get(f));
+			result.addAll((LinkedList<Place>)unfiltered.get(f));
 
 		/*
 		 * for(Place p : getPlaces(x,y)){ if(p.getFloor() == f || (p.getFloor()

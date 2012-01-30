@@ -7,23 +7,47 @@
     <include
         android:id="@+id/nav"
         layout="@layout/menu_nav" />
+    
+    <TextView
+        android:id="@+id/help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_below="@+id/nav"
+        android:text="@string/bookmarks_help" />
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/help"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_below="@+id/nav" >
+        android:layout_marginRight="8dp" >
     </ListView>
 
-    <TextView
+    <RelativeLayout
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/nav"
-        android:gravity="center"
-        android:lineSpacingExtra="3dp"
-        android:text="@string/empty_bookmarks" />
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/empty_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/empty_bookmarks" />
+        <Button
+            android:id="@+id/empty_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/empty_text"
+            android:layout_centerHorizontal="true"
+            android:onClick="startPrepopulate"
+            android:layout_marginTop="8dp"
+            android:text="Import Classes" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -71,7 +71,7 @@ public class PtolemyMapView extends MapView {
 		// Load places.
 
 	}
-
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		int action = ev.getAction();

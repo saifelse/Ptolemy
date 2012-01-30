@@ -36,6 +36,7 @@ public class NearbyActivity extends ListActivity {
 	static public final String PLACE = "place";
 	static private final int FLOOR_PENALTY = 50; // "meters"
 	static private final double RADIUS = 6378100;
+	static private final int MAX_DISTANCE = 500;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,9 @@ public class NearbyActivity extends ListActivity {
 		if (lat == -1 || lon == -1 || floor == -1) {
 			finish();
 		}
+//		lat = 42359164;
+//		lon = -71093144;
+//		floor = 1;
 		Log.v(Config.TAG, "STARTING NEARBYACTIVITY: (" + lat + "," + lon + ","
 				+ floor + ")");
 		setContentView(R.layout.nearest);
@@ -146,13 +150,13 @@ public class NearbyActivity extends ListActivity {
 		Log.v(Config.TAG, "ATHENA: " + athenaQueue.size());
 
 		for (int i = 0; i < 3; i++) {
-			if ((maleToiletTop = maleToiletQueue.poll()) != null) {
+			if ((maleToiletTop = maleToiletQueue.poll()) != null && maleToiletTop.distance < MAX_DISTANCE) {
 				finalQueue.add(maleToiletTop);
 			}
-			if ((femaleToiletTop = femaleToiletQueue.poll()) != null) {
+			if ((femaleToiletTop = femaleToiletQueue.poll()) != null && femaleToiletTop.distance < MAX_DISTANCE) {
 				finalQueue.add(femaleToiletTop);
 			}
-			if ((athenaTop = athenaQueue.poll()) != null) {
+			if ((athenaTop = athenaQueue.poll()) != null && athenaTop.distance < MAX_DISTANCE) {
 				finalQueue.add(athenaTop);
 			}
 		}

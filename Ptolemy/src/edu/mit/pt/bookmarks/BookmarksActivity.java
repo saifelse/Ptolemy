@@ -1,7 +1,5 @@
 package edu.mit.pt.bookmarks;
 
-import edu.mit.pt.R;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +27,7 @@ import android.widget.Toast;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.PrepopulateActivity;
+import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.Athena;
@@ -55,42 +54,40 @@ public class BookmarksActivity extends ListActivity {
 		ActionBar.setTitle(this, ACTIVITY_TILE);
 		ActionBar.setDefaultBackAction(this);
 
-		final Activity that = this;
-
 		// Add nav buttons.
-		ImageButton syncButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
-		syncButton.setImageResource(R.drawable.ic_menu_find_holo_dark);
-		syncButton.setContentDescription(getString(R.string.sync_bookmark));
-		syncButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(that, PrepopulateActivity.class);
-				startActivityForResult(intent, REQUEST_BOOKMARKS);
-			}
-		});
-
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
 				R.layout.menu_nav_button, null);
 		addButton.setImageResource(R.drawable.ic_menu_bookmark_add);
 		addButton.setContentDescription(getString(R.string.add_bookmark));
 		addButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(that, AddBookmarkActivity.class);
+				Intent intent = new Intent(BookmarksActivity.this,
+						AddBookmarkActivity.class);
 				startActivity(intent);
 			}
 		});
 
-		ActionBar.setButtons(this, new View[] { addButton, syncButton });
+		ActionBar.setButtons(this, new View[] { addButton });
 
 		ListView lv = getListView();
+		View footerView = getLayoutInflater().inflate(
+				R.layout.bookmark_list_footer, null);
+		lv.addFooterView(footerView);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				if (position >= adapter.getCount()) {
+					Intent intent = new Intent(BookmarksActivity.this,
+							PrepopulateActivity.class);
+					startActivityForResult(intent, REQUEST_BOOKMARKS);
+					return;
+				}
 				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 				long placeId = cursor.getLong(cursor
 						.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
 								+ BaseColumns._ID));
-				Intent intent = new Intent(that, PtolemyMapActivity.class);
+				Intent intent = new Intent(BookmarksActivity.this,
+						PtolemyMapActivity.class);
 				Uri.Builder builder = Uri
 						.parse("content://edu.mit.pt.data.placescontentprovider/")
 						.buildUpon().path(Long.toString(placeId));
@@ -145,7 +142,10 @@ public class BookmarksActivity extends ListActivity {
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.edit_bookmark_menu, menu);
+		if (((AdapterContextMenuInfo) menuInfo).position < adapter.getCount()) {
+			inflater.inflate(R.menu.edit_bookmark_menu, menu);
+			return;
+		}
 	}
 
 	@Override
@@ -169,6 +169,14 @@ public class BookmarksActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * For button in bookmarks.xml
+	 */
+	public void startPrepopulate(View v) {
+		Intent intent = new Intent(this, PrepopulateActivity.class);
+		startActivityForResult(intent, REQUEST_BOOKMARKS);
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -178,14 +186,17 @@ public class BookmarksActivity extends ListActivity {
 			}
 			long[] mitClassIds = data
 					.getLongArrayExtra(PrepopulateActivity.CLASSES);
+			int count = 0;
 			for (MITClass c : MITClass.getClasses(this, mitClassIds)) {
-				Bookmark.addBookmark(this, c.getName(), c.getPlace(),
-						BookmarkType.LECTURE);
+				if (Bookmark.findInBookmarks(this, c.getPlace()) == -1) {
+					Bookmark.addBookmark(this, c.getName(), c.getPlace(),
+							BookmarkType.LECTURE);
+					count++;
+				}
 			}
 			Toast toast;
-			if (mitClassIds.length != 0) {
-				toast = Toast.makeText(this, mitClassIds.length
-						+ " bookmarks added!", 1000);
+			if (count != 0) {
+				toast = Toast.makeText(this, count + " bookmarks added!", 1000);
 			} else {
 				toast = Toast.makeText(this,
 						"Sorry, no bookmarks could be added.", 1000);

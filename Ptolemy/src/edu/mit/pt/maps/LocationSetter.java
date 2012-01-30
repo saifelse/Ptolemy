@@ -39,6 +39,7 @@ public class LocationSetter {
 	// Location
 	private Handler updateLocationHandler;
 	private boolean isStopped;
+	private LocationListener locationListener; //listens to gps
 
 	private static LocationManager locationManager;
 
@@ -59,7 +60,7 @@ public class LocationSetter {
 				.getSystemService(Context.LOCATION_SERVICE);
 		String locationProvider = LocationManager.GPS_PROVIDER;
 		currentLocation = null;
-		LocationListener locationListener = new LocationListener() {
+		locationListener = new LocationListener() {
 
 			public void onLocationChanged(Location location) {
 				System.out.println("Location changed: " + location.toString());
@@ -119,10 +120,14 @@ public class LocationSetter {
 	}
 
 	private void pauseLocation() {
-
+		WifiLocation.getInstance(context).pause();
+		locationManager.removeUpdates(locationListener);
 	}
 
 	private void resumeLocation() {
+		WifiLocation.getInstance(context).resume();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+				locationListener);
 		getPoint(context);
 
 	}
