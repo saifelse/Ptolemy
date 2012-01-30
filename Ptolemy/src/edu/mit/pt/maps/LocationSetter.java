@@ -119,10 +119,11 @@ public class LocationSetter {
 	}
 
 	private void pauseLocation() {
-
+		WifiLocation.getInstance(context).pause();
 	}
 
 	private void resumeLocation() {
+		WifiLocation.getInstance(context).resume();
 		getPoint(context);
 
 	}
