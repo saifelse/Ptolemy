@@ -213,7 +213,7 @@ public class LocationSetter {
 				currentLocation = p;
 			} else {
 				currentLocation = new APGeoPoint(exponentialWeightedMovingAverage(currentLocation,
-					p, 0.9), p.getFloor());
+					p, 0.6), p.getFloor());
 			}
 
 		}

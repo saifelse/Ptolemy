@@ -31,6 +31,7 @@ public class WifiLocation {
 	Context context;
 	private boolean shownWifiNag = false;
 	private boolean paused = false;
+	private boolean rle_nag_shown = false;
 
 	// singleton
 	static WifiLocation wifiLocation = null;
@@ -247,6 +248,13 @@ public class WifiLocation {
 		Log.v(Config.TAG, "bssid: " + bssid1);
 		if (bssid1.equals("06:01:01:2f:e0:10")) {
 			Log.v(Config.TAG, "RLE level: " + closestAP1.level);
+			if (closestAP1.level < -44 && !rle_nag_shown) {
+				Toast t = new Toast(context);
+				t.setText("I've detected you are in RLE and because of that, my location sources may be inaccurate");
+				t.setDuration(Toast.LENGTH_LONG);
+				t.show();
+				rle_nag_shown = true;
+			}
 			//RLE
 			if (closestAP1.level < -44 && closestAP2 != null) {
 				floor = closestAP2Location.getFloor();
