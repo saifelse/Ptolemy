@@ -155,9 +155,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 				LocationSetter setter = LocationSetter.getInstance(
 						v.getContext(), null);
 				APGeoPoint p = setter.getPoint(v.getContext());
-				intent.putExtra(NearbyActivity.LAT, p.getLatitudeE6());
-				intent.putExtra(NearbyActivity.LON, p.getLongitudeE6());
-				intent.putExtra(NearbyActivity.FLOOR, p.getFloor());
+				if (p != null) {
+					intent.putExtra(NearbyActivity.LAT, p.getLatitudeE6());
+					intent.putExtra(NearbyActivity.LON, p.getLongitudeE6());
+					intent.putExtra(NearbyActivity.FLOOR, p.getFloor());
+				}
 				startActivityForResult(intent, NEAREST_RESULT);
 			}
 		});
