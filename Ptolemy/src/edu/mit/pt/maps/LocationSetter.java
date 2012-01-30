@@ -10,6 +10,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
+import android.text.format.Time;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
@@ -36,6 +38,7 @@ public class LocationSetter {
 	private Sensor magneticFieldSensor;
 
 	private final float minGPSAccuracy = (float) 30.0; // meters
+	private long lastGPSTime = 0;
 
 	// Location
 	private Handler updateLocationHandler;
@@ -71,6 +74,8 @@ public class LocationSetter {
 							(int) (location.getLatitude() * 1e6),
 							(int) (location.getLongitude() * 1e6),
 							1); //assume first floor if gps works
+					lastGPSTime = System.currentTimeMillis();
+					locationSetter.setLocation(currentLocation);
 				}
 			}
 
@@ -203,19 +208,22 @@ public class LocationSetter {
 	}
 
 	public void setLocation(APGeoPoint p) {
-		if (currentLocation == null) {
-			currentLocation = p;
-		} else {
-			if (p == null)
-				return;
-			//snap if you're farther than 100
-			if (distanceBetweenGeoPoints(currentLocation, p) > 100.0) {
+		//20s
+		if (!(System.currentTimeMillis() - lastGPSTime < 20000)) {
+			if (currentLocation == null) {
 				currentLocation = p;
 			} else {
-				currentLocation = new APGeoPoint(exponentialWeightedMovingAverage(currentLocation,
-					p, 0.6), p.getFloor());
+				if (p == null)
+					return;
+				//snap if you're farther than 100
+				if (distanceBetweenGeoPoints(currentLocation, p) > 100.0) {
+					currentLocation = p;
+				} else {
+					currentLocation = new APGeoPoint(exponentialWeightedMovingAverage(currentLocation,
+						p, 0.6), p.getFloor());
+				}
+	
 			}
-
 		}
 		overlay.setLocation(currentLocation);
 	}
