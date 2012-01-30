@@ -10,14 +10,17 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.android.maps.GeoPoint;
+
+import edu.mit.pt.Config;
 import android.content.Context;
+import android.util.Log;
 
 //TODO: use LRU
 
 public class PlaceManager {
 	public static int LAT_TILE_SPAN = 300;
 	public static int LON_TILE_SPAN = 400;
-	public static int CACHE_SIZE = 25;
+	public static int CACHE_SIZE = 40;
 	private Context context;
 	private Set<PlaceType> placeTypeFilter;
 
@@ -85,6 +88,7 @@ public class PlaceManager {
 		int max = 0;
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
+				// TODO LOG IF CACHING IS ACTUALLY HAPPENING.
 				Map<Integer, List<Place>> indivTile = getPlaces(x, y);
 				for (Integer k : indivTile.keySet()) {
 					if (k < min)
@@ -133,13 +137,18 @@ public class PlaceManager {
 
 	private Map<Integer, List<Place>> getPlaces(int x, int y) {
 		String h = hash(x, y, 0);
+		Log.v(Config.TAG, "Getting place: "+h);
+		
 		if (!cachedTiles.containsKey(h)) {
+			Log.v(Config.TAG, "Adding to cache! :(");
 			int latMin = tileYToLat(y);
 			int lonMin = tileXToLon(x);
 			Map<Integer, List<Place>> computed = Place.getPlaces(context,
 					latMin, latMin + LAT_TILE_SPAN, lonMin, lonMin
 							+ LON_TILE_SPAN);
 			cachedTiles.put(h, computed);
+		}else{
+			Log.v(Config.TAG, "Already in cache! :)");
 		}
 		return cachedTiles.get(h);
 	}
