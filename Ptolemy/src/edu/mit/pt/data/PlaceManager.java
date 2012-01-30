@@ -15,18 +15,20 @@ import edu.mit.pt.Config;
 import android.content.Context;
 import android.util.Log;
 
-//TODO: use LRU
-
 public class PlaceManager {
 	public static int LAT_TILE_SPAN = 300;
 	public static int LON_TILE_SPAN = 400;
-	public static int CACHE_SIZE = 40;
+	public static int CACHE_SIZE = 60;
+	public static int CACHEMINMAX_SIZE = 200;
+
 	private Context context;
 	private Set<PlaceType> placeTypeFilter;
 
 	private Map<String, Map<Integer, List<Place>>> cachedTiles;
+	private Map<String, MinMax> cachedTilesMinMax;
 
 	public void addFilter(PlaceType p) {
+
 		placeTypeFilter.add(p);
 	}
 
@@ -52,6 +54,19 @@ public class PlaceManager {
 			protected boolean removeEldestEntry(
 					Entry<String, Map<Integer, List<Place>>> x) {
 				return size() > CACHE_SIZE;
+			}
+		};
+		
+		cachedTilesMinMax = new LinkedHashMap<String, MinMax>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5942076442426988803L;
+
+			@Override
+			protected boolean removeEldestEntry(
+					Entry<String, MinMax> x) {
+				return size() > CACHEMINMAX_SIZE;
 			}
 		};
 	}
@@ -88,14 +103,11 @@ public class PlaceManager {
 		int max = 0;
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
-				// TODO LOG IF CACHING IS ACTUALLY HAPPENING.
-				Map<Integer, List<Place>> indivTile = getPlaces(x, y);
-				for (Integer k : indivTile.keySet()) {
-					if (k < min)
-						min = k;
-					if (k > max)
-						max = k;
-				}
+				MinMax indivTileMinMax = getPlacesMinMax(x, y);
+				if (indivTileMinMax.min < min)
+					min = indivTileMinMax.min;
+				if (indivTileMinMax.max > max)
+					max = indivTileMinMax.max;
 			}
 		}
 		return new MinMax(min, max);
@@ -133,6 +145,24 @@ public class PlaceManager {
 			}
 		}
 		return results;
+	}
+
+	private MinMax getPlacesMinMax(int x, int y) {
+		String h = hash(x, y, 0);
+		if (!cachedTilesMinMax.containsKey(h)) {
+			MinMax minMax = new MinMax(1,1);
+			Map<Integer, List<Place>> indivTile = getPlaces(x, y);
+			for (Integer k : indivTile.keySet()) {
+				if (k < minMax.min)
+					minMax.min = k;
+				if (k > minMax.max)
+					minMax.max = k;
+			}
+			cachedTilesMinMax.put(h,minMax);
+			return minMax;
+		} else {
+			return cachedTilesMinMax.get(h);
+		}
 	}
 
 	private Map<Integer, List<Place>> getPlaces(int x, int y) {

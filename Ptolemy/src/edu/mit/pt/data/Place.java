@@ -24,7 +24,7 @@ abstract public class Place implements Parcelable {
 	int latE6;
 	int lonE6;
 	String name;
-	public int floor;
+	int floor;
 
 	public Place(long id, String name, int latE6, int lonE6, int floor) {
 		this.id = id;
