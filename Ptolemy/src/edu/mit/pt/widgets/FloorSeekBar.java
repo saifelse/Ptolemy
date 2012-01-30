@@ -184,7 +184,7 @@ public class FloorSeekBar extends View {
 
 		// Draw floor indicator
 		Paint strokePaint = new Paint(indicTxt);
-		strokePaint.setARGB(200, 255, 255, 255);
+		strokePaint.setARGB(160, 255, 255, 255);
 		strokePaint.setTextAlign(Paint.Align.CENTER);
 		//strokePaint.setTextSize(16);
 		strokePaint.setTypeface(Typeface.DEFAULT_BOLD);
