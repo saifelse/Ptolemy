@@ -27,7 +27,7 @@ public class PlacesOverlayItem extends OverlayItem {
 				markerSel.getIntrinsicHeight());
 		downBelow.setBounds(0, 0, downBelow.getIntrinsicWidth(),
 				downBelow.getIntrinsicHeight());
-		
+
 		switch (this.place.getPlaceType()) {
 		case CLASSROOM:
 			PlacesItemizedOverlay.boundCenter(marker);
@@ -55,15 +55,16 @@ public class PlacesOverlayItem extends OverlayItem {
 
 	@Override
 	public Drawable getMarker(int stateBitset) {
-		if (place.getFloor() == overlay.getFloor()) {
+		//Attempting to use direct field access for speed instead of getters/setters
+		if (place.floor == overlay.floor) {
 			// if (((stateBitset & OverlayItem.ITEM_STATE_SELECTED_MASK) ==
 			// OverlayItem.ITEM_STATE_SELECTED_MASK)
 			// || (stateBitset & OverlayItem.ITEM_STATE_PRESSED_MASK) ==
 			// OverlayItem.ITEM_STATE_PRESSED_MASK) {
 			// return this.markerSel;
 			// }
-			if (getTitle() != null
-					&& getTitle().equals(overlay.getFocusedTitle())) {
+			String title = getTitle();
+			if (title != null && title.equals(overlay.getFocusedTitle())) {
 				return this.markerSel;
 			}
 			return marker;
