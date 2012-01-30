@@ -1,6 +1,5 @@
 package edu.mit.pt.maps;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,6 +7,7 @@ import java.util.TimerTask;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,6 +19,7 @@ import com.google.android.maps.Overlay;
 
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
+import edu.mit.pt.data.LinkedList;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceManager;
 import edu.mit.pt.data.PlaceManager.MinMax;
@@ -26,7 +27,6 @@ import edu.mit.pt.widgets.FloorSeekBar;
 import edu.mit.pt.widgets.FloorSeekBar.FloorSeekEvent;
 import edu.mit.pt.widgets.FloorSeekBar.OnFloorSelectListener;
 
-// TODO: Fix updateMinMax behaviour.
 public class FloorMapView extends RelativeLayout {
 	public final static int MAP_VIEW_ID = 0;
 	public final static int SEEK_BAR_ID = 1;
@@ -36,7 +36,7 @@ public class FloorMapView extends RelativeLayout {
 	private final FloorSeekBar seekBar;
 	private final static int SEEK_TOP_MARGIN = 0;
 	private final static int SEEK_WIDTH = 75;
-	private final static int SEEK_HEIGHT = 500;
+	private final static int SEEK_HEIGHT = LayoutParams.MATCH_PARENT;
 
 	private Context context;
 	// Places
@@ -124,7 +124,7 @@ public class FloorMapView extends RelativeLayout {
 		addView(mapView, lpMap);
 
 		RelativeLayout.LayoutParams lpSeek = new RelativeLayout.LayoutParams(
-				FloorMapView.SEEK_WIDTH, LayoutParams.MATCH_PARENT);
+				FloorMapView.SEEK_WIDTH, FloorMapView.SEEK_HEIGHT);
 		lpSeek.topMargin = SEEK_TOP_MARGIN;
 		lpSeek.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		lpSeek.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -163,35 +163,14 @@ public class FloorMapView extends RelativeLayout {
 
 	private void updateToFloor(int floor) {
 		this.floor = floor;
-		// seekBar.setFloor(floor);
-		List<Overlay> overlays = mapView.getOverlays();
-		Resources resources = getContext().getResources();
-
-		// Remove old places
-		overlays.remove(placesOverlay);
-
-		// Specify floor (floor-1 shows transparent, floor+1 shows outline)
-		placesOverlay.setFloor(floor);
-
-		// Add places that are on the specified floor
-		placesOverlay.clear();
-
-		// FIXME Determine valid types
-
-		Log.v(Config.TAG, "Looking up visible places");
-		List<Place> places = getVisiblePlaces();
-		for (Place p : places) {
-			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
-					p.getName(), p.getMarker(resources, false), p.getMarker(
-							resources, true), p.getMarkerDownBelow(resources),
-					placesOverlay);
-			placesOverlay.addOverlayItemNoUpdate(item);
+		if (mapView.getZoomLevel() < 20){
+			handlePlaceData(new LinkedList<Place>());
+		}else {
+			GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
+			GeoPoint bottomRight = mapView.getProjection().fromPixels(
+					mapView.getWidth(), mapView.getHeight());
+			new VisiblePlaceTask().execute(topLeft, bottomRight);
 		}
-		placesOverlay.update();
-		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
-		overlays.add(placesOverlay);
-
-		mapView.invalidate();
 	}
 
 	public void setFloor(int floor) {
@@ -212,46 +191,33 @@ public class FloorMapView extends RelativeLayout {
 		});
 	}
 
-	private List<Place> getVisiblePlaces() {
-		if (mapView.getZoomLevel() < 20)
-			return new ArrayList<Place>();
-		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(
-				mapView.getWidth(), mapView.getHeight());
-		return placeManager.getPlaces(topLeft, bottomRight, this.floor);
-	}
-
-	private MinMax getMinMax() {
-		if (mapView.getZoomLevel() < 20)
-			return new MinMax(0, 0);
-		GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(
-				mapView.getWidth(), mapView.getHeight());
-		return placeManager.getMinMax(topLeft, bottomRight);
-	}
-
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_UP:
 			// Refresh floors based on what is visible.
-			if (mapView.getZoomLevel() < 20)
+			if (mapView.getZoomLevel() < 20){
 				seekBar.setVisibility(INVISIBLE);
-			else
+			}else {
 				seekBar.setVisibility(VISIBLE);
-
+			}
 			updateMinMax();
-
 		}
 		return false;
 	}
 
+	// getMinMax(), sets seekbars, then update to floor
+	//  if zoom less than 20, (0,0), otherwise look it up.
 	public void updateMinMax() {
-		MinMax minMax = getMinMax();
-
-		seekBar.setMin(minMax.min);
-		seekBar.setMax(minMax.max);
-		updateToFloor(floor);
+		if (mapView.getZoomLevel() < 20){
+			handleMinMaxData(new MinMax(0,0));
+		}else{
+			GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
+			GeoPoint bottomRight = mapView.getProjection().fromPixels(
+					mapView.getWidth(), mapView.getHeight());
+			new UpdateMinMaxTask().execute(topLeft, bottomRight);
+		}
+		
 	}
 
 	public PtolemyMapView getMapView() {
@@ -265,4 +231,66 @@ public class FloorMapView extends RelativeLayout {
 	public PlacesItemizedOverlay getPlacesOverlay() {
 		return placesOverlay;
 	}
+	
+	private void handleMinMaxData(MinMax minMax){
+		seekBar.setMin(minMax.min);
+		seekBar.setMax(minMax.max);
+		updateToFloor(floor);
+	}
+	private class UpdateMinMaxTask extends AsyncTask<GeoPoint, Void, MinMax> {
+		 @Override
+	     protected MinMax doInBackground(GeoPoint... gp) {
+	    	 GeoPoint topLeft = gp[0];
+	    	 GeoPoint bottomRight = gp[1];
+	    	 return placeManager.getMinMax(topLeft, bottomRight);
+	     }
+		 
+		 @Override
+	     protected void onProgressUpdate(Void... x) {
+	     }
+		 
+	     protected void onPostExecute(MinMax minMax) {
+	    	 handleMinMaxData(minMax);
+	     }
+	 }
+	private void handlePlaceData(List<Place> places){
+		List<Overlay> overlays = mapView.getOverlays();
+		Resources resources = getContext().getResources();
+		// Remove old places
+		overlays.remove(placesOverlay);
+		// Specify floor (floor-1 shows transparent, floor+1 shows outline)
+		placesOverlay.setFloor(floor);
+		// Add places that are on the specified floor
+		placesOverlay.clear();
+		
+    	for (Place p : places) {
+ 			PlacesOverlayItem item = new PlacesOverlayItem(p, p.getName(),
+ 					p.getName(), p.getMarker(resources, false), p.getMarker(
+ 							resources, true), p.getMarkerDownBelow(resources),
+ 					placesOverlay);
+ 			placesOverlay.addOverlayItemNoUpdate(item);
+ 		}
+ 		placesOverlay.update();
+ 		Log.v(Config.TAG, "Adding " + places.size() + " places on F " + floor);
+ 		overlays.add(placesOverlay);
+ 		mapView.invalidate();
+	}
+	
+	private class VisiblePlaceTask extends AsyncTask<GeoPoint, Void, List<Place>> {
+		 @Override
+	     protected List<Place> doInBackground(GeoPoint... gp) {
+	    	 GeoPoint topLeft = gp[0];
+	    	 GeoPoint bottomRight = gp[1];
+	    	 return placeManager.getPlaces(topLeft, bottomRight, floor);
+	     }
+		 
+		 @Override
+	     protected void onProgressUpdate(Void... x) {
+	     }
+		 
+	     protected void onPostExecute(List<Place> places) {
+	 		handlePlaceData(places);
+	     }
+	 }
+	
 }

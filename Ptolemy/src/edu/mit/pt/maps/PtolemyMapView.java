@@ -28,6 +28,8 @@ public class PtolemyMapView extends MapView {
 	private int pNumColumns = 3;
 	private boolean pinchZoom = false;
 	private PtolemyTileManager tm;
+	
+	private long lastPressTimestamp;
 
 	public PtolemyMapView(Context context, String key) {
 		super(context, key);
@@ -77,7 +79,9 @@ public class PtolemyMapView extends MapView {
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			invalidate();
+			if (System.currentTimeMillis() - lastPressTimestamp < 400)
+				getController().zoomInFixing((int)ev.getX(), (int)ev.getY());
+			lastPressTimestamp = System.currentTimeMillis();
 			break;
 		case MotionEvent.ACTION_MOVE:
 //			pinchZoom = (ev.getPointerCount() > 1);
