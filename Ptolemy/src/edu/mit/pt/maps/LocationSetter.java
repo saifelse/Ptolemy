@@ -91,7 +91,7 @@ public class LocationSetter {
 			}
 
 		};
-		locationManager.requestLocationUpdates(locationProvider, 0, 0,
+		locationManager.requestLocationUpdates(locationProvider, 0, 2,
 				locationListener);
 	}
 
@@ -219,7 +219,6 @@ public class LocationSetter {
 	}
 
 	protected void handleBearing(double bng) {
-		// System.out.println(bng);
 		bearing = bng;
 		overlay.setBearing(bearing);
 	}

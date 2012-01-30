@@ -31,7 +31,7 @@ public class AP {
 
 		//Log.v(Config.TAG, cursor.getCount() + " ssids found");
 		if (cursor.getCount() == 0) {
-			//System.out.println("Could not find " + bssid);
+			Log.v(Config.TAG, "Could not find " + bssid);
 			return null;
 		}
 		int latIndex = cursor.getColumnIndex(APTable.COLUMN_LAT);
@@ -41,7 +41,6 @@ public class AP {
 		int lat = cursor.getInt(latIndex);
 		int lon = cursor.getInt(lonIndex);
 		int flr = cursor.getInt(flrIndex);
-		//System.out.println("FLOOR: " + flr + " BSSID: " + bssid);
 		return new APGeoPoint(lat, lon, flr);
 	}
 

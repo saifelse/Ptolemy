@@ -45,7 +45,6 @@ public class XPSOverlay extends Overlay {
 		placementMatrix.setTranslate(-arrow.getWidth() / 2,
 				-arrow.getHeight() / 2);
 		placementMatrix.postRotate((float) dir);
-		//System.out.println("Rotate by : " + dir);
 		placementMatrix.postTranslate(screenPoint.x, screenPoint.y);
 
 		canvas.drawBitmap(arrow, placementMatrix, null);
