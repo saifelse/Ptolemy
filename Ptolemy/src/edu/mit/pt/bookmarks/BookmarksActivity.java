@@ -61,7 +61,8 @@ public class BookmarksActivity extends ListActivity {
 		addButton.setContentDescription(getString(R.string.add_bookmark));
 		addButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(BookmarksActivity.this, AddBookmarkActivity.class);
+				Intent intent = new Intent(BookmarksActivity.this,
+						AddBookmarkActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -69,13 +70,15 @@ public class BookmarksActivity extends ListActivity {
 		ActionBar.setButtons(this, new View[] { addButton });
 
 		ListView lv = getListView();
-		View footerView = getLayoutInflater().inflate(R.layout.bookmark_list_footer, null);
+		View footerView = getLayoutInflater().inflate(
+				R.layout.bookmark_list_footer, null);
 		lv.addFooterView(footerView);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (position >= adapter.getCount()) {
-					Intent intent = new Intent(BookmarksActivity.this, PrepopulateActivity.class);
+					Intent intent = new Intent(BookmarksActivity.this,
+							PrepopulateActivity.class);
 					startActivityForResult(intent, REQUEST_BOOKMARKS);
 					return;
 				}
@@ -83,7 +86,8 @@ public class BookmarksActivity extends ListActivity {
 				long placeId = cursor.getLong(cursor
 						.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
 								+ BaseColumns._ID));
-				Intent intent = new Intent(BookmarksActivity.this, PtolemyMapActivity.class);
+				Intent intent = new Intent(BookmarksActivity.this,
+						PtolemyMapActivity.class);
 				Uri.Builder builder = Uri
 						.parse("content://edu.mit.pt.data.placescontentprovider/")
 						.buildUpon().path(Long.toString(placeId));
@@ -138,7 +142,10 @@ public class BookmarksActivity extends ListActivity {
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.edit_bookmark_menu, menu);
+		if (((AdapterContextMenuInfo) menuInfo).position < adapter.getCount()) {
+			inflater.inflate(R.menu.edit_bookmark_menu, menu);
+			return;
+		}
 	}
 
 	@Override
@@ -161,7 +168,7 @@ public class BookmarksActivity extends ListActivity {
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
 	/**
 	 * For button in bookmarks.xml
 	 */
@@ -189,8 +196,7 @@ public class BookmarksActivity extends ListActivity {
 			}
 			Toast toast;
 			if (count != 0) {
-				toast = Toast.makeText(this, count
-						+ " bookmarks added!", 1000);
+				toast = Toast.makeText(this, count + " bookmarks added!", 1000);
 			} else {
 				toast = Toast.makeText(this,
 						"Sorry, no bookmarks could be added.", 1000);

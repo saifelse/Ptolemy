@@ -47,6 +47,7 @@
 
     <string name="empty_bookmarks">You have no bookmarks. Go add some!\n\nIf you have a Kerberos account, try importing classes based on your current registration:</string>
     <string name="more_bookmarks">Import classes from registration</string>
+    <string name="bookmarks_help">Try long-pressing on a bookmark to edit or delete it.</string>
     <string name="empty_nearest">Couldn\'t find anything nearby. Sorry!</string>
     <string name="edit_bookmark">Edit Bookmark</string>
     <string name="delete_bookmark">Delete Bookmark</string>
