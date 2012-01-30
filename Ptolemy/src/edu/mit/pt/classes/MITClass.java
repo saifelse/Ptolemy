@@ -28,6 +28,7 @@ public class MITClass {
 
 	String name;
 	Place place;
+	public String classroomName = null;
 
 	public MITClass(String name, Place place) {
 		this.name = name;
@@ -123,6 +124,26 @@ public class MITClass {
 		}
 		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
 	}
+	
+	/**
+	 * Given mitid, return id
+	 */
+	public static long getId(Context context, String name) {
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		Cursor c = db.query(MITClassTable.CLASSES_TABLE_NAME, new String[] {
+				MITClassTable.COLUMN_ID, MITClassTable.COLUMN_ROOM },
+				MITClassTable.COLUMN_MITID + "=?", new String[] { name }, null,
+				null, null);
+		if (c.getCount() == 0) {
+			return -1;
+		}
+		c.moveToFirst();
+		String roomName = c.getString(c
+				.getColumnIndex(MITClassTable.COLUMN_ROOM));
+		Log.v(Config.TAG, "Search for " + name + " found a room: " + roomName);
+		return c.getLong(c.getColumnIndex(MITClassTable.COLUMN_ID));
+	}
 
 	public static MITClass getClass(Context context, long id) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
@@ -145,6 +166,29 @@ public class MITClass {
 			return null;
 		}
 		MITClass c = new MITClass(name, place);
+		return c;
+	}
+	
+	public static MITClass getClassWithNullPlace(Context context, long id) {
+		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
+				.getPtolemyDBOpenHelper(context).getReadableDatabase();
+		Cursor cursor = db.query(MITClassTable.CLASSES_TABLE_NAME,
+				new String[] { MITClassTable.COLUMN_MITID,
+						MITClassTable.COLUMN_ROOM },
+				MITClassTable.COLUMN_ID + "=?",
+				new String[] { Long.toString(id) }, null, null, null);
+		if (cursor.getCount() == 0) {
+			return null;
+		}
+		cursor.moveToFirst();
+		String name = cursor.getString(cursor
+				.getColumnIndex(MITClassTable.COLUMN_MITID));
+		String room = cursor.getString(cursor
+				.getColumnIndex(MITClassTable.COLUMN_ROOM));
+		Place place = Place.getPlaceByName(context, room);
+		MITClass c = new MITClass(name, place);
+		if (place == null)
+			c.classroomName = room;
 		return c;
 	}
 	

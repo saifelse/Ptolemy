@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -40,8 +41,27 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 			if (dataUri != null) {
 				String id = dataUri.getLastPathSegment();
 				if (id.charAt(0) == 'c') {
-					MITClass mitClass = MITClass.getClass(this, Long.parseLong(id.substring(1)));
+					MITClass mitClass = MITClass.getClassWithNullPlace(this,
+							Long.parseLong(id.substring(1)));
 					p = mitClass.getPlace();
+					if (p == null) {
+						// don't have the room
+						if (mitClass.classroomName == null)
+							return;
+						new AlertDialog.Builder(this)
+								.setTitle("Hmm...")
+								.setMessage(
+										mitClass.getName()
+												+ " is located in room "
+												+ mitClass.classroomName
+												+ " but I don't know where that is.\n\nOur database is still improving. Sorry for the inconvenience.")
+								.setNeutralButton("Ok", new OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {	
+									}
+								})
+								.create().show();
+						return;
+					}
 					roomQuery = mitClass.getName();
 				} else {
 					int classroomId = Integer.valueOf(id);
@@ -108,11 +128,13 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 							OverlayItem newFocus) {
 						if (newFocus == null) {
 							setPlaceMeta(null);
-							floorMapView.getPlacesOverlay().setFocusedTitle(null);
+							floorMapView.getPlacesOverlay().setFocusedTitle(
+									null);
 							return;
 						}
 						PlacesOverlayItem pItem = (PlacesOverlayItem) newFocus;
-						floorMapView.getPlacesOverlay().setFocusedTitle(pItem.getTitle());
+						floorMapView.getPlacesOverlay().setFocusedTitle(
+								pItem.getTitle());
 						floorMapView.updateToFloor(pItem.getPlace().getFloor());
 						setPlaceMeta(pItem.getPlace());
 					}
