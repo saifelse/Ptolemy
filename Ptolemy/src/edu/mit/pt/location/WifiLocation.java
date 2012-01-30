@@ -117,14 +117,18 @@ public class WifiLocation {
 
 	private GeoPoint trilaterateGeoPoints(GeoPoint a, int strengtha,
 			GeoPoint b, int strengthb, GeoPoint c, int strengthc) {
-		double guessLat = (a.getLatitudeE6() + b.getLatitudeE6() + c
-				.getLatitudeE6()) / 3.0;
-		double guessLon = (a.getLongitudeE6() + b.getLongitudeE6() + c
-				.getLongitudeE6()) / 3.0;
 		double scaleConst = 6.02;
 		double sigMagA = Math.pow(2.0, -strengtha / scaleConst);
 		double sigMagB = Math.pow(2.0, -strengthb / scaleConst);
 		double sigMagC = Math.pow(2.0, -strengthc / scaleConst);
+		double guessLat = (a.getLatitudeE6() * sigMagA + b.getLatitudeE6() * sigMagB + c
+				.getLatitudeE6() * sigMagC) / (sigMagA + sigMagB + sigMagC);
+//		double guessLat = (a.getLatitudeE6() + b.getLatitudeE6() + c
+//				.getLatitudeE6()) / 3.0;
+		double guessLon = (a.getLongitudeE6() * sigMagA + b.getLongitudeE6() * sigMagB + c
+				.getLongitudeE6() * sigMagC) / (sigMagA + sigMagB + sigMagC);
+//		double guessLon = (a.getLongitudeE6() + b.getLongitudeE6() + c
+//				.getLongitudeE6()) / 3.0;
 		Log.v(WifiLocation.class.getName(), "sigMagA: " + sigMagA);
 		double dLat = 7;
 		double dLon = 7;
