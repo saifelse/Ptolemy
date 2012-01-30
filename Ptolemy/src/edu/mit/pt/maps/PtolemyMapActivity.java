@@ -30,6 +30,7 @@ import edu.mit.pt.location.APGeoPoint;
 import edu.mit.pt.tutorial.TourActivity;
 import edu.mit.pt.tutorial.TourItemActivity;
 import edu.mit.pt.tutorial.TourMapActivity;
+import edu.mit.pt.tutorial.TourSearchActivity;
 import edu.mit.pt.tutorial.TourToolbarActivity;
 
 public class PtolemyMapActivity extends PtolemyBaseMapActivity {
@@ -40,9 +41,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int TUTORIAL_MAP_RESULT = 1;
 	private final int TUTORIAL_TOOLBAR_RESULT = 2;
 	private final int TUTORIAL_ITEM_RESULT = 3;
-	private final int ADD_EDIT_BOOKMARK_RESULT = 4;
-	private final int BOOKMARKS_RESULT = 5;
-	private final int NEAREST_RESULT = 6;
+	private final int TUTORIAL_SEARCH_RESULT = 4;
+	private final int ADD_EDIT_BOOKMARK_RESULT = 5;
+	private final int BOOKMARKS_RESULT = 6;
+	private final int NEAREST_RESULT = 7;
 	// MAKE SURE THIS ROOM EXISTS!
 	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "38-370";
@@ -448,6 +450,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}
 			break;
 		case TUTORIAL_ITEM_RESULT:
+			startActivityForResult(new Intent(PtolemyMapActivity.this,
+					TourSearchActivity.class), TUTORIAL_SEARCH_RESULT);
+			break;
+		case TUTORIAL_SEARCH_RESULT:
 			findViewById(R.id.tutorial_add_bookmark_img).setVisibility(
 					View.GONE);
 			break;

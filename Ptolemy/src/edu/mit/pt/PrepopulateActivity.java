@@ -49,7 +49,8 @@ public class PrepopulateActivity extends Activity {
 
 		dialog = ProgressDialog.show(this, "", "Connecting. Please wait...",
 				true);
-
+		
+		Log.v(Config.TAG, "USERNAME: " + username +", PASSWORD: " + password);
 		if (username.equals("benbitdiddle") && password.equals("6570")) {
 			@SuppressWarnings("serial")
 			List<String> fakeClasses = new ArrayList<String>() {

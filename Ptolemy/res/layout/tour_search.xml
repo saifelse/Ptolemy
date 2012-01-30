@@ -5,23 +5,23 @@
     android:padding="10dp" >
 
     <TextView
-        android:id="@+id/item"
+        android:id="@+id/search_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:textColor="#FFFFFF"
         android:textSize="32dp"
-        android:text="Tap a marker" />
+        android:text="Search from home" />
 
     <TextView
         android:id="@+id/item_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/item"
+        android:layout_below="@+id/search_more"
         android:lineSpacingExtra="2dp"
-        android:text="And details appear below - from here you can also directly add a bookmark for that place.\n\n(Note: we scraped this database of locations ourselves, and it's still a work in progress. Expect to see more locations added in the weeks to come!)"
+        android:text="As a bonus, Ptolemy lets you search for MIT classes and rooms straight from your home screen. Try Android's global search to find rooms like '10-250' - you may have to enable Ptolemy under Searchable Items first."
         android:textColor="#DDDDDD" />
 
     <Button
@@ -32,6 +32,6 @@
         android:layout_below="@+id/item_text"
         android:layout_marginTop="8dp"
         android:onClick="continueTour"
-        android:text="Next" />
+        android:text="Finish" />
 
 </RelativeLayout>
