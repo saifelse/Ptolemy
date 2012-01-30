@@ -25,6 +25,8 @@ public class PtolemyActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		needFirstRun = Config.firstRunCheck(this);
 		setContentView(R.layout.first_launch);
+		
+		WebLogger.Log("Creating PtolemyActivity");
 	}
 
 	@Override
