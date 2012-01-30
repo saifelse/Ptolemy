@@ -25,7 +25,7 @@ public class Trilateration {
 		
 		Trilateration.linearTrilaterate(a, b, c, sa, sb, sc);
 	}
-	public GeoPoint[] trilaterate(GeoPoint a, GeoPoint b, GeoPoint c, double dbmA, double dbmB, double dbmC){
+	public static GeoPoint[] trilaterate(GeoPoint a, GeoPoint b, GeoPoint c, double dbmA, double dbmB, double dbmC){
 		Point cA = geoPointToCartesianPoint(a);
 		Point cB = geoPointToCartesianPoint(b);
 		Point cC = geoPointToCartesianPoint(c);
@@ -91,15 +91,15 @@ public class Trilateration {
 	}
 	// TODO implement.
 	private static double linearizeDbm(double dbm){
-		return 0.0;
+		return Math.pow(2.0, -dbm / 6.02);
 	}
 	// TODO implement
 	private static Point geoPointToCartesianPoint(GeoPoint a){
-		return null;
+		return new Point(a.getLatitudeE6(), a.getLongitudeE6() / 1.35);
 	}
 	// TODO implement
 	private static GeoPoint cartesianPointToGeoPoint(Point a){
-		return null;
+		return new GeoPoint((int)(a.x), (int)(a.y * 1.35));
 	}
 	
 	private static class Circle {

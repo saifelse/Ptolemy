@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 
+import edu.mit.pt.Config;
 import edu.mit.pt.R;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.LocationSetter;
@@ -61,15 +62,16 @@ public class WifiLocation {
 	public void pause() {
 		paused = true;
 	}
-	
+
 	public void resume() {
 		paused = false;
 	}
-	
+
 	public void update() {
 		// TODO: FIXME passing null
 		if (!paused)
-			LocationSetter.getInstance(context, null).setLocation(getLocation());
+			LocationSetter.getInstance(context, null)
+					.setLocation(getLocation());
 	}
 
 	private GeoPoint midGeoPoint(GeoPoint a, GeoPoint b) {
@@ -124,25 +126,26 @@ public class WifiLocation {
 		double sigMagB = Math.pow(2.0, -strengthb / scaleConst);
 		double sigMagC = Math.pow(2.0, -strengthc / scaleConst);
 		Log.v(WifiLocation.class.getName(), "sigMagA: " + sigMagA);
-		double dLat = 1e1;
-		double dLon = 1e1;
+		double dLat = 7;
+		double dLon = 7;
 		for (int i = 0; i < 5; i++) {
-			Log.v(WifiLocation.class.getName(),"" + guessLat + ", " + guessLon);
+			Log.v(WifiLocation.class.getName(), "" + guessLat + ", " + guessLon);
 			double error = calcError(guessLat, guessLon, a, sigMagA, b,
 					sigMagB, c, sigMagC);
-			Log.v(WifiLocation.class.getName(),"Error: " + error);
+			Log.v(WifiLocation.class.getName(), "Error: " + error);
 			double dErrordLatE7 = calcError(guessLat + dLat, guessLon, a,
 					sigMagA, b, sigMagB, c, sigMagC) - error;
-			Log.v(WifiLocation.class.getName(),"dErrordLatE7: " + dErrordLatE7);
+			Log.v(WifiLocation.class.getName(), "dErrordLatE7: " + dErrordLatE7);
 			double dErrordLonE7 = calcError(guessLat, guessLon + dLon, a,
 					sigMagA, b, sigMagB, c, sigMagC) - error;
-			Log.v(WifiLocation.class.getName(),"dErrordLonE7: " + dErrordLonE7);
+			Log.v(WifiLocation.class.getName(), "dErrordLonE7: " + dErrordLonE7);
 			double dErrordLatLonE7 = calcError(guessLat + dLat,
 					guessLon + dLon, a, sigMagA, b, sigMagB, c, sigMagC)
 					- error;
-			Log.v(WifiLocation.class.getName(),"dErrordLatLonE7: " + dErrordLatLonE7);
-			guessLat = guessLat - error / dErrordLatE7 * 1e-1;
-			guessLon = guessLon - error / dErrordLonE7 * 1e-1;
+			Log.v(WifiLocation.class.getName(), "dErrordLatLonE7: "
+					+ dErrordLatLonE7);
+			guessLat = guessLat - error / dErrordLatE7 * 2e-1;
+			guessLon = guessLon - error / dErrordLonE7 * 2e-1;
 		}
 		return new GeoPoint((int) guessLat, (int) guessLon);
 	}
@@ -155,24 +158,26 @@ public class WifiLocation {
 		AlertDialog.Builder ad = new AlertDialog.Builder(context);
 		ad.setTitle(R.string.wifi_nag_title);
 		ad.setMessage(R.string.wifi_nag_text);
-		
+
 		ad.setPositiveButton(R.string.wifi_nag_positive, new OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
 				wifi.setWifiEnabled(true);
-				
-			}});
+
+			}
+		});
 		ad.setNegativeButton(R.string.wifi_nag_negative, new OnClickListener() {
-			
+
 			public void onClick(DialogInterface dialog, int which) {
-				Toast.makeText(context, "Please turn wifi on", Toast.LENGTH_LONG).show();
-				
+				Toast.makeText(context, "Please turn wifi on",
+						Toast.LENGTH_LONG).show();
+
 			}
 		});
 		ad.create().show();
 		shownWifiNag = true;
 	}
-	
+
 	public APGeoPoint getLocation() {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this.context).getReadableDatabase();
@@ -189,6 +194,10 @@ public class WifiLocation {
 			}
 
 		});
+		
+		for (ScanResult r: results)
+			Log.v(Config.TAG, "Found ap bssid " + r.BSSID);
+		
 		if (results.size() < 1) // no aps found
 			return null;
 
@@ -198,8 +207,10 @@ public class WifiLocation {
 		int j = 0;
 		for (; j < results.size(); j++) {
 			String bssid = maskBSSID(results.get(j).BSSID);
+			Log.v(Config.TAG, "Searching for " + bssid);
 			APGeoPoint location = AP.getAPLocation(bssid, db);
 			if (location != null) { // found good ap
+				Log.v(Config.TAG, "Found location for " + bssid);
 				closestAP1 = results.get(j);
 				closestAP1Location = location;
 				bssid1 = bssid;
@@ -211,9 +222,6 @@ public class WifiLocation {
 		if (closestAP1 == null)
 			return null;
 
-		int floor = closestAP1Location.getFloor();
-
-		Log.v(WifiLocation.class.getName(),"CURRENT FLOOR: " + floor);
 
 		ScanResult closestAP2 = null;
 		String bssid2 = null;
@@ -229,6 +237,20 @@ public class WifiLocation {
 				break;
 			}
 		}
+		
+		int floor = closestAP1Location.getFloor();
+		
+		Log.v(Config.TAG, "bssid: " + bssid1);
+		if (bssid1.equals("06:01:01:2f:e0:10")) {
+			Log.v(Config.TAG, "RLE level: " + closestAP1.level);
+			//RLE
+			if (closestAP1.level < -44 && closestAP2 != null) {
+				floor = closestAP2Location.getFloor();
+			}
+		}
+		
+		Log.v(WifiLocation.class.getName(),"CURRENT FLOOR: " + floor);
+
 
 		ScanResult closestAP3 = null;
 		String bssid3 = null;
@@ -272,5 +294,4 @@ public class WifiLocation {
 		}
 
 	}
-
 }

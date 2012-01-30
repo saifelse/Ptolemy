@@ -194,7 +194,7 @@ public class LocationSetter {
 		return new GeoPoint(newLatitude, newLongitude);
 	}
 
-	private float distanceBetweenGeoPoints(GeoPoint a, GeoPoint b) {
+	public static float distanceBetweenGeoPoints(GeoPoint a, GeoPoint b) {
 		float r[] = new float[1];
 		Location.distanceBetween(a.getLatitudeE6() / 1e6,
 				a.getLongitudeE6() / 1e6, b.getLatitudeE6() / 1e6,
@@ -206,7 +206,9 @@ public class LocationSetter {
 		if (currentLocation == null) {
 			currentLocation = p;
 		} else {
-			//snap if you're farther than 100m
+			if (p == null)
+				return;
+			//snap if you're farther than 100
 			if (distanceBetweenGeoPoints(currentLocation, p) > 100.0) {
 				currentLocation = p;
 			} else {

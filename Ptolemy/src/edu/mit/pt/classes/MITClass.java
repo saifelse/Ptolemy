@@ -75,7 +75,7 @@ public class MITClass {
 	public static String loadClasses(Context context, SQLiteDatabase db)
 			throws JSONException, IOException {
 		// Delete all rows
-		db.delete(MITClassTable.CLASSES_TABLE_NAME, "", new String[] {});
+		//db.delete(MITClassTable.CLASSES_TABLE_NAME, "", new String[] {});
 
 		// Refetch from file
 		String json;

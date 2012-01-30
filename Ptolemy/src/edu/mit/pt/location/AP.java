@@ -29,7 +29,7 @@ public class AP {
 		Cursor cursor = queryBuilder.query(database, null, null, null, null,
 				null, null);
 
-		//Log.v(Config.TAG, cursor.getCount() + " ssids found");
+		Log.v(Config.TAG, cursor.getCount() + " ssids found for " + bssid);
 		if (cursor.getCount() == 0) {
 			Log.v(Config.TAG, "Could not find " + bssid);
 			return null;
