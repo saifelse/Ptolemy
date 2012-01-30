@@ -503,4 +503,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		floorMapView.getPlacesOverlay().setFocus(null);
 		floorMapView.getPlacesOverlay().update();
 	}
+	protected void notifyOverlayOfFloor(int floor){
+		meOverlay.setViewFloor(floor);
+	}
 }

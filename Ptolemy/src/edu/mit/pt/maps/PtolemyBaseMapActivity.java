@@ -151,7 +151,7 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 			super.onBackPressed();
 		}
 	}
-
+	
 	abstract void setPlaceMeta(Place p);
 
 	abstract void showPlaceOnMap(Place p);

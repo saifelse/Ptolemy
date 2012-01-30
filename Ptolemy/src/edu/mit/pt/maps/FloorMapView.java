@@ -178,6 +178,12 @@ public class FloorMapView extends RelativeLayout {
 	}
 	public void updateToFloor(int floor, Runnable r) {
 		this.floor = floor;
+		
+		if(context instanceof PtolemyMapActivity){
+			((PtolemyMapActivity)context).notifyOverlayOfFloor(floor);
+		}else {
+			Log.v(Config.TAG, "Context is not PtolemyMapActivity!");
+		}
 		seekBar.setFloor(floor);
 		seekBar.snapY();
 		if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL){

@@ -12,13 +12,15 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
 import edu.mit.pt.R;
+import edu.mit.pt.location.APGeoPoint;
 
 //Positioning system overlay
 public class XPSOverlay extends Overlay {
 	private GeoPoint point;
 	private double dir;
 	private MapView mapView;
-	
+	private int floor;
+	private int viewFloor;
 	public XPSOverlay(MapView mapView) {
 		super();
 		this.mapView = mapView;
@@ -29,8 +31,13 @@ public class XPSOverlay extends Overlay {
 		dir = bearing;
 		mapView.postInvalidate();
 	}
-	public void setLocation(GeoPoint p) {
-		point = p;
+	public void setLocation(APGeoPoint p) {
+		point = (GeoPoint)p;
+		floor = p.getFloor();
+		mapView.postInvalidate();
+	}
+	public void setViewFloor(int floor){
+		viewFloor = floor;
 		mapView.postInvalidate();
 	}
 	// TODO: draw differently depending what floor is being examined.
@@ -38,8 +45,14 @@ public class XPSOverlay extends Overlay {
 		if (point == null) return;
 
 		Point screenPoint = mapView.getProjection().toPixels(point, null);
+		int resource;
+		if(floor != viewFloor){
+			resource = R.drawable.location_marker_other_floor;
+		}else{
+			resource = R.drawable.location_marker;
+		}
 		Bitmap arrow = BitmapFactory.decodeResource(mapView.getResources(),
-				R.drawable.location_marker);
+				resource);
 
 		Matrix placementMatrix = new Matrix();
 		placementMatrix.setTranslate(-arrow.getWidth() / 2,
