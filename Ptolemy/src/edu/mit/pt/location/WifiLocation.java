@@ -14,9 +14,11 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 
+import edu.mit.pt.R;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 import edu.mit.pt.maps.LocationSetter;
 
@@ -143,20 +145,19 @@ public class WifiLocation {
 
 	private void showWifiNag() {
 		AlertDialog.Builder ad = new AlertDialog.Builder(context);
-		ad.setTitle("Wifi Location Sources");
-		ad.setMessage("Ptolemy uses WiFi access point data in order to provide you with a location inside MIT's campus due to the inability of GPS to function indoors.  However, your wifi is currently off. Do you want me to enable it for you?");
+		ad.setTitle(R.string.wifi_nag_title);
+		ad.setMessage(R.string.wifi_nag_text);
 		
-		ad.setPositiveButton("Ok", new OnClickListener() {
+		ad.setPositiveButton(R.string.wifi_nag_positive, new OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
-				System.out.println("OKKKK");
 				wifi.setWifiEnabled(true);
 				
 			}});
-		ad.setNegativeButton("Cancel", new OnClickListener() {
+		ad.setNegativeButton(R.string.wifi_nag_negative, new OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				System.out.println("CANCELLL");
+				Toast.makeText(context, "Please turn wifi on", Toast.LENGTH_LONG).show();
 				
 			}
 		});

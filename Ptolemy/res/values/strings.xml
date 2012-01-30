@@ -51,5 +51,9 @@
     <string name="delete_bookmark">Delete Bookmark</string>
     <string name="navigate">navigate</string>
     <string name="loading">Loading Ptolemy...</string>
+    <string name="wifi_nag_text">Ptolemy uses WiFi access point data in order to provide you with a location inside MIT\'s campus due to the inability of GPS to function indoors.  However, your wifi is currently off. Do you want me to enable it for you?</string>
+    <string name="wifi_nag_title">Wifi Location Sources</string>
+    <string name="wifi_nag_positive">Ok</string>
+    <string name="wifi_nag_negative">Cancel</string>
 
 </resources>
