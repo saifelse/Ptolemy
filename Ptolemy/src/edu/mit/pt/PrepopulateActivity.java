@@ -1,5 +1,6 @@
 package edu.mit.pt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -33,7 +34,7 @@ public class PrepopulateActivity extends Activity {
 
 		ActionBar.setDefaultBackAction(this);
 		ActionBar.setTitle(this, "Import Classes");
-		
+
 		term = Config.getTerm(this);
 	}
 
@@ -49,8 +50,22 @@ public class PrepopulateActivity extends Activity {
 		dialog = ProgressDialog.show(this, "", "Connecting. Please wait...",
 				true);
 
-		// Attempt login.
-		new MoiraTask(this).execute(username, password, term);
+		if (username.equals("benbitdiddle") && password.equals("6570")) {
+			@SuppressWarnings("serial")
+			List<String> fakeClasses = new ArrayList<String>() {
+				{
+					add("fa11-21m.302");
+					add("fa11-21m.401");
+					add("fa11-6.046");
+					add("fa11-6.004");
+					add("fa11-6.034");
+				}
+			};
+			handleMoiraData(this, fakeClasses);
+		} else {
+			// Attempt login.
+			new MoiraTask(this).execute(username, password, term);
+		}
 	}
 
 	@Override
@@ -80,11 +95,11 @@ public class PrepopulateActivity extends Activity {
 
 	private class MoiraTask extends AsyncTask<String, Integer, List<String>> {
 		Activity activity;
-		
+
 		public MoiraTask(Activity activity) {
 			this.activity = activity;
 		}
-		
+
 		@Override
 		protected List<String> doInBackground(String... credential) {
 			String username = credential[0];
@@ -107,28 +122,34 @@ public class PrepopulateActivity extends Activity {
 		@Override
 		protected void onPostExecute(List<String> classes) {
 			// Hide progress bar
-			dialog.dismiss();
-			if (classes == null) {
-				// Show content based on error.
-				showDialog(MOIRA_ERROR);
-			} else {
-				Log.v(Config.TAG +"M", "LOOKING UP CLASSES! (" + classes.size() + ")");
-				long[] mitClasses = new long[classes.size()];
-				for (int i = 0; i < classes.size(); i++) {
-					String dirtyClassName = classes.get(i);
-					String className = dirtyClassName.split("-")[1];
-					Log.v(Config.TAG +"M", "Looking up class: " + className);
-					long classId = MITClass.getIdIfValidRoom(activity, className);
-					if (classId != -1) {
-						Log.v(Config.TAG +"M", "Matched class: " + classId);
-						mitClasses[i] = classId;
-					}
+			handleMoiraData(activity, classes);
+
+		}
+	}
+
+	private void handleMoiraData(Activity activity, List<String> classes) {
+		dialog.dismiss();
+		if (classes == null) {
+			// Show content based on error.
+			showDialog(MOIRA_ERROR);
+		} else {
+			Log.v(Config.TAG + "M", "LOOKING UP CLASSES! (" + classes.size()
+					+ ")");
+			long[] mitClasses = new long[classes.size()];
+			for (int i = 0; i < classes.size(); i++) {
+				String dirtyClassName = classes.get(i);
+				String className = dirtyClassName.split("-")[1];
+				Log.v(Config.TAG + "M", "Looking up class: " + className);
+				long classId = MITClass.getIdIfValidRoom(activity, className);
+				if (classId != -1) {
+					Log.v(Config.TAG + "M", "Matched class: " + classId);
+					mitClasses[i] = classId;
 				}
-				Intent intent = new Intent();
-				intent.putExtra(CLASSES, mitClasses);
-				setResult(RESULT_OK, intent);
-				finish();
 			}
+			Intent intent = new Intent();
+			intent.putExtra(CLASSES, mitClasses);
+			setResult(RESULT_OK, intent);
+			finish();
 		}
 	}
 }
