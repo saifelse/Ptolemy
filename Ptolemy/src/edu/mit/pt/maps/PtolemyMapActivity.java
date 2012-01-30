@@ -215,11 +215,11 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 					});
 				}
 			}).start();
-		} else {
-			APGeoPoint point = Config.getLocation(this);
-			mapView.getController().setCenter(new GeoPoint(point.getLatitudeE6(), point.getLongitudeE6()));
-			floorMapView.getSeekBar().setFloor(point.getFloor());
 		}
+		APGeoPoint point = Config.getLocation(this);
+		mapView.getController().setCenter(new GeoPoint(point.getLatitudeE6(), point.getLongitudeE6()));
+		floorMapView.getSeekBar().setFloor(point.getFloor());
+		
 	}
 
 	@Override
