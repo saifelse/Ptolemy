@@ -249,10 +249,7 @@ public class WifiLocation {
 		if (bssid1.equals("06:01:01:2f:e0:10")) {
 			Log.v(Config.TAG, "RLE level: " + closestAP1.level);
 			if (closestAP1.level < -44 && !rle_nag_shown) {
-				Toast t = new Toast(context);
-				t.setText("I've detected you are in RLE and because of that, my location sources may be inaccurate");
-				t.setDuration(Toast.LENGTH_LONG);
-				t.show();
+				Toast.makeText(context, "I've detected you are in RLE and because of that, my location sources may be inaccurate", Toast.LENGTH_LONG).show();
 				rle_nag_shown = true;
 			}
 			//RLE
