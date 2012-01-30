@@ -29,6 +29,7 @@ public class FloorSeekBar extends View {
 
 	private int thumbHeight = 12;
 	private int thumbWidth = 24;
+	private int leftShift = 6;
 
 	private float scrollDotRadius = 3;
 
@@ -192,7 +193,7 @@ public class FloorSeekBar extends View {
 		strokePaint.setStrokeWidth(4);
 
 		Paint textPaint = new Paint(indicTxt);
-		textPaint.setARGB(255, 40, 40, 40);
+		textPaint.setARGB(255, 51, 51, 51);
 		textPaint.setTextAlign(Paint.Align.CENTER);
 		//textPaint.setTextSize(16);
 		textPaint.setTypeface(Typeface.DEFAULT_BOLD);
@@ -206,12 +207,12 @@ public class FloorSeekBar extends View {
 
 		if (targetFloor != min) {
 			canvas.drawText(Integer.toString(min),
-					centerXLine + thumbWidth / 2, getYFromFloor(min)
+					centerXLine + thumbWidth / 2 + leftShift, getYFromFloor(min)
 							+ textHeight / 2, minMaxTxt);
 		}
 		if (targetFloor != max) {
 			canvas.drawText(Integer.toString(max),
-					centerXLine + thumbWidth / 2, getYFromFloor(max)
+					centerXLine + thumbWidth / 2 + leftShift, getYFromFloor(max)
 							+ textHeight / 2, minMaxTxt);
 		}
 		// Scroll
@@ -248,7 +249,7 @@ public class FloorSeekBar extends View {
 
 
 		canvas.drawText(Integer.toString(getFloorFromY(unsnappedY)),
-				centerXLine + thumbWidth / 2, unsnappedY + textHeight / 2,
+				centerXLine + thumbWidth / 2 + leftShift, unsnappedY + textHeight / 2,
 				scrollFloorTxt);
 
 		canvas.drawRect(new Rect(centerXLine - thumbWidth / 2, unsnappedY
