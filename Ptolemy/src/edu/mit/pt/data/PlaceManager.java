@@ -96,8 +96,8 @@ public class PlaceManager {
 		int tileXMin = lonToTileX(topLeft.getLongitudeE6());
 		int tileXMax = lonToTileX(bottomRight.getLongitudeE6());
 
-		int min = 0;
-		int max = 0;
+		int min = 1;
+		int max = 1;
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
 				MinMax indivTileMinMax = getPlacesMinMax(x, y);
