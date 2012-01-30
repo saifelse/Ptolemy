@@ -290,7 +290,7 @@ abstract public class Place implements Parcelable {
 				continue;
 			}
 			if (!places.containsKey(p.getFloor())) {
-				places.put(p.getFloor(), new ArrayList<Place>());
+				places.put(p.getFloor(), new LinkedList<Place>());
 			}
 			places.get(p.getFloor()).add(p);
 		}
