@@ -1,7 +1,5 @@
 package edu.mit.pt.bookmarks;
 
-import edu.mit.pt.R;
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +27,7 @@ import android.widget.Toast;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.PrepopulateActivity;
+import edu.mit.pt.R;
 import edu.mit.pt.VerticalTextView;
 import edu.mit.pt.classes.MITClass;
 import edu.mit.pt.data.Athena;
@@ -55,8 +54,6 @@ public class BookmarksActivity extends ListActivity {
 		ActionBar.setTitle(this, ACTIVITY_TILE);
 		ActionBar.setDefaultBackAction(this);
 
-		final Activity that = this;
-
 		// Add nav buttons.
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
 				R.layout.menu_nav_button, null);
@@ -64,7 +61,7 @@ public class BookmarksActivity extends ListActivity {
 		addButton.setContentDescription(getString(R.string.add_bookmark));
 		addButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(that, AddBookmarkActivity.class);
+				Intent intent = new Intent(BookmarksActivity.this, AddBookmarkActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -78,7 +75,7 @@ public class BookmarksActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (position >= adapter.getCount()) {
-					Intent intent = new Intent(that, PrepopulateActivity.class);
+					Intent intent = new Intent(BookmarksActivity.this, PrepopulateActivity.class);
 					startActivityForResult(intent, REQUEST_BOOKMARKS);
 					return;
 				}
@@ -86,7 +83,7 @@ public class BookmarksActivity extends ListActivity {
 				long placeId = cursor.getLong(cursor
 						.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
 								+ BaseColumns._ID));
-				Intent intent = new Intent(that, PtolemyMapActivity.class);
+				Intent intent = new Intent(BookmarksActivity.this, PtolemyMapActivity.class);
 				Uri.Builder builder = Uri
 						.parse("content://edu.mit.pt.data.placescontentprovider/")
 						.buildUpon().path(Long.toString(placeId));
@@ -164,6 +161,14 @@ public class BookmarksActivity extends ListActivity {
 			return super.onContextItemSelected(item);
 		}
 	}
+	
+	/**
+	 * For button in bookmarks.xml
+	 */
+	public void startPrepopulate(View v) {
+		Intent intent = new Intent(this, PrepopulateActivity.class);
+		startActivityForResult(intent, REQUEST_BOOKMARKS);
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -174,13 +179,17 @@ public class BookmarksActivity extends ListActivity {
 			}
 			long[] mitClassIds = data
 					.getLongArrayExtra(PrepopulateActivity.CLASSES);
+			int count = 0;
 			for (MITClass c : MITClass.getClasses(this, mitClassIds)) {
-				Bookmark.addBookmark(this, c.getName(), c.getPlace(),
-						BookmarkType.LECTURE);
+				if (Bookmark.findInBookmarks(this, c.getPlace()) == -1) {
+					Bookmark.addBookmark(this, c.getName(), c.getPlace(),
+							BookmarkType.LECTURE);
+					count++;
+				}
 			}
 			Toast toast;
-			if (mitClassIds.length != 0) {
-				toast = Toast.makeText(this, mitClassIds.length
+			if (count != 0) {
+				toast = Toast.makeText(this, count
 						+ " bookmarks added!", 1000);
 			} else {
 				toast = Toast.makeText(this,

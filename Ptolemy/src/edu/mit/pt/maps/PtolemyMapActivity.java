@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import edu.mit.pt.ActionBar;
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
@@ -285,7 +284,7 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	/**
 	 * Called in map_main.xml.
 	 */
-	public void moveToFocusedPlaces(View v) {
+	public void moveToFocusedPlace(View v) {
 		if (focusedPlace == null) {
 			return;
 		}

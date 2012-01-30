@@ -13,6 +13,7 @@ import edu.mit.pt.ActionBar;
 import edu.mit.pt.R;
 import edu.mit.pt.bookmarks.AddBookmarkActivity;
 import edu.mit.pt.data.Place;
+import edu.mit.pt.data.PlaceType;
 
 public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 
@@ -72,6 +73,11 @@ public class BrowsePlaceActivity extends PtolemyBaseMapActivity {
 		}
 
 		configureFloorMapView(floorMapView);
+		
+		floorMapView.getPlaceManager().addFilter(PlaceType.ATHENA);
+		floorMapView.getPlaceManager().addFilter(PlaceType.CLASSROOM);
+		floorMapView.getPlaceManager().addFilter(PlaceType.MTOILET);
+		floorMapView.getPlaceManager().addFilter(PlaceType.FTOILET);
 	}
 
 	@Override
