@@ -58,17 +58,6 @@ public class BookmarksActivity extends ListActivity {
 		final Activity that = this;
 
 		// Add nav buttons.
-		ImageButton syncButton = (ImageButton) getLayoutInflater().inflate(
-				R.layout.menu_nav_button, null);
-		syncButton.setImageResource(R.drawable.ic_menu_find_holo_dark);
-		syncButton.setContentDescription(getString(R.string.sync_bookmark));
-		syncButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(that, PrepopulateActivity.class);
-				startActivityForResult(intent, REQUEST_BOOKMARKS);
-			}
-		});
-
 		ImageButton addButton = (ImageButton) getLayoutInflater().inflate(
 				R.layout.menu_nav_button, null);
 		addButton.setImageResource(R.drawable.ic_menu_bookmark_add);
@@ -80,12 +69,19 @@ public class BookmarksActivity extends ListActivity {
 			}
 		});
 
-		ActionBar.setButtons(this, new View[] { addButton, syncButton });
+		ActionBar.setButtons(this, new View[] { addButton });
 
 		ListView lv = getListView();
+		View footerView = getLayoutInflater().inflate(R.layout.bookmark_list_footer, null);
+		lv.addFooterView(footerView);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				if (position >= adapter.getCount()) {
+					Intent intent = new Intent(that, PrepopulateActivity.class);
+					startActivityForResult(intent, REQUEST_BOOKMARKS);
+					return;
+				}
 				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 				long placeId = cursor.getLong(cursor
 						.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
