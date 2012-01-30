@@ -138,6 +138,9 @@ public class FloorSeekBar extends View {
 		invalidate();
 	}
 
+	public int getUserSetFloor(){
+		return userSetFloor;
+	}
 	private void setUnsnappedY(int y) {
 		unsnappedY = Math.max(getTrackTop(), Math.min(getTrackBottom(), y));
 		// setFloor(getFloorFromY(unsnappedY)); // live update floor.

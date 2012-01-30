@@ -72,23 +72,25 @@ public class FloorMapView extends RelativeLayout {
 	}
 	public void resumeUpdate() {
 		Log.v(Config.TAG + "_f", "Resuming update!");
-		updateTask.cancel();
-		updateTask = new CheckUpdateTask();
-		timer.scheduleAtFixedRate(updateTask, 1000, 1000);
+		timer.cancel();
+		timer = new Timer();
+		timer.schedule(new CheckUpdateTask(), 500);
+		//timer.scheduleAtFixedRate(updateTask, 500, 500);
 	}
 
 	public void pauseUpdate() {
 		Log.v(Config.TAG + "_f", "Cancelled update!");
-		updateTask.cancel();
+		timer.cancel();
+		//updateTask.cancel();
 	}
 
 	@Override
 	public void onWindowFocusChanged(boolean hasWindowFocus) {
 		if (hasWindowFocus) {
 			updateMinMax();
-			// resumeUpdate();
+			resumeUpdate();
 		} else {
-			// pauseUpdate();
+			pauseUpdate();
 		}
 	}
 
@@ -109,7 +111,13 @@ public class FloorMapView extends RelativeLayout {
 					}
 					Log.v(Config.TAG + "_f", "We moved!");
 					p = mapView.getProjection().fromPixels(0, 0);
-					updateMinMax();
+					updateMinMax(new Runnable(){
+						@Override
+						public void run() {
+							Log.v(Config.TAG + "_hey", "Run check again!");
+							timer.schedule(new CheckUpdateTask(), 500);							
+						}
+					});
 				}
 			});
 		}
@@ -161,7 +169,7 @@ public class FloorMapView extends RelativeLayout {
 		timer = new Timer();
 		updateTask = new CheckUpdateTask();
 
-		// resumeUpdate();
+		resumeUpdate();
 	}
 
 	public void updateToFloor(int floor) {
@@ -224,14 +232,18 @@ public class FloorMapView extends RelativeLayout {
 
 	// getMinMax(), sets seekbars, then update to floor
 	//  if zoom less than 20, (0,0), otherwise look it up.
-	public void updateMinMax() {
+	public void updateMinMax(){
+		updateMinMax(null);
+	}
+	public void updateMinMax(Runnable r) {
 		if (mapView.getZoomLevel() < MIN_ZOOM_LEVEL){
 			handleMinMaxData(new MinMax(0,0));
+			if(r != null) r.run();
 		}else{
 			GeoPoint topLeft = mapView.getProjection().fromPixels(0, 0);
 			GeoPoint bottomRight = mapView.getProjection().fromPixels(
 					mapView.getWidth(), mapView.getHeight());
-			new UpdateMinMaxTask().execute(topLeft, bottomRight);
+			new UpdateMinMaxTask(r).execute(topLeft, bottomRight);
 		}
 		
 	}
@@ -254,6 +266,10 @@ public class FloorMapView extends RelativeLayout {
 		updateToFloor(floor);
 	}
 	private class UpdateMinMaxTask extends AsyncTask<GeoPoint, Void, MinMax> {
+		private Runnable postAction;
+		public UpdateMinMaxTask(Runnable r){
+			postAction = r;
+		}
 		 @Override
 	     protected MinMax doInBackground(GeoPoint... gp) {
 	    	 GeoPoint topLeft = gp[0];
@@ -267,6 +283,7 @@ public class FloorMapView extends RelativeLayout {
 		 
 	     protected void onPostExecute(MinMax minMax) {
 	    	 handleMinMaxData(minMax);
+	    	 if(postAction != null) postAction.run();
 	     }
 	 }
 	private void handlePlaceData(List<Place> places){
