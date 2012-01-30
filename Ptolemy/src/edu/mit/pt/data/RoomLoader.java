@@ -71,7 +71,7 @@ public class RoomLoader {
 		for (int i = 0; i < roomList.length(); i++) {
 			String name = roomList.getString(i);
 			if (name == null) {
-				System.out.println("ROOM IS NULL!");
+				Log.v(RoomLoader.class.getName(), "ROOM IS NULL!");
 				continue;
 			}
 

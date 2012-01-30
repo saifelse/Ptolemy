@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
@@ -63,7 +64,7 @@ public class LocationSetter {
 		locationListener = new LocationListener() {
 
 			public void onLocationChanged(Location location) {
-				System.out.println("Location changed: " + location.toString());
+				Log.v(LocationSetter.class.getName(), "Location changed: " + location.toString());
 				if (location.getAccuracy() < minGPSAccuracy) {
 					// want to use GPS instead
 					currentLocation = new APGeoPoint(
