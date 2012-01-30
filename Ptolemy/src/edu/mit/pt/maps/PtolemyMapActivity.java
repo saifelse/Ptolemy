@@ -73,7 +73,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 		int pixelsX = mapView.getWidth() / 2;
 		int pixelsY = mapView.getHeight() / 2;
 		GeoPoint point = mapView.getProjection().fromPixels(pixelsX, pixelsY);
-		Config.saveLocation(this, point.getLatitudeE6(), point.getLongitudeE6(), floorMapView.getSeekBar().getUserSetFloor());
+		Config.saveLocation(this, point.getLatitudeE6(),
+				point.getLongitudeE6(), floorMapView.getSeekBar()
+						.getUserSetFloor());
 		LocationSetter.getInstance(this, null).pause();
 	}
 
@@ -164,8 +166,8 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}
 		});
 
-		ActionBar.setButtons(this, new View[] { compassButton, searchButton,
-				nearestButton, bookmarksButton });
+		ActionBar.setButtons(this, new View[] { compassButton, nearestButton,
+				searchButton, bookmarksButton });
 
 		athenaFilterButton = (PlaceFilterButton) findViewById(R.id.athena_filter_btn);
 		setupFilterButton(athenaFilterButton, PlaceType.ATHENA);
@@ -219,9 +221,10 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			}).start();
 		}
 		APGeoPoint point = Config.getLocation(this);
-		mapView.getController().setCenter(new GeoPoint(point.getLatitudeE6(), point.getLongitudeE6()));
+		mapView.getController().setCenter(
+				new GeoPoint(point.getLatitudeE6(), point.getLongitudeE6()));
 		floorMapView.getSeekBar().setFloor(point.getFloor());
-		
+
 	}
 
 	@Override

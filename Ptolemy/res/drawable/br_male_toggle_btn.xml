@@ -3,6 +3,6 @@
     <item android:drawable="@drawable/toggle_button_background"/>
     <item
         android:drawable="@drawable/br_male_filter_btn"
-        android:top="-8dp"/>
+        android:top="34dp"/>
 
 </layer-list>

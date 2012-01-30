@@ -4,6 +4,6 @@
         android:drawable="@drawable/toggle_button_background" />
     <item
         android:drawable="@drawable/athena_filter_btn"
-        android:top="-8dp"/>
+        android:top="34dp"/>
 
 </layer-list>
