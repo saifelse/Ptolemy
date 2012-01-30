@@ -57,5 +57,8 @@
     <string name="wifi_nag_title">Wifi Location Sources</string>
     <string name="wifi_nag_positive">Ok</string>
     <string name="wifi_nag_negative">Cancel</string>
+    
+    <string name="search_hint">Search rooms or classes</string>
+    <string name="search_hint_rooms">Search rooms</string>
 
 </resources>
