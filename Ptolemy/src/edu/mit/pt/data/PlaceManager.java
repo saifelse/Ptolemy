@@ -75,7 +75,8 @@ public class PlaceManager {
 		int tileXMin = lonToTileX(topLeft.getLongitudeE6());
 		int tileXMax = lonToTileX(bottomRight.getLongitudeE6());
 
-		List<Place> result = new LinkedList<Place>();
+		// List<Place> result = new LinkedList<Place>();
+		List<Place> result = new ArrayList<Place>();
 		for (int x = tileXMin; x <= tileXMax; x++) {
 			for (int y = tileYMin; y <= tileYMax; y++) {
 				for (Place p : getPlaces(x, y, floor)) {
@@ -134,9 +135,12 @@ public class PlaceManager {
 					int floor = k.getKey();
 					List<Place> places = k.getValue();
 					if (!results.containsKey(floor)) {
-						results.put(floor, new LinkedList<Place>());
+						// results.put(floor, new LinkedList<Place>());
+						results.put(floor, new ArrayList<Place>());
 					}
-					((LinkedList<Place>)results.get(floor)).addAll((LinkedList<Place>)places);
+					// ((LinkedList<Place>)results.get(floor)).addAll((LinkedList<Place>)places);
+					results.get(floor).addAll(places);
+
 				}
 			}
 		}
@@ -175,8 +179,9 @@ public class PlaceManager {
 	}
 	
 	private List<Place> getPlaces(int x, int y, int f) {
-		LinkedList<Place> result = new LinkedList<Place>();
-
+		// LinkedList<Place> result = new LinkedList<Place>();
+		ArrayList<Place> result = new ArrayList<Place>();
+		
 		Map<Integer, List<Place>> unfiltered = getPlaces(x, y);
 
 		Integer max = null;
@@ -185,12 +190,15 @@ public class PlaceManager {
 				max = k;
 			}
 		}
-		if (max != null && max < f)
-			result.addAll((LinkedList<Place>)unfiltered.get(max));
+		if (max != null && max < f){
+			// result.addAll((LinkedList<Place>)unfiltered.get(max));
+			result.addAll(unfiltered.get(max));
+		}
 
-		if (unfiltered.containsKey(f))
-			result.addAll((LinkedList<Place>)unfiltered.get(f));
-
+		if (unfiltered.containsKey(f)){
+			// result.addAll((LinkedList<Place>)unfiltered.get(f));
+			result.addAll(unfiltered.get(f));
+		}
 		/*
 		 * for(Place p : getPlaces(x,y)){ if(p.getFloor() == f || (p.getFloor()
 		 * == f-1 || p.getFloor() == f+1) && p.getPlaceType() !=
