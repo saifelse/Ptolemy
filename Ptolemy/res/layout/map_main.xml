@@ -55,7 +55,7 @@
             android:layout_height="48dp"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <edu.mit.pt.maps.PlaceFilterButton
                 android:id="@+id/athena_filter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <edu.mit.pt.maps.PlaceFilterButton
                 android:id="@+id/classroom_filter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <edu.mit.pt.maps.PlaceFilterButton
                 android:id="@+id/br_male_filter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
-            <ToggleButton
+            <edu.mit.pt.maps.PlaceFilterButton
                 android:id="@+id/br_female_filter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
