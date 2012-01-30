@@ -44,7 +44,6 @@ public class PlacesContentProvider extends ContentProvider {
 		SQLiteDatabase database = db.getWritableDatabase();
 		database.beginTransaction();
 		for (ContentValues v : values) {
-			System.out.println(v.get(PlacesTable.COLUMN_NAME));
 			database.insert(PlacesTable.PLACES_TABLE_NAME, null, v);
 		}
 		database.setTransactionSuccessful();
@@ -72,8 +71,6 @@ public class PlacesContentProvider extends ContentProvider {
 		SQLiteDatabase database = db.getReadableDatabase();
 		Cursor cursor = queryBuilder.query(database, projection, selection,
 				selectionArgs, null, null, sortOrder);
-		System.out.println(cursor.getCount());
-		System.out.println("QUERY : " + query);
 		return cursor;
 	}
 

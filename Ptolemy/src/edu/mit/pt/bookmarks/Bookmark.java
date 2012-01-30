@@ -1,13 +1,18 @@
 package edu.mit.pt.bookmarks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PtolemyDBOpenHelperSingleton;
 
-public class Bookmark {
+public class Bookmark implements Parcelable {
 
 	private long id;
 	private String customName;
@@ -94,18 +99,50 @@ public class Bookmark {
 				new String[] { Long.toString(id) });
 	}
 
-	static public long findInBookmarks(Context context, Place p) {
+	static public List<Long> findInBookmarks(Context context, Place p) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(context).getReadableDatabase();
 		Cursor c = db.query(BookmarksTable.BOOKMARKS_TABLE_NAME,
 				new String[] { BookmarksTable.COLUMN_ID, BookmarksTable.COLUMN_PLACE_ID }, null, null,
 				null, null, null);
+		List<Long> longs = new ArrayList<Long>();
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 			long placeId = c.getLong(c.getColumnIndex(BookmarksTable.COLUMN_PLACE_ID));
 			if (placeId == p.getId()) {
-				return c.getLong(c.getColumnIndex(BookmarksTable.COLUMN_ID));
+				longs.add(c.getLong(c.getColumnIndex(BookmarksTable.COLUMN_ID)));
 			}
 		}
-		return -1;
+		return longs;
 	}
+	
+	@Override
+	public int describeContents() {
+        return 0;
+    }
+
+	@Override
+    public void writeToParcel(Parcel out, int flags) {
+		out.writeLong(id);
+		out.writeString(customName);
+		out.writeParcelable(place, 0);
+		out.writeString(type.name());
+    }
+
+    public static final Parcelable.Creator<Bookmark> CREATOR
+            = new Parcelable.Creator<Bookmark>() {
+        public Bookmark createFromParcel(Parcel in) {
+            return new Bookmark(in);
+        }
+
+        public Bookmark[] newArray(int size) {
+            return new Bookmark[size];
+        }
+    };
+
+    private Bookmark(Parcel in) {
+    	id = in.readLong();
+    	customName = in.readString();
+    	place = in.readParcelable(Place.class.getClassLoader());
+    	type = BookmarkType.valueOf(in.readString());
+    }
 }

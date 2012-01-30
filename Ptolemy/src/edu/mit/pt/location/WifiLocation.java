@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -78,13 +79,10 @@ public class WifiLocation {
 
 	private GeoPoint weightedMidGeoPoint(GeoPoint a, int strengtha, GeoPoint b,
 			int strengthb) {
-		System.out.println(strengtha);
-		System.out.println(strengthb);
 		int diff = strengtha - strengthb;
 		double powersOfTwoDiff = (double) diff / 6.02;
 		double ratio = Math.pow(2.0, -powersOfTwoDiff);
 		double amountA = Math.pow(2.0, -ratio);
-		System.out.println(amountA);
 		double amountB = 1 - amountA;
 		return new GeoPoint((int) (amountA * a.getLatitudeE6() + amountB
 				* b.getLatitudeE6()),
@@ -125,24 +123,24 @@ public class WifiLocation {
 		double sigMagA = Math.pow(2.0, -strengtha / scaleConst);
 		double sigMagB = Math.pow(2.0, -strengthb / scaleConst);
 		double sigMagC = Math.pow(2.0, -strengthc / scaleConst);
-		System.out.println("sigMagA: " + sigMagA);
+		Log.v(WifiLocation.class.getName(), "sigMagA: " + sigMagA);
 		double dLat = 1e1;
 		double dLon = 1e1;
 		for (int i = 0; i < 5; i++) {
-			System.out.println("" + guessLat + ", " + guessLon);
+			Log.v(WifiLocation.class.getName(),"" + guessLat + ", " + guessLon);
 			double error = calcError(guessLat, guessLon, a, sigMagA, b,
 					sigMagB, c, sigMagC);
-			System.out.println("Error: " + error);
+			Log.v(WifiLocation.class.getName(),"Error: " + error);
 			double dErrordLatE7 = calcError(guessLat + dLat, guessLon, a,
 					sigMagA, b, sigMagB, c, sigMagC) - error;
-			System.out.println("dErrordLatE7: " + dErrordLatE7);
+			Log.v(WifiLocation.class.getName(),"dErrordLatE7: " + dErrordLatE7);
 			double dErrordLonE7 = calcError(guessLat, guessLon + dLon, a,
 					sigMagA, b, sigMagB, c, sigMagC) - error;
-			System.out.println("dErrordLonE7: " + dErrordLonE7);
+			Log.v(WifiLocation.class.getName(),"dErrordLonE7: " + dErrordLonE7);
 			double dErrordLatLonE7 = calcError(guessLat + dLat,
 					guessLon + dLon, a, sigMagA, b, sigMagB, c, sigMagC)
 					- error;
-			System.out.println("dErrordLatLonE7: " + dErrordLatLonE7);
+			Log.v(WifiLocation.class.getName(),"dErrordLatLonE7: " + dErrordLatLonE7);
 			guessLat = guessLat - error / dErrordLatE7 * 1e-1;
 			guessLon = guessLon - error / dErrordLonE7 * 1e-1;
 		}
@@ -215,7 +213,7 @@ public class WifiLocation {
 
 		int floor = closestAP1Location.getFloor();
 
-		System.out.println("CURRENT FLOOR: " + floor);
+		Log.v(WifiLocation.class.getName(),"CURRENT FLOOR: " + floor);
 
 		ScanResult closestAP2 = null;
 		String bssid2 = null;

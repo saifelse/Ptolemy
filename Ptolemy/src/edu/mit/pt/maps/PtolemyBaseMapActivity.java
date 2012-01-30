@@ -36,7 +36,6 @@ abstract public class PtolemyBaseMapActivity extends MapActivity {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			// Try autocomplete ID first.
 			Uri dataUri = intent.getData();
-			System.out.println("INTENT: " + intent.getData());
 			Place p;
 			if (dataUri != null) {
 				String id = dataUri.getLastPathSegment();
