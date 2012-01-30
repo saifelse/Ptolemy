@@ -96,6 +96,8 @@ public class LocationSetter {
 	public APGeoPoint getPoint(Context context) {
 		WifiLocation wifiLocation = WifiLocation.getInstance(context);
 		APGeoPoint point = wifiLocation.getLocation();
+		if (point == null)
+			return null;
 		setLocation(point);
 		return currentLocation;
 	}
