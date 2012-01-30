@@ -13,7 +13,7 @@ import edu.mit.pt.maps.PtolemyMapActivity;
 
 public class PtolemyActivity extends Activity {
 
-	static final boolean DEBUG = true;
+	static final boolean DEBUG = false;
 	static final int DIALOG_ERROR_NETWORK = 0;
 	static final int DIALOG_ERROR_JSON = 1;
 	static final int DIALOG_ERROR_OTHER = 2;
