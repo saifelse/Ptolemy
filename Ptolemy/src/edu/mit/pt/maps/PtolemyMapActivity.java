@@ -1,8 +1,12 @@
 package edu.mit.pt.maps;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,9 +44,12 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	private final int TUTORIAL_FLOOR = 2;
 	private final String TUTORIAL_ROOM = "38-370";
 
+	private final int DIALOG_MULTIPLE_BOOKMARKS = 0;
+	private final String BOOKMARKS = "bookmarks";
+
 	private PtolemyMapView mapView;
 	private XPSOverlay meOverlay;
-	private long focusedBookmarkId = -1;
+	private List<Long> focusedBookmarkIds = new ArrayList<Long>();
 
 	@Override
 	public void onPause() {
@@ -270,9 +277,9 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 	}
 
 	private void setExtraButton() {
-		focusedBookmarkId = Bookmark.findInBookmarks(this, focusedPlace);
+		focusedBookmarkIds = Bookmark.findInBookmarks(this, focusedPlace);
 		ImageButton extraBtn = ((ImageButton) findViewById(R.id.place_extra_button));
-		if (focusedBookmarkId == -1) {
+		if (focusedBookmarkIds.isEmpty()) {
 			extraBtn.setImageDrawable(getResources().getDrawable(
 					R.drawable.ic_menu_bookmark_add));
 		} else {
@@ -296,12 +303,26 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 			return;
 		}
 		Intent intent;
-		if (focusedBookmarkId != -1) {
-			intent = new Intent(this, EditBookmarkActivity.class);
-			intent.putExtra(BookmarksActivity.BOOKMARK_ID, focusedBookmarkId);
-		} else {
+		if (focusedBookmarkIds.isEmpty()) {
 			intent = new Intent(this, AddBookmarkActivity.class);
 			intent.putExtra(BookmarksActivity.PLACE_ID, focusedPlace.getId());
+		} else {
+			if (focusedBookmarkIds.size() == 1) {
+				intent = new Intent(this, EditBookmarkActivity.class);
+				intent.putExtra(BookmarksActivity.BOOKMARK_ID,
+						focusedBookmarkIds.get(0));
+			} else {
+				Bookmark[] bookmarks = new Bookmark[focusedBookmarkIds.size()];
+				for (int i = 0; i < focusedBookmarkIds.size(); i++) {
+					bookmarks[i] = Bookmark.getBookmark(this,
+							focusedBookmarkIds.get(i));
+				}
+				Bundle data = new Bundle();
+				data.putParcelableArray(BOOKMARKS, bookmarks);
+				removeDialog(DIALOG_MULTIPLE_BOOKMARKS);
+				showDialog(DIALOG_MULTIPLE_BOOKMARKS, data);
+				return;
+			}
 		}
 		startActivityForResult(intent, ADD_EDIT_BOOKMARK_RESULT);
 	}
@@ -380,6 +401,38 @@ public class PtolemyMapActivity extends PtolemyBaseMapActivity {
 					View.GONE);
 			break;
 		}
+	}
+
+	@Override
+	protected Dialog onCreateDialog(final int id) {
+		Dialog dialog;
+		switch (id) {
+		case DIALOG_MULTIPLE_BOOKMARKS:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Multiple bookmarks found!");
+			String[] items = new String[focusedBookmarkIds.size()];
+			for (int i = 0; i < focusedBookmarkIds.size(); i++) {
+				long bookmarkId = focusedBookmarkIds.get(i);
+				items[i] = Bookmark.getBookmark(this, bookmarkId)
+						.getCustomName();
+			}
+
+			builder.setItems(items, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					Intent intent = new Intent(PtolemyMapActivity.this,
+							EditBookmarkActivity.class);
+					intent.putExtra(BookmarksActivity.BOOKMARK_ID,
+							focusedBookmarkIds.get(item));
+					startActivityForResult(intent, ADD_EDIT_BOOKMARK_RESULT);
+				}
+			});
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
+			break;
+		}
+		return dialog;
 	}
 
 	@Override

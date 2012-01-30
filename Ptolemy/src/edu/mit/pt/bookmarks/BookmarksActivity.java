@@ -1,5 +1,7 @@
 package edu.mit.pt.bookmarks;
 
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ResourceCursorAdapter;
@@ -72,16 +75,21 @@ public class BookmarksActivity extends ListActivity {
 		ListView lv = getListView();
 		View footerView = getLayoutInflater().inflate(
 				R.layout.bookmark_list_footer, null);
+		((Button) footerView.findViewById(R.id.bookmark_footer_button))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(BookmarksActivity.this,
+								PrepopulateActivity.class);
+						startActivityForResult(intent, REQUEST_BOOKMARKS);
+						return;
+					}
+				});
 		lv.addFooterView(footerView);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (position >= adapter.getCount()) {
-					Intent intent = new Intent(BookmarksActivity.this,
-							PrepopulateActivity.class);
-					startActivityForResult(intent, REQUEST_BOOKMARKS);
-					return;
-				}
 				Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 				long placeId = cursor.getLong(cursor
 						.getColumnIndex(PlacesTable.PLACES_TABLE_NAME
@@ -129,6 +137,10 @@ public class BookmarksActivity extends ListActivity {
 				R.layout.bookmark_list_item, cur, true);
 
 		setListAdapter(adapter);
+
+		if (adapter.isEmpty()) {
+			findViewById(R.id.help).setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -187,8 +199,21 @@ public class BookmarksActivity extends ListActivity {
 			long[] mitClassIds = data
 					.getLongArrayExtra(PrepopulateActivity.CLASSES);
 			int count = 0;
+			boolean add;
 			for (MITClass c : MITClass.getClasses(this, mitClassIds)) {
-				if (Bookmark.findInBookmarks(this, c.getPlace()) == -1) {
+				List<Long> bookmarkIds = Bookmark.findInBookmarks(this,
+						c.getPlace());
+				add = true;
+				if (!bookmarkIds.isEmpty()) {
+					for (Long id : bookmarkIds) {
+						Bookmark bookmark = Bookmark.getBookmark(this, id);
+						if (bookmark.getCustomName().equals(c.getName())) {
+							add = false;
+							break;
+						}
+					}
+				}
+				if (add) {
 					Bookmark.addBookmark(this, c.getName(), c.getPlace(),
 							BookmarkType.LECTURE);
 					count++;
