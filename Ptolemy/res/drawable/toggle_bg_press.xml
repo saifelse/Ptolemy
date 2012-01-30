@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:dither="true"
-    android:src="@drawable/toggle_bg_press_tile"
-    android:tileMode="repeat" />
+<inset
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/toggle_bg_press_img"
+    android:insetTop="0dp"
+    android:insetRight="10dp"
+    android:insetBottom="42dp"
+    android:insetLeft="10dp" />

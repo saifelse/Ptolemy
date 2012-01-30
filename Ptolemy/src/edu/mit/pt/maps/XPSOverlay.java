@@ -39,7 +39,7 @@ public class XPSOverlay extends Overlay {
 
 		Point screenPoint = mapView.getProjection().toPixels(point, null);
 		Bitmap arrow = BitmapFactory.decodeResource(mapView.getResources(),
-				R.drawable.arrow_up_blue);
+				R.drawable.location_marker);
 
 		Matrix placementMatrix = new Matrix();
 		placementMatrix.setTranslate(-arrow.getWidth() / 2,

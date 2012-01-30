@@ -43,7 +43,7 @@ public class LocationSetter {
 	// Location
 	private Handler updateLocationHandler;
 	private boolean isStopped;
-	private LocationListener locationListener; //listens to gps
+	private LocationListener locationListener; // listens to gps
 
 	private static LocationManager locationManager;
 
@@ -67,13 +67,18 @@ public class LocationSetter {
 		locationListener = new LocationListener() {
 
 			public void onLocationChanged(Location location) {
-				Log.v(LocationSetter.class.getName(), "Location changed: " + location.toString());
+				Log.v(LocationSetter.class.getName(), "Location changed: "
+						+ location.toString());
 				if (location.getAccuracy() < minGPSAccuracy) {
 					// want to use GPS instead
 					currentLocation = new APGeoPoint(
 							(int) (location.getLatitude() * 1e6),
-							(int) (location.getLongitude() * 1e6),
-							1); //assume first floor if gps works
+							(int) (location.getLongitude() * 1e6), 1); // assume
+																		// first
+																		// floor
+																		// if
+																		// gps
+																		// works
 					lastGPSTime = System.currentTimeMillis();
 					locationSetter.setLocation(currentLocation);
 				}
@@ -132,8 +137,8 @@ public class LocationSetter {
 
 	private void resumeLocation() {
 		WifiLocation.getInstance(context).resume();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-				locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, locationListener);
 		getPoint(context);
 
 	}
@@ -198,6 +203,10 @@ public class LocationSetter {
 				.getLongitudeE6() * (1 - factor));
 		return new GeoPoint(newLatitude, newLongitude);
 	}
+	
+	private double exponentialWeightedMovingAverage(double avg, double newV, double factor) {
+		return avg*factor + newV*(1-factor);
+	}
 
 	public static float distanceBetweenGeoPoints(GeoPoint a, GeoPoint b) {
 		float r[] = new float[1];
@@ -208,28 +217,30 @@ public class LocationSetter {
 	}
 
 	public void setLocation(APGeoPoint p) {
-		//20s
+		// 20s
 		if (!(System.currentTimeMillis() - lastGPSTime < 20000)) {
 			if (currentLocation == null) {
 				currentLocation = p;
 			} else {
 				if (p == null)
 					return;
-				//snap if you're farther than 100
+				// snap if you're farther than 100
 				if (distanceBetweenGeoPoints(currentLocation, p) > 100.0) {
 					currentLocation = p;
 				} else {
-					currentLocation = new APGeoPoint(exponentialWeightedMovingAverage(currentLocation,
-						p, 0.6), p.getFloor());
+					currentLocation = new APGeoPoint(
+							exponentialWeightedMovingAverage(currentLocation,
+									p, 0.6), p.getFloor());
 				}
-	
+
 			}
 		}
 		overlay.setLocation(currentLocation);
 	}
 
 	protected void handleBearing(double bng) {
-		bearing = bng;
+		bearing = exponentialWeightedMovingAverage(bearing,
+				bng, 0.9);
 		overlay.setBearing(bearing);
 	}
 }
