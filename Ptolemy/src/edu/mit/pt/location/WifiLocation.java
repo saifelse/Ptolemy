@@ -49,11 +49,17 @@ public class WifiLocation {
 				.getSystemService(Context.WIFI_SERVICE);
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+		intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 		BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				update();
+				if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction()))
+					update();
+				if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
+					if (!wifi.isWifiEnabled())
+						shownWifiNag = false;
+				}
 
 			}
 		};
@@ -174,7 +180,7 @@ public class WifiLocation {
 		ad.setNegativeButton(R.string.wifi_nag_negative, new OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
-				Toast.makeText(context, "Please turn wifi on",
+				Toast.makeText(context, "Please turn wifi on!",
 						Toast.LENGTH_LONG).show();
 
 			}
