@@ -56,10 +56,11 @@ public class WifiLocation {
 			public void onReceive(Context context, Intent intent) {
 				if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction()))
 					update();
-				if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
-					if (!wifi.isWifiEnabled())
-						shownWifiNag = false;
-				}
+//				if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
+//					Log.v(Config.TAG, "Wifi state changed");
+//					if (wifi.getWifiState() == WifiManager.WIFI_STATE_DISABLED)
+//						shownWifiNag = false;
+//				}
 
 			}
 		};

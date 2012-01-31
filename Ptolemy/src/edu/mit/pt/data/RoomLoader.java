@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.pt.WebLogger;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
@@ -116,6 +118,8 @@ public class RoomLoader {
 						valuesToInsert.toArray(new ContentValues[valuesToInsert
 								.size()]));
 
+		WebLogger.Log("Succesfully loaded rooms");
+		
 		return count;
 	}
 }
