@@ -181,7 +181,7 @@ public class WifiLocation {
 		ad.setNegativeButton(R.string.wifi_nag_negative, new OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
-				Toast.makeText(context, "Please turn wifi on!",
+				Toast.makeText(context, "Please turn WiFi on!",
 						Toast.LENGTH_LONG).show();
 
 			}
