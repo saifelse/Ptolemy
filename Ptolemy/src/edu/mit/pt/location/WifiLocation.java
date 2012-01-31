@@ -72,7 +72,7 @@ public class WifiLocation {
 		// TODO: FIXME passing null
 		if (!paused)
 			LocationSetter.getInstance(context, null)
-					.setLocation(getLocation());
+					.setLocation(getLocation(false));
 	}
 
 	private GeoPoint midGeoPoint(GeoPoint a, GeoPoint b) {
@@ -183,12 +183,12 @@ public class WifiLocation {
 		shownWifiNag = true;
 	}
 
-	public APGeoPoint getLocation() {
+	public APGeoPoint getLocation(boolean clicked) {
 		SQLiteDatabase db = PtolemyDBOpenHelperSingleton
 				.getPtolemyDBOpenHelper(this.context).getReadableDatabase();
 		List<ScanResult> results = wifi.getScanResults();
 		if (results == null) {
-			if (!shownWifiNag)
+			if (!shownWifiNag && clicked)
 				showWifiNag();
 			return null;
 		}
@@ -248,7 +248,7 @@ public class WifiLocation {
 		Log.v(Config.TAG, "bssid: " + bssid1);
 		if (bssid1.equals("06:01:01:2f:e0:10")) {
 			Log.v(Config.TAG, "RLE level: " + closestAP1.level);
-			if (closestAP1.level < -44 && !rle_nag_shown) {
+			if (closestAP1.level < -44 && !rle_nag_shown && clicked) {
 				Toast.makeText(context, "I've detected you are in RLE and because of that, my location sources may be inaccurate", Toast.LENGTH_LONG).show();
 				rle_nag_shown = true;
 			}
