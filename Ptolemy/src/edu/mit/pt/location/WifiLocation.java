@@ -253,7 +253,7 @@ public class WifiLocation {
 		int floor = closestAP1Location.getFloor();
 		
 		Log.v(Config.TAG, "bssid: " + bssid1);
-		if (bssid1.equals("06:01:01:2f:e0:10")) {
+		if (results.get(0).SSID.equals("EECS-MTL-RLE")) {
 			Log.v(Config.TAG, "RLE level: " + closestAP1.level);
 			if (closestAP1.level < -44 && !rle_nag_shown && clicked) {
 				Toast.makeText(context, "I've detected you are in RLE and because of that, my location sources may be inaccurate", Toast.LENGTH_LONG).show();
