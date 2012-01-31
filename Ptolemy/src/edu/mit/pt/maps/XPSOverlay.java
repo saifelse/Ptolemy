@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 
 import com.google.android.maps.GeoPoint;
@@ -53,8 +52,6 @@ public class XPSOverlay extends Overlay {
 			resource = R.drawable.location_marker;
 		}
 		
-		Paint aliasPaint = new Paint();
-		aliasPaint.setAntiAlias(true);
 		
 		Bitmap arrow = BitmapFactory.decodeResource(mapView.getResources(),
 				resource);
@@ -65,6 +62,6 @@ public class XPSOverlay extends Overlay {
 		placementMatrix.postRotate((float) dir);
 		placementMatrix.postTranslate(screenPoint.x, screenPoint.y);
 		
-		canvas.drawBitmap(arrow, placementMatrix, aliasPaint);
+		canvas.drawBitmap(arrow, placementMatrix, null);
 	}
 }
