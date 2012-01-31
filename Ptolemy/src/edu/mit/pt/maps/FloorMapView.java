@@ -20,7 +20,6 @@ import com.google.android.maps.Overlay;
 
 import edu.mit.pt.Config;
 import edu.mit.pt.R;
-import edu.mit.pt.data.LinkedList;
 import edu.mit.pt.data.Place;
 import edu.mit.pt.data.PlaceManager;
 import edu.mit.pt.data.PlaceManager.MinMax;
