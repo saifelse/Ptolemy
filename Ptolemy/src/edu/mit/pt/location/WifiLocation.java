@@ -221,6 +221,13 @@ public class WifiLocation {
 			String bssid = maskBSSID(results.get(j).BSSID);
 			Log.v(Config.TAG, "Searching for " + bssid);
 			APGeoPoint location = AP.getAPLocation(bssid, db);
+			if (results.get(j).SSID.equals("EECS-MTL-RLE")) {
+				closestAP1 = results.get(j);
+				closestAP1Location = new APGeoPoint(42361074, -71092348, 4);
+				bssid1 = bssid;
+				j++;
+				break;
+			}
 			if (location != null) { // found good ap
 				Log.v(Config.TAG, "Found location for " + bssid);
 				closestAP1 = results.get(j);
